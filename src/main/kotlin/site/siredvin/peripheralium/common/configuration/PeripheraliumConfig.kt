@@ -2,6 +2,7 @@ package site.siredvin.peripheralium.common.configuration
 
 import net.minecraftforge.common.ForgeConfigSpec
 import site.siredvin.peripheralium.api.IConfigHandler
+import site.siredvin.peripheralium.computercraft.peripheral.operation.UnconditionalOperations
 
 object PeripheraliumConfig {
 
@@ -32,6 +33,9 @@ object PeripheraliumConfig {
             builder.pop()
             builder.push("experience")
             XP_TO_FUEL_RATE = builder.comment("Determinates amount xp to correspond one fuel point").defineInRange("xpToFuelRate", 10, 1, Int.MAX_VALUE)
+            builder.pop()
+            builder.push("operations")
+            register(UnconditionalOperations.values(), builder)
             builder.pop()
         }
 

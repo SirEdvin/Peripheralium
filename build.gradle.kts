@@ -7,6 +7,7 @@ import com.matthewprenger.cursegradle.Options
 
 plugins {
     id("fabric-loom")
+    id("maven-publish")
     id("com.matthewprenger.cursegradle") version "1.4.0"
     id("org.jetbrains.changelog") version "1.3.1"
 
@@ -14,13 +15,15 @@ plugins {
     kotlin("jvm").version(kotlinVersion)
 }
 
+val archivesBaseName: String by project
+
 base {
-    val archivesBaseName: String by project
     archivesName.set(archivesBaseName)
 }
 
+val isSnapshotVersion = System.getProperty("snapshot").toBoolean()
 val modVersion: String by project
-version = modVersion
+version = if (!isSnapshotVersion) modVersion else "$modVersion-SNAPSHOT"
 val mavenGroup: String by project
 group = mavenGroup
 
@@ -158,5 +161,19 @@ curseforge {
 project.afterEvaluate {
     tasks.getByName<CurseUploadTask>("curseforge${CURSEFORGE_ID}") {
         dependsOn(tasks.remapJar)
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifact(tasks.remapJar) {
+                builtBy(tasks.remapJar)
+            }
+        }
+    }
+
+    repositories {
+        mavenLocal()
     }
 }
