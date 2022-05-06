@@ -6,7 +6,7 @@ import dan200.computercraft.shared.turtle.blocks.TileTurtle
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
-import site.siredvin.peripheralium.api.peripheral.IBasePeripheral
+import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
 import site.siredvin.peripheralium.api.peripheral.IOwnerAbility
 import site.siredvin.peripheralium.util.Pair
 
@@ -14,7 +14,7 @@ object AbilityToolkit {
 
     private fun <T: IOwnerAbility> extractAbilityFromTurtle(turtle: ITurtleAccess, side: TurtleSide, ability: PeripheralOwnerAbility<T>): T? {
         val targetPeripheral = turtle.getPeripheral(side)
-        if (targetPeripheral !is IBasePeripheral<*>)
+        if (targetPeripheral !is IOwnedPeripheral<*>)
             return null
         return targetPeripheral.peripheralOwner!!.getAbility(ability)
     }

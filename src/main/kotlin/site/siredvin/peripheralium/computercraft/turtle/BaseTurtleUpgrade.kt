@@ -1,7 +1,7 @@
 package site.siredvin.peripheralium.computercraft.turtle
 
 import com.mojang.blaze3d.vertex.PoseStack
-import site.siredvin.peripheralium.api.peripheral.IBasePeripheral
+import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import dan200.computercraft.api.turtle.ITurtleAccess
@@ -15,7 +15,7 @@ import com.mojang.math.Vector3f
 import dan200.computercraft.api.peripheral.IPeripheral
 import site.siredvin.peripheralium.computercraft.peripheral.DisabledPeripheral
 
-abstract class BaseTurtleUpgrade<T : IBasePeripheral<*>>(
+abstract class BaseTurtleUpgrade<T : IOwnedPeripheral<*>>(
     id: ResourceLocation,
     type: TurtleUpgradeType,
     adjective: String,

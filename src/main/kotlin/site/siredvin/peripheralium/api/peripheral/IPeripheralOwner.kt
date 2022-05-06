@@ -15,11 +15,15 @@ interface IPeripheralOwner {
 @dan200.computercraft.api.lua.LuaFunction get() {
         return owner?.customName.toString()
     }
+    val targetRepresentation: Any?
+        get() = null
+
     val level: Level?
     val pos: BlockPos
     val facing: Direction
     val owner: Player?
     val dataStorage: CompoundTag
+
     fun markDataStorageDirty()
 
     fun <T> withPlayer(function: (LibFakePlayer) ->  T, overwrittenDirection: Direction? = null): T

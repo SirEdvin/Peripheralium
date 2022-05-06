@@ -8,11 +8,11 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.TurtleIDBuildFunction
 import site.siredvin.peripheralium.api.TurtlePeripheralBuildFunction
-import site.siredvin.peripheralium.api.peripheral.IBasePeripheral
+import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
 import site.siredvin.peripheralium.common.items.TurtleItem
 import site.siredvin.peripheralium.util.turtleAdjective
 
-abstract class PeripheralTurtleUpgrade<T : IBasePeripheral<*>> : BaseTurtleUpgrade<T> {
+abstract class PeripheralTurtleUpgrade<T : IOwnedPeripheral<*>> : BaseTurtleUpgrade<T> {
     constructor(id: ResourceLocation, adjective: String, item: ItemStack) : super(
         id,
         TurtleUpgradeType.PERIPHERAL,
@@ -28,16 +28,16 @@ abstract class PeripheralTurtleUpgrade<T : IBasePeripheral<*>> : BaseTurtleUpgra
     )
 
     companion object {
-        fun <T : IBasePeripheral<*>> dynamic(item: TurtleItem, constructor: TurtlePeripheralBuildFunction<T>): PeripheralTurtleUpgrade<T> {
+        fun <T : IOwnedPeripheral<*>> dynamic(item: TurtleItem, constructor: TurtlePeripheralBuildFunction<T>): PeripheralTurtleUpgrade<T> {
             return Dynamic(item.turtleID, item.defaultInstance, constructor)
         }
 
-        fun <T : IBasePeripheral<*>> dynamic(item: Item, constructor: TurtlePeripheralBuildFunction<T>, idBuilder: TurtleIDBuildFunction): PeripheralTurtleUpgrade<T> {
+        fun <T : IOwnedPeripheral<*>> dynamic(item: Item, constructor: TurtlePeripheralBuildFunction<T>, idBuilder: TurtleIDBuildFunction): PeripheralTurtleUpgrade<T> {
             return Dynamic(idBuilder.get(item), item.defaultInstance, constructor)
         }
     }
 
-    private class Dynamic<T : IBasePeripheral<*>>(
+    private class Dynamic<T : IOwnedPeripheral<*>>(
         turtleID: ResourceLocation, stack: ItemStack, private val constructor: TurtlePeripheralBuildFunction<T>
         ): PeripheralTurtleUpgrade<T>(turtleID, stack) {
         override fun buildPeripheral(turtle: ITurtleAccess, side: TurtleSide): T {

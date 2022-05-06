@@ -1,6 +1,6 @@
 package site.siredvin.peripheralium.computercraft.pocket
 
-import site.siredvin.peripheralium.api.peripheral.IBasePeripheral
+import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
 import dan200.computercraft.api.pocket.AbstractPocketUpgrade
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.ItemLike
@@ -10,7 +10,7 @@ import site.siredvin.peripheralium.computercraft.peripheral.DisabledPeripheral
 import site.siredvin.peripheralium.util.pocketAdjective
 import java.util.function.Supplier
 
-abstract class BasePocketUpgrade<T : IBasePeripheral<*>> : AbstractPocketUpgrade {
+abstract class BasePocketUpgrade<T : IOwnedPeripheral<*>> : AbstractPocketUpgrade {
     protected var peripheral: T? = null
 
     protected constructor(id: ResourceLocation, adjective: String?, stack: Supplier<out ItemLike?>?) : super(

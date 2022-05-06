@@ -17,8 +17,4 @@ interface IPeripheralPlugin {
 
     val additionalType: String?
         get() = null
-
-    fun isSuitable(peripheral: IPeripheral): Boolean {
-        return true
-    }
 }

@@ -25,6 +25,8 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
         get() = turtle.position
     override val facing: Direction
         get() = turtle.direction
+    override val targetRepresentation: Any
+        get() = turtle
     override val owner: Player?
         get() {
             val owningPlayer = turtle.owningPlayer ?: return null

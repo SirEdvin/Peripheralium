@@ -21,6 +21,9 @@ class BlockEntityPeripheralOwner<T>(val tileEntity: T) :
     override val pos: BlockPos
         get() = tileEntity.blockPos
 
+    override val targetRepresentation: T
+        get() = tileEntity
+
     override val facing: Direction
         get() = tileEntity.blockState.getValue(LibTileEntityBlock.FACING);
 
