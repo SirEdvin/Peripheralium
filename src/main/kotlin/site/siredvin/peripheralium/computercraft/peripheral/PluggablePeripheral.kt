@@ -23,6 +23,14 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
     val connectedComputers: List<IComputerAccess>
         get() = _connectedComputers
 
+    protected fun addAdditionalType(additionalType: String?) {
+        if (additionalType != null && additionalType != peripheralType) {
+            if (additionalTypeStorage == null)
+                additionalTypeStorage = mutableSetOf()
+            additionalTypeStorage!!.add(additionalType)
+        }
+    }
+
     protected fun buildPlugins() {
         if (!initialized) {
             initialized = true
@@ -34,8 +42,7 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
             }
             if (plugins != null) plugins!!.forEach(Consumer { plugin: IPeripheralPlugin ->
                 pluggedMethods.addAll(plugin.methods)
-                if (plugin.additionalType != null)
-                    additionalTypeStorage!!.add(plugin.additionalType!!)
+                addAdditionalType(plugin.additionalType)
             })
             _methodNames = pluggedMethods.stream().map { obj: BoundMethod -> obj.name }.toArray { size -> Array(size) { "" } }
         }
@@ -50,11 +57,7 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
             plugins = LinkedList()
         plugins!!.add(plugin)
         addOperations(plugin.operations)
-        if (plugin.additionalType != null) {
-            if (additionalTypeStorage == null)
-                additionalTypeStorage = mutableSetOf()
-            additionalTypeStorage!!.add(plugin.additionalType!!)
-        }
+        addAdditionalType(plugin.additionalType)
     }
 
     override fun attach(computer: IComputerAccess) {
