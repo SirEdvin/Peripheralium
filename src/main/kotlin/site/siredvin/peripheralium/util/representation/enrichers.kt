@@ -28,15 +28,7 @@ fun effectsData(entity: Entity, data: MutableMap<String, Any>) {
     if (entity is LivingEntity) {
         val effects: MutableList<MutableMap<String, Any>> = mutableListOf()
         entity.activeEffectsMap.forEach {
-            effects.add(
-                hashMapOf(
-                    "name" to it.key.displayName.string,
-                    "technicalName" to it.key.descriptionId,
-                    "duration" to it.value.duration,
-                    "amplifier" to it.value.amplifier,
-                    "isAmbient" to it.value.isAmbient
-                )
-            )
+            effects.add(LuaRepresentation.forMobEffectInstance(it.value))
         }
         data["effects"] = effects
     }

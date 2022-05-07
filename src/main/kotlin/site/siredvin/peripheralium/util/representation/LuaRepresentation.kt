@@ -4,6 +4,8 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.Registry
 import net.minecraft.tags.TagKey
+import net.minecraft.world.effect.MobEffect
+import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -66,6 +68,23 @@ object LuaRepresentation {
         map["technicalName"] = Registry.ITEM.getKey(item).toString()
         map["name"] = item.description.string
         return map
+    }
+
+    fun forMobEffect(effect: MobEffect): MutableMap<String, Any> {
+        return hashMapOf(
+            "name" to effect.displayName.string,
+            "technicalName" to effect.descriptionId,
+        )
+    }
+
+    fun forMobEffectInstance(effectInstance: MobEffectInstance): MutableMap<String, Any> {
+        val base = forMobEffect(effectInstance.effect)
+        base.putAll(mapOf(
+            "duration" to effectInstance.duration,
+            "amplifier" to effectInstance.amplifier,
+            "isAmbient" to effectInstance.isAmbient
+        ))
+        return base
     }
 
     fun <T> tagsToList(tags: Stream<TagKey<T>>): List<String> {
