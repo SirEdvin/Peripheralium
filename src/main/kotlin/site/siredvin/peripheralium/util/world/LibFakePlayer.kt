@@ -269,11 +269,6 @@ class LibFakePlayer(
                 return Pair.of(false, "Cannot break protected block")
             if (block == Blocks.BEDROCK || state.getDestroySpeed(level, pos) <= -1f)
                 return Pair.of(false, "Unbreakable block detected")
-            // TODO: Rewrite to be able to break by hand
-//            if (tool.item !is DiggerItem)
-//                return Pair.of(false, "Item should be digger tool")
-//            if (!tool.item.isCorrectToolForDrops(state))
-//                return Pair.of(false, "Tool cannot mine this block")
             val breakSpeed = 0.5f * tool.getDestroySpeed(state) / state.getDestroySpeed(level, pos) - 0.1f
             for (i in 0..9) {
                 currentDamage += breakSpeed
