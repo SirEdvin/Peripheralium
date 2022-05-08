@@ -176,5 +176,12 @@ publishing {
 
     repositories {
         mavenLocal()
+        maven {
+            url = uri("https://repo.repsy.io/mvn/siredvin/default")
+            credentials {
+                username = secretEnv["USERNAME"] ?: System.getenv("USERNAME")
+                password = secretEnv["PASSWORD"] ?: System.getenv("PASSWORD")
+            }
+        }
     }
 }
