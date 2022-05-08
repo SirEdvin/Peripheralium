@@ -171,6 +171,9 @@ publishing {
             artifact(tasks.remapJar) {
                 builtBy(tasks.remapJar)
             }
+            artifact(tasks.remapSourcesJar) {
+                builtBy(tasks.remapSourcesJar)
+            }
         }
     }
 
