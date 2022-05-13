@@ -92,6 +92,9 @@ dependencies {
 
     modImplementation("com.github.cc-tweaked:cc-restitched:v1.18.2-1.100.5-ccr")
     modImplementation("curse.maven:forgeconfigapirt-fabric-547434:3671141")
+
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:8.1.449")
+    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:8.1.449")
 }
 
 tasks {
