@@ -1,4 +1,7 @@
 {
   "item.peripheralium.peripheralium_blend": "Peripheralium blend",
-  "item.peripheralium.peripheralium_dust": "Peripheralium dust"
+  "item.peripheralium.peripheralium_dust": "Peripheralium dust",
+  "item.peripheralium.peripheralium_block": "Peripheralium block",
+
+  "block.peripheralium.peripheralium_block": "Peripheralium block"
 }

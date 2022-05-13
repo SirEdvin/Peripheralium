@@ -8,5 +8,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Peripheralium dust and blend
+- Add cross-mod resource - peripheralium
 - Recipe builders for smelting and shapeless recipes

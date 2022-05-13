@@ -2,7 +2,7 @@ package site.siredvin.peripheralium.common.setup
 
 import net.minecraft.world.item.Item
 import site.siredvin.peripheralium.common.items.DescriptiveItem
-import site.siredvin.peripheralium.util.register
+import site.siredvin.peripheralium.ext.register
 
 object Items {
     val ITEMS = mutableListOf<Item>()
