@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.DirectionProperty
 
-class LibTileEntityBlock<T : BlockEntity?> : BaseTileEntityBlock {
+class GenericTileEntityBlock<T : BlockEntity> : BaseTileEntityBlock<T> {
     private val tileEntity: BlockEntityType<T>
     private val isRotatable: Boolean
 
