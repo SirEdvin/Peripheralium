@@ -1,38 +1,35 @@
 package site.siredvin.peripheralium.common.blocks
 
+import dan200.computercraft.shared.Registry
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.item.context.BlockPlaceContext
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.DirectionalBlock
-import net.minecraft.world.level.block.Mirror
-import net.minecraft.world.level.block.Rotation
+import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.DirectionProperty
+import net.minecraft.world.level.material.Material
+import java.util.function.Supplier
 
-class GenericTileEntityBlock<T : BlockEntity> : BaseTileEntityBlock<T> {
-    private val tileEntity: BlockEntityType<T>
-    private val isRotatable: Boolean
+class GenericBlockEntityBlock<T : BlockEntity>(
+    private val blockEntityTypeSup: Supplier<BlockEntityType<T>>,
+    private val isRotatable: Boolean,
+    belongToTickingEntity: Boolean = false,
+    properties: Properties = Properties.of(Material.METAL).strength(1f, 5f).sound(SoundType.METAL).noOcclusion()
+): BaseTileEntityBlock<T>(belongToTickingEntity, properties) {
 
-    constructor(tileEntity: BlockEntityType<T>, isRotatable: Boolean) : super(false) {
-        this.tileEntity = tileEntity
-        this.isRotatable = isRotatable
-        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.SOUTH))
+    companion object {
+        val FACING: DirectionProperty = HorizontalDirectionalBlock.FACING
     }
 
-    constructor(tileEntity: BlockEntityType<T>, isRotatable: Boolean, belongToTickingEntity: Boolean) : super(
-        belongToTickingEntity
-    ) {
-        this.tileEntity = tileEntity
-        this.isRotatable = isRotatable
+    init {
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.SOUTH))
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? {
-        return tileEntity.create(pos, state)
+        return blockEntityTypeSup.get().create(pos, state)
     }
 
     override fun rotate(state: BlockState, rot: Rotation): BlockState {
@@ -53,11 +50,7 @@ class GenericTileEntityBlock<T : BlockEntity> : BaseTileEntityBlock<T> {
     override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
         return if (isRotatable) defaultBlockState().setValue(
             FACING,
-            context.nearestLookingDirection.opposite.opposite
+            context.horizontalDirection.opposite
         ) else defaultBlockState()
-    }
-
-    companion object {
-        val FACING: DirectionProperty = DirectionalBlock.FACING
     }
 }

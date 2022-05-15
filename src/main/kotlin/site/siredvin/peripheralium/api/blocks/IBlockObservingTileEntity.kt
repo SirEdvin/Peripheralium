@@ -7,5 +7,6 @@ interface IBlockObservingTileEntity {
     fun destroy() {}
     fun onNeighbourChange(neighbour: BlockPos) {}
     fun onNeighbourTileEntityChange(neighbour: BlockPos) {}
+    fun onChunkUnloaded() {}
     fun blockTick() {}
 }

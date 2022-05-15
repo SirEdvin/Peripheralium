@@ -1,0 +1,25 @@
+package site.siredvin.peripheralium
+
+import net.fabricmc.api.ClientModInitializer
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents
+import net.minecraft.client.multiplayer.ClientLevel
+import net.minecraft.world.level.block.entity.BlockEntity
+import site.siredvin.peripheralium.api.blocks.IBlockObservingTileEntity
+
+
+@Environment(EnvType.CLIENT)
+object PeripheraliumClient: ClientModInitializer {
+    override fun onInitializeClient() {
+        registerEvents()
+    }
+
+    fun registerEvents() {
+        ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register(ClientBlockEntityEvents.Unload { blockEntity: BlockEntity, world: ClientLevel ->
+            if (blockEntity is IBlockObservingTileEntity) {
+                blockEntity.onChunkUnloaded()
+            }
+        })
+    }
+}

@@ -11,11 +11,11 @@ import net.minecraft.nbt.CompoundTag
 import dan200.computercraft.api.peripheral.IComputerAccess
 import net.minecraft.core.Direction
 
-abstract class PeripheralTileEntity<T : IOwnedPeripheral<*>?>(
-    tileEntityTypeIn: BlockEntityType<*>,
+abstract class PeripheralBlockEntity<T : IOwnedPeripheral<*>?>(
+    blockEntityType: BlockEntityType<*>,
     blockPos: BlockPos,
     blockState: BlockState
-) : BlockEntity(tileEntityTypeIn, blockPos, blockState), IPeripheralTileEntity, IPeripheralTile {
+) : BlockEntity(blockEntityType, blockPos, blockState), IPeripheralTileEntity, IPeripheralTile {
     // Peripheral logic
     final override var peripheralSettings: CompoundTag
         protected set

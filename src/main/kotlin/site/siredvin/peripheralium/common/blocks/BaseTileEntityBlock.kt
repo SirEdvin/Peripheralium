@@ -26,15 +26,15 @@ abstract class BaseTileEntityBlock<T: BlockEntity>(
     }
 
     override fun <T : BlockEntity> getTicker(
-        level: Level,
-        state: BlockState,
+        tickerLevel: Level,
+        tickerState: BlockState,
         type: BlockEntityType<T>
     ): BlockEntityTicker<T>? {
-        if (level.isClientSide || !belongToTickingEntity)
+        if (tickerLevel.isClientSide || !belongToTickingEntity)
             return null
-        return BlockEntityTicker { _, _, _, entity ->
+        return BlockEntityTicker { level, pos, state, entity ->
             if (entity is IPeripheralTileEntity) {
-                entity.handleTick(level, state, type)
+                entity.handleTick(level, pos, state)
             }
         }
     }

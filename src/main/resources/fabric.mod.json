@@ -22,6 +22,12 @@
         "value": "site.siredvin.peripheralium.Peripheralium"
       }
     ],
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "site.siredvin.peripheralium.PeripheraliumClient"
+      }
+    ],
     "fabric-datagen": [
       {
         "adapter": "kotlin",
