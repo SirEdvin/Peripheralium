@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.material.Material
-import site.siredvin.peripheralium.api.blocks.IBlockObservingTileEntity
+import site.siredvin.peripheralium.api.blockentities.IObservingBlockEntity
 import site.siredvin.peripheralium.api.peripheral.IPeripheralTileEntity
 import java.util.*
 
@@ -49,14 +49,14 @@ abstract class BaseTileEntityBlock<T: BlockEntity>(
     ) {
         super.neighborChanged(blockState, level, blockPos, neighbourBlock, neighbourPos, bl)
         val tile = level.getBlockEntity(blockPos)
-        if (tile is IBlockObservingTileEntity)
+        if (tile is IObservingBlockEntity)
             tile.onNeighbourChange(neighbourPos)
     }
 
     override fun tick(blockState: BlockState, serverLevel: ServerLevel, blockPos: BlockPos, random: Random) {
         super.tick(blockState, serverLevel, blockPos, random)
         val tile = serverLevel.getBlockEntity(blockPos)
-        if (tile is IBlockObservingTileEntity)
+        if (tile is IObservingBlockEntity)
             tile.blockTick()
     }
 
@@ -70,7 +70,7 @@ abstract class BaseTileEntityBlock<T: BlockEntity>(
         super.onPlace(blockState, level, blockPos, newState, bl)
         if (newState.block === this) {
             val tile = level.getBlockEntity(blockPos)
-            if (tile is IBlockObservingTileEntity)
+            if (tile is IObservingBlockEntity)
                 tile.placed()
         }
     }
@@ -86,7 +86,7 @@ abstract class BaseTileEntityBlock<T: BlockEntity>(
             return
         val tile = level.getBlockEntity(blockPos)
         super.onRemove(blockState, level, blockPos, replace, bl)
-        if (tile is IBlockObservingTileEntity)
+        if (tile is IObservingBlockEntity)
             tile.destroy()
     }
 }

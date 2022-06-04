@@ -8,7 +8,7 @@ import net.minecraftforge.api.ModLoadingContext
 import net.minecraftforge.fml.config.ModConfig
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import site.siredvin.peripheralium.api.blocks.IBlockObservingTileEntity
+import site.siredvin.peripheralium.api.blockentities.IObservingBlockEntity
 import site.siredvin.peripheralium.common.configuration.ConfigHolder
 import site.siredvin.peripheralium.common.setup.Blocks
 import site.siredvin.peripheralium.common.setup.Items
@@ -28,7 +28,7 @@ object Peripheralium: ModInitializer {
 
     fun registerHandlers() {
         ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register(ServerBlockEntityEvents.Unload { blockEntity: BlockEntity, world: ServerLevel ->
-            if (blockEntity is IBlockObservingTileEntity) {
+            if (blockEntity is IObservingBlockEntity) {
                 blockEntity.onChunkUnloaded()
             }
         })

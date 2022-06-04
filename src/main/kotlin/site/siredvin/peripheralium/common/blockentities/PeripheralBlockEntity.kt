@@ -11,7 +11,7 @@ import net.minecraft.nbt.CompoundTag
 import dan200.computercraft.api.peripheral.IComputerAccess
 import net.minecraft.core.Direction
 
-abstract class PeripheralBlockEntity<T : IOwnedPeripheral<*>?>(
+abstract class PeripheralBlockEntity<T : IOwnedPeripheral<*>>(
     blockEntityType: BlockEntityType<*>,
     blockPos: BlockPos,
     blockState: BlockState

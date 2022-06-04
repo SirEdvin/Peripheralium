@@ -1,12 +1,11 @@
-package site.siredvin.peripheralium.api.blocks
+package site.siredvin.peripheralium.api.blockentities
 
 import net.minecraft.core.BlockPos
 
-interface IBlockObservingTileEntity {
+interface IObservingBlockEntity {
     fun placed() {}
     fun destroy() {}
     fun onNeighbourChange(neighbour: BlockPos) {}
-    fun onNeighbourTileEntityChange(neighbour: BlockPos) {}
     fun onChunkUnloaded() {}
     fun blockTick() {}
 }

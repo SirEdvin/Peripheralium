@@ -6,7 +6,7 @@ import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.world.level.block.entity.BlockEntity
-import site.siredvin.peripheralium.api.blocks.IBlockObservingTileEntity
+import site.siredvin.peripheralium.api.blockentities.IObservingBlockEntity
 
 
 @Environment(EnvType.CLIENT)
@@ -17,7 +17,7 @@ object PeripheraliumClient: ClientModInitializer {
 
     fun registerEvents() {
         ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register(ClientBlockEntityEvents.Unload { blockEntity: BlockEntity, world: ClientLevel ->
-            if (blockEntity is IBlockObservingTileEntity) {
+            if (blockEntity is IObservingBlockEntity) {
                 blockEntity.onChunkUnloaded()
             }
         })
