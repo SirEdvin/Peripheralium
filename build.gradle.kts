@@ -90,11 +90,11 @@ dependencies {
     val fabricKotlinVersion: String by project
     modImplementation("net.fabricmc:fabric-language-kotlin:$fabricKotlinVersion")
 
-    modImplementation("com.github.cc-tweaked:cc-restitched:v1.18.2-1.100.5-ccr")
-    modImplementation("curse.maven:forgeconfigapirt-fabric-547434:3671141")
+    modImplementation("com.github.cc-tweaked:cc-restitched:v1.19.1-1.101.2-ccr")
+    modImplementation("curse.maven:forgeconfigapirt-fabric-547434:3960064")
 
-    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:8.1.449")
-    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:8.1.449")
+//    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:8.1.449")
+//    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:8.1.449")
 }
 
 tasks {
@@ -107,8 +107,8 @@ tasks {
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions { jvmTarget = javaVersion.toString() }
-        sourceCompatibility = javaVersion.toString()
-        targetCompatibility = javaVersion.toString()
+//        sourceCompatibility = javaVersion.toString()
+//        targetCompatibility = javaVersion.toString()
     }
     jar { from("LICENSE") { rename { "${it}_${base.archivesName}" } } }
     processResources {

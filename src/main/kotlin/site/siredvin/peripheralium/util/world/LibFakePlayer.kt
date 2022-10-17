@@ -96,7 +96,7 @@ class LibFakePlayer(
                 digPosition!!,
                 ServerboundPlayerActionPacket.Action.ABORT_DESTROY_BLOCK,
                 Direction.EAST,
-                1
+                1, 1
             )
         }
         digPosition = pos
@@ -277,7 +277,7 @@ class LibFakePlayer(
                 if (currentDamage > 9) {
                     withConsumer(level, pos) {
                         level.playSound(null, pos, state.soundType.breakSound, SoundSource.NEUTRAL, .25f, 1f)
-                        gameMode.handleBlockBreakAction(pos, ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK, direction.opposite, 1)
+                        gameMode.handleBlockBreakAction(pos, ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK, direction.opposite, 1, 1)
                         gameMode.destroyBlock(pos)
                         level.destroyBlockProgress(id, pos, -1)
                         setState(null, null)

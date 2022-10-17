@@ -16,7 +16,7 @@ object PeripheraliumClient: ClientModInitializer {
     }
 
     fun registerEvents() {
-        ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register(ClientBlockEntityEvents.Unload { blockEntity: BlockEntity, world: ClientLevel ->
+        ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register(ClientBlockEntityEvents.Unload { blockEntity: BlockEntity, _: ClientLevel ->
             if (blockEntity is IObservingBlockEntity) {
                 blockEntity.onChunkUnloaded()
             }

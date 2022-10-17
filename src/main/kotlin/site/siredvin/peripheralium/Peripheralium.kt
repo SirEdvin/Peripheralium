@@ -27,7 +27,7 @@ object Peripheralium: ModInitializer {
     }
 
     fun registerHandlers() {
-        ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register(ServerBlockEntityEvents.Unload { blockEntity: BlockEntity, world: ServerLevel ->
+        ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register(ServerBlockEntityEvents.Unload { blockEntity: BlockEntity, _: ServerLevel ->
             if (blockEntity is IObservingBlockEntity) {
                 blockEntity.onChunkUnloaded()
             }

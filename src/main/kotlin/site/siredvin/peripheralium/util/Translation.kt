@@ -1,12 +1,12 @@
 package site.siredvin.peripheralium.util
 
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.TranslatableComponent
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 
-fun itemTooltip(descriptionId: String): TranslatableComponent {
+fun itemTooltip(descriptionId: String): MutableComponent {
     val lastIndex = descriptionId.lastIndexOf('.')
-    return TranslatableComponent(
+    return Component.translatable(
         String.format(
             "%s.tooltip.%s",
             descriptionId.substring(0, lastIndex).replaceFirst("^block".toRegex(), "item"),
@@ -15,9 +15,9 @@ fun itemTooltip(descriptionId: String): TranslatableComponent {
     )
 }
 
-fun itemExtra(descriptionId: String, extra: String): Component {
+fun itemExtra(descriptionId: String, extra: String): MutableComponent {
     val lastIndex = descriptionId.lastIndexOf('.')
-    return TranslatableComponent(
+    return Component.translatable(
         String.format(
             "%s.extra.%s.%s",
             descriptionId.substring(0, lastIndex).replaceFirst("^block".toRegex(), "item"),
@@ -26,9 +26,9 @@ fun itemExtra(descriptionId: String, extra: String): Component {
     )
 }
 
-fun itemExtra(descriptionId: String, extra: String, vararg args: Any): Component {
+fun itemExtra(descriptionId: String, extra: String, vararg args: Any): MutableComponent {
     val lastIndex = descriptionId.lastIndexOf('.')
-    return TranslatableComponent(
+    return Component.translatable(
         String.format(
             "%s.extra.%s.%s",
             descriptionId.substring(0, lastIndex).replaceFirst("^block".toRegex(), "item"),
@@ -46,10 +46,10 @@ fun pocketAdjective(pocketID: ResourceLocation): String {
     return java.lang.String.format("pocket.%s.%s", pocketID.namespace, pocketID.path)
 }
 
-fun text(modID: String, name: String): Component {
-    return TranslatableComponent(String.format("text.%s.%s", modID, name))
+fun text(modID: String, name: String): MutableComponent {
+    return Component.translatable(String.format("text.%s.%s", modID, name))
 }
 
-fun text(modID: String, name: String, vararg args: Any): Component {
-    return TranslatableComponent(String.format("text.%s.%s", modID, name), *args)
+fun text(modID: String, name: String, vararg args: Any): MutableComponent {
+    return Component.translatable(String.format("text.%s.%s", modID, name), *args)
 }
