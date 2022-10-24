@@ -23,7 +23,9 @@ base {
 
 val isSnapshotVersion = System.getProperty("snapshot").toBoolean()
 val modVersion: String by project
-version = if (!isSnapshotVersion) modVersion else "$modVersion-SNAPSHOT"
+val minecraftVersion: String by project
+val modVersionWithMC = "$modVersion-$minecraftVersion"
+version = if (!isSnapshotVersion) modVersionWithMC else "$modVersionWithMC-SNAPSHOT"
 val mavenGroup: String by project
 group = mavenGroup
 
@@ -107,8 +109,6 @@ tasks {
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions { jvmTarget = javaVersion.toString() }
-        sourceCompatibility = javaVersion.toString()
-        targetCompatibility = javaVersion.toString()
     }
     jar { from("LICENSE") { rename { "${it}_${base.archivesName}" } } }
     processResources {
