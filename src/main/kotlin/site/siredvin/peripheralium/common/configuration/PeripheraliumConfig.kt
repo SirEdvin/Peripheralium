@@ -15,14 +15,27 @@ object PeripheraliumConfig {
     val xpToFuelRate: Int
         get() = ConfigHolder.COMMON_CONFIG.XP_TO_FUEL_RATE.get()
 
+    val itemStorageTransferLimit: Long
+        get() = ConfigHolder.COMMON_CONFIG.ITEM_STORAGE_TRANSFER_LIMIT.get()
+    val fluidStorageTransferLimit: Long
+        get() = ConfigHolder.COMMON_CONFIG.FLUID_STORAGE_TRANSFER_LIMIT.get()
+
     class CommonConfig internal constructor(builder: ForgeConfigSpec.Builder) {
 
         var IS_INITIAL_COOLDOWN_ENABLED: ForgeConfigSpec.BooleanValue
         var INITIAL_COOLDOWN_SENSENTIVE_LEVEL: ForgeConfigSpec.IntValue
         var COOLDOWN_TRASHOLD_LEVEL: ForgeConfigSpec.IntValue
         var XP_TO_FUEL_RATE: ForgeConfigSpec.IntValue
+        val ITEM_STORAGE_TRANSFER_LIMIT: ForgeConfigSpec.LongValue
+        val FLUID_STORAGE_TRANSFER_LIMIT: ForgeConfigSpec.LongValue
 
         init {
+            builder.push("limitations")
+            ITEM_STORAGE_TRANSFER_LIMIT = builder.comment("Limits max item transfer per one operation")
+                .defineInRange("itemStorageTransferLimit", 128L, 1L, Long.MAX_VALUE)
+            FLUID_STORAGE_TRANSFER_LIMIT = builder.comment("Limits max fluid transfer per one operation")
+                .defineInRange("fluidStorageTransferLimit", 5305500L, 1L, Long.MAX_VALUE)
+            builder.pop()
             builder.push("cooldown")
             IS_INITIAL_COOLDOWN_ENABLED = builder.comment("Enables initial cooldown on peripheral initialization")
                 .define("isInitialCooldownEnabled", true)
