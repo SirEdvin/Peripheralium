@@ -144,7 +144,7 @@ curseforge {
         id = CURSEFORGE_ID
         releaseType = CURSEFORGE_RELEASE_TYPE
         addGameVersion("Fabric")
-        addGameVersion("1.18.2")
+        addGameVersion("1.19.2")
         try {
             changelog = "${project.changelog.get(project.version as String).withHeader(false).toText()}"
             changelogType = "markdown"
