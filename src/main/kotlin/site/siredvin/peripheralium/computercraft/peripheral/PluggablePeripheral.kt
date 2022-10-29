@@ -9,10 +9,11 @@ import dan200.computercraft.api.peripheral.IDynamicPeripheral
 import dan200.computercraft.api.peripheral.IPeripheral
 import site.siredvin.peripheralium.api.peripheral.IPeripheralOperation
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
+import site.siredvin.peripheralium.api.peripheral.IPluggablePeripheral
 import java.util.*
 import java.util.function.Consumer
 
-open class PluggablePeripheral<T>(private val peripheralType: String, private val peripheralTarget: T?): IDynamicPeripheral {
+open class PluggablePeripheral<T>(private val peripheralType: String, private val peripheralTarget: T?): IDynamicPeripheral, IPluggablePeripheral {
     protected val _connectedComputers: MutableList<IComputerAccess> = ArrayList()
     protected var initialized = false
     protected val pluggedMethods: MutableList<BoundMethod> = ArrayList()
@@ -20,7 +21,7 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
     protected var _methodNames = Array(0) { "" }
     protected var additionalTypeStorage: MutableSet<String>? = null
 
-    val connectedComputers: List<IComputerAccess>
+    override val connectedComputers: List<IComputerAccess>
         get() = _connectedComputers
 
     protected fun addAdditionalType(additionalType: String?) {
@@ -43,6 +44,7 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
             if (plugins != null) plugins!!.forEach(Consumer { plugin: IPeripheralPlugin ->
                 pluggedMethods.addAll(plugin.methods)
                 addAdditionalType(plugin.additionalType)
+                plugin.connectedPeripheral = this
             })
             _methodNames = pluggedMethods.stream().map { obj: BoundMethod -> obj.name }.toArray { size -> Array(size) { "" } }
         }
