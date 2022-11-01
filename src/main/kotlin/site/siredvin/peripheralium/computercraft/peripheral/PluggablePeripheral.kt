@@ -7,10 +7,13 @@ import dan200.computercraft.api.lua.MethodResult
 import dan200.computercraft.api.peripheral.IComputerAccess
 import dan200.computercraft.api.peripheral.IDynamicPeripheral
 import dan200.computercraft.api.peripheral.IPeripheral
+import kotlinx.atomicfu.locks.withLock
 import site.siredvin.peripheralium.api.peripheral.IPeripheralOperation
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 import site.siredvin.peripheralium.api.peripheral.IPluggablePeripheral
 import java.util.*
+import java.util.concurrent.locks.Lock
+import java.util.concurrent.locks.ReentrantLock
 import java.util.function.Consumer
 
 open class PluggablePeripheral<T>(private val peripheralType: String, private val peripheralTarget: T?): IDynamicPeripheral, IPluggablePeripheral {
@@ -20,8 +23,9 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
     protected var plugins: MutableList<IPeripheralPlugin>? = null
     protected var _methodNames = Array(0) { "" }
     protected var additionalTypeStorage: MutableSet<String>? = null
+    protected var connectedComputersLock: ReentrantLock = ReentrantLock()
 
-    override val connectedComputers: List<IComputerAccess>
+    val connectedComputers: List<IComputerAccess>
         get() = _connectedComputers
 
     protected fun addAdditionalType(additionalType: String?) {
@@ -63,12 +67,31 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
     }
 
     override fun attach(computer: IComputerAccess) {
-        _connectedComputers.add(computer)
+        connectedComputersLock.withLock {
+            _connectedComputers.add(computer)
+        }
     }
 
     override fun detach(computer: IComputerAccess) {
-        _connectedComputers.remove(computer)
+        connectedComputersLock.withLock {
+            _connectedComputers.remove(computer)
+        }
     }
+
+    override fun forEachComputer(func: Consumer<IComputerAccess>) {
+        connectedComputersLock.withLock {
+            _connectedComputers.forEach { func.accept(it) }
+        }
+    }
+
+    override fun isComputerPresent(computerID: Int): Boolean {
+        connectedComputersLock.withLock {
+            return _connectedComputers.any { it.id == computerID }
+        }
+    }
+
+    override val connectedComputersCount: Int
+        get() = connectedComputersLock.withLock { return _connectedComputers.size }
 
     override fun equals(iPeripheral: IPeripheral?): Boolean {
         return iPeripheral === this
