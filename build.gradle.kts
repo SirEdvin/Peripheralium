@@ -94,7 +94,7 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
     modImplementation("net.fabricmc:fabric-language-kotlin:$fabricKotlinVersion")
 
-    modImplementation("com.github.cc-tweaked:cc-restitched:-${ccrVersion}")
+    modImplementation("com.github.cc-tweaked:cc-restitched:${ccrVersion}")
     modImplementation("curse.maven:forgeconfigapirt-fabric-${forgeConfigVersion}")
 
 //    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${reiVersion}")
