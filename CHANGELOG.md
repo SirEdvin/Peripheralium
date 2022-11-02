@@ -6,9 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.3] - 02-11-22
+
 ### Added
 
 - Add cross-mod resource - peripheralium
 - Recipe builders for smelting and shapeless recipes
 - BlockEntity support as library part
-- 
+- Plugins for some nice base integrations
+- Base event logic for plugins

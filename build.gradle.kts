@@ -81,22 +81,24 @@ repositories {
 }
 
 dependencies {
-    val minecraftVersion: String by project
-    minecraft("com.mojang:minecraft:$minecraftVersion")
-    val yarnMappings: String by project
-    mappings(loom.officialMojangMappings())
     val loaderVersion: String by project
-    modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
     val fabricVersion: String by project
-    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
     val fabricKotlinVersion: String by project
+    val reiVersion: String by project
+    val forgeConfigVersion: String by project
+    val ccrVersion: String by project
+
+    minecraft("com.mojang:minecraft:$minecraftVersion")
+    mappings(loom.officialMojangMappings())
+    modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
     modImplementation("net.fabricmc:fabric-language-kotlin:$fabricKotlinVersion")
 
-    modImplementation("com.github.cc-tweaked:cc-restitched:v1.19.1-1.101.2-ccr")
-    modImplementation("curse.maven:forgeconfigapirt-fabric-547434:3960064")
+    modImplementation("com.github.cc-tweaked:cc-restitched:-${ccrVersion}")
+    modImplementation("curse.maven:forgeconfigapirt-fabric-${forgeConfigVersion}")
 
-//    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:8.1.449")
-//    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:8.1.449")
+//    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${reiVersion}")
+//    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${reiVersion}")
 }
 
 tasks {
@@ -144,7 +146,7 @@ curseforge {
         id = CURSEFORGE_ID
         releaseType = CURSEFORGE_RELEASE_TYPE
         addGameVersion("Fabric")
-        addGameVersion("1.19.2")
+        addGameVersion(minecraftVersion)
         try {
             changelog = "${project.changelog.get(project.version as String).withHeader(false).toText()}"
             changelogType = "markdown"
