@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `asBlockPos` for relative-facing logic
 
+### Changed
+
+- `PeripheralBlockEntity` now can ignore peripheral providing part
+
 ## [0.4.3] - 2022-11-02
 
 ### Added

@@ -29,7 +29,7 @@ abstract class PeripheralBlockEntity<T : IOwnedPeripheral<*>>(
         peripheralSettings = CompoundTag()
     }
 
-    override fun getPeripheral(side: Direction): T {
+    override fun getPeripheral(side: Direction): T? {
         ensurePeripheralCreated(side)
         return peripheral!!
     }
