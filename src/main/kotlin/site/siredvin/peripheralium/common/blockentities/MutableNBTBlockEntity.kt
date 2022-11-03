@@ -16,9 +16,6 @@ abstract class MutableNBTBlockEntity<T : IOwnedPeripheral<*>>(
     blockState: BlockState
 ) : PeripheralBlockEntity<T>(blockEntityType, blockPos, blockState), ISyncingBlockEntity {
 
-    val requiresRenderUpdate: Boolean
-        get() = false
-
     // Client-server sync logic
 
     override fun getUpdateTag(): CompoundTag {
