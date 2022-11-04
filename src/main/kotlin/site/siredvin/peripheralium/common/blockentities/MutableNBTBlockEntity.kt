@@ -43,17 +43,14 @@ abstract class MutableNBTBlockEntity<T : IOwnedPeripheral<*>>(
 
     // Server->client sync logic
 
-    override fun pushInternalDataChangeToClient() {
-        pushInternalDataChangeToClient(blockState)
-    }
-
-    override fun pushInternalDataChangeToClient(state: BlockState) {
+    override fun pushInternalDataChangeToClient(state: BlockState?) {
         val level = getLevel()!!
+        val realState = state ?: blockState
         Objects.requireNonNull<Any?>(level)
         if (!level.isClientSide) {
             setChanged()
-            level.setBlockAndUpdate(blockPos, state)
-            level.sendBlockUpdated(blockPos, blockState, blockState, 3)
+            level.setBlockAndUpdate(blockPos, realState)
+            level.sendBlockUpdated(blockPos, realState, realState, 3)
         }
     }
 

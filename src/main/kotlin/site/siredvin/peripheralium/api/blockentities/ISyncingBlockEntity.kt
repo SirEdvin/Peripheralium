@@ -5,8 +5,7 @@ import net.minecraft.world.level.block.state.BlockState
 
 interface ISyncingBlockEntity {
     fun saveInternalData(data: CompoundTag): CompoundTag
-    fun loadInternalData(data: CompoundTag)
-    fun pushInternalDataChangeToClient()
-    fun pushInternalDataChangeToClient(state: BlockState)
+    fun loadInternalData(data: CompoundTag, state: BlockState? = null): BlockState
+    fun pushInternalDataChangeToClient(state: BlockState? = null)
     fun triggerRenderUpdate()
 }

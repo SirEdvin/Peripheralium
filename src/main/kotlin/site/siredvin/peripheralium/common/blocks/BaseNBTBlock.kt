@@ -22,7 +22,7 @@ abstract class BaseNBTBlock<T>(
     BaseTileEntityBlock<T>(belongToTickingEntity, properties) where T : BlockEntity, T : ISyncingBlockEntity {
     abstract fun createItemStack(): ItemStack
 
-    protected val savableProperties: List<Property<*>>
+    open val savableProperties: List<Property<*>>
         get() = emptyList()
 
     override fun playerWillDestroy(level: Level, pos: BlockPos, state: BlockState, player: Player) {
@@ -68,7 +68,7 @@ abstract class BaseNBTBlock<T>(
                         }
                     }
                     if (data.contains(INTERNAL_DATA_TAG)) {
-                        blockEntity.loadInternalData(data.getCompound(INTERNAL_DATA_TAG))
+                        state = blockEntity.loadInternalData(data.getCompound(INTERNAL_DATA_TAG), state)
                         blockEntity.pushInternalDataChangeToClient(state)
                     }
                 }
