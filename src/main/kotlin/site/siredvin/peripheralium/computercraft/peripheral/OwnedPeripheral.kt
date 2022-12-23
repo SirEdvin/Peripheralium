@@ -41,6 +41,15 @@ abstract class OwnedPeripheral<O : IPeripheralOwner>(peripheralType: String, fin
         }
     }
 
+    override fun collectPluginMethods() {
+        super.collectPluginMethods()
+        peripheralOwner.abilities.forEach {
+            if (it is IPeripheralPlugin) {
+                connectPlugin(it)
+            }
+        }
+    }
+
     @Throws(LuaException::class)
     protected fun validateSide(direction: String): Direction {
         val dir = direction.uppercase()
