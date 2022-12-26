@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.17] - 2022-12-26
+
+### Added
+
+- `asBlockPos` for relative-facing logic
+
+### Fixed
+
+- Plugin interconnection logic (from Turtlematic issue)[https://github.com/SirEdvin/Turtlematic/issues/2]
+- A lot of thinks in NBTBlock logic
+
+### Changed
+
+- `PeripheralBlockEntity` now can ignore peripheral providing part
+
 ## [0.4.3] - 2022-11-02
 
 ### Added

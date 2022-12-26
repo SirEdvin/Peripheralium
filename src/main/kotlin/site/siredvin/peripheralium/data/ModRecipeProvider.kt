@@ -28,6 +28,6 @@ class ModRecipeProvider(dataGenerator: FabricDataGenerator) : FabricRecipeProvid
             .save(consumer, ResourceLocation("peripheralium:peripheralium_block_uncraft"))
 
         TweakedSmeltingRecipeBuilder.smelting(Ingredient.of(Items.PERIPHERALIUM_BLEND), Items.PERIPHERALIUM_DUST, 0.7f, 200)
-            .save(consumer)
+            .save(consumer, ResourceLocation("peripheralium:peripheralium_dust_smelting"))
     }
 }

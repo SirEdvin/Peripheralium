@@ -28,7 +28,7 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
     val connectedComputers: List<IComputerAccess>
         get() = _connectedComputers
 
-    protected fun addAdditionalType(additionalType: String?) {
+    protected open fun addAdditionalType(additionalType: String?) {
         if (additionalType != null && additionalType != peripheralType) {
             if (additionalTypeStorage == null)
                 additionalTypeStorage = mutableSetOf()
@@ -36,7 +36,17 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
         }
     }
 
-    protected fun buildPlugins() {
+    protected open fun connectPlugin(plugin: IPeripheralPlugin) {
+        pluggedMethods.addAll(plugin.methods)
+        addAdditionalType(plugin.additionalType)
+        plugin.connectedPeripheral = this
+    }
+
+    protected open fun collectPluginMethods() {
+        if (plugins != null) plugins!!.forEach(Consumer { connectPlugin(it) })
+    }
+
+    protected open fun buildPlugins() {
         if (!initialized) {
             initialized = true
             pluggedMethods.clear()
@@ -45,11 +55,7 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
             } else {
                 additionalTypeStorage?.clear()
             }
-            if (plugins != null) plugins!!.forEach(Consumer { plugin: IPeripheralPlugin ->
-                pluggedMethods.addAll(plugin.methods)
-                addAdditionalType(plugin.additionalType)
-                plugin.connectedPeripheral = this
-            })
+            collectPluginMethods()
             _methodNames = pluggedMethods.stream().map { obj: BoundMethod -> obj.name }.toArray { size -> Array(size) { "" } }
         }
     }

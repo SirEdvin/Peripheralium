@@ -16,9 +16,6 @@ abstract class MutableNBTBlockEntity<T : IOwnedPeripheral<*>>(
     blockState: BlockState
 ) : PeripheralBlockEntity<T>(blockEntityType, blockPos, blockState), ISyncingBlockEntity {
 
-    val requiresRenderUpdate: Boolean
-        get() = false
-
     // Client-server sync logic
 
     override fun getUpdateTag(): CompoundTag {
@@ -46,17 +43,14 @@ abstract class MutableNBTBlockEntity<T : IOwnedPeripheral<*>>(
 
     // Server->client sync logic
 
-    override fun pushInternalDataChangeToClient() {
-        pushInternalDataChangeToClient(blockState)
-    }
-
-    override fun pushInternalDataChangeToClient(state: BlockState) {
-        val level = getLevel()!!
+    override fun pushInternalDataChangeToClient(state: BlockState?) {
+        val level = getLevel() ?: return
+        val realState = state ?: blockState
         Objects.requireNonNull<Any?>(level)
         if (!level.isClientSide) {
             setChanged()
-            level.setBlockAndUpdate(blockPos, state)
-            level.sendBlockUpdated(blockPos, blockState, blockState, 3)
+            level.setBlockAndUpdate(blockPos, realState)
+            level.sendBlockUpdated(blockPos, realState, realState, 3)
         }
     }
 

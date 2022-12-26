@@ -35,7 +35,7 @@ class ItemStoragePlugin(private val level: Level, private val storage: Storage<I
         transaction.use {
             storage.iterator().forEach {
                 if (!it.isResourceBlank)
-                    result.add(ItemData.fill(HashMap(), it.resource.toStack()))
+                    result.add(ItemData.fill(HashMap(), it.resource.toStack(it.amount.toInt())))
             }
         }
         return result

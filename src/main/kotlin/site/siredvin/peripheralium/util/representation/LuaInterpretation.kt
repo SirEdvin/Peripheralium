@@ -2,7 +2,10 @@ package site.siredvin.peripheralium.util.representation
 
 import dan200.computercraft.api.lua.LuaException
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.world.level.block.Rotation
+import site.siredvin.peripheralium.common.blocks.GenericBlockEntityBlock
+import site.siredvin.peripheralium.ext.toRelative
 
 object LuaInterpretation {
     // BlockPos tricks
@@ -19,6 +22,12 @@ object LuaInterpretation {
     @Throws(LuaException::class)
     fun asBlockPos(center: BlockPos, table: Map<*, *>): BlockPos {
         val relative = asBlockPos(table)
+        return BlockPos(center.x + relative.x, center.y + relative.y, center.z + relative.z)
+    }
+
+    @Throws(LuaException::class)
+    fun asBlockPos(center: BlockPos, table: Map<*, *>, facing: Direction): BlockPos {
+        val relative = asBlockPos(table).toRelative(facing.opposite)
         return BlockPos(center.x + relative.x, center.y + relative.y, center.z + relative.z)
     }
 
