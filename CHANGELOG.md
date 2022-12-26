@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `asBlockPos` for relative-facing logic
 
+### Fixed
+
+- Plugin interconnection logic (from Turtlematic issue)[https://github.com/SirEdvin/Turtlematic/issues/2]
+- A lot of thinks in NBTBlock logic
+
 ### Changed
 
 - `PeripheralBlockEntity` now can ignore peripheral providing part
