@@ -7,8 +7,14 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.npc.Villager
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
+import net.minecraft.world.item.enchantment.Enchantment
+import net.minecraft.world.item.enchantment.EnchantmentHelper
+import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.level.block.state.BlockState
 import site.siredvin.peripheralium.ext.toRelative
 import java.util.stream.Collectors
@@ -89,5 +95,40 @@ object LuaRepresentation {
 
     fun <T> tagsToList(tags: Stream<TagKey<T>>): List<String> {
         return tags.map { key -> key.location.toString() }.collect(Collectors.toList())
+    }
+
+    fun getVillagerOffersAsMap(villager: Villager): MutableMap<Int, Any> {
+        val offersMap : MutableMap<Int, Any> = HashMap()
+        var index: Int = 1
+        for(merchantOffer:MerchantOffer in villager.offers) {
+            val offerMap : MutableMap<String, Any> = HashMap()
+            offerMap["first_cost"] = getItemStackAsMap(merchantOffer.costA)
+            offerMap["second_cost"] = getItemStackAsMap(merchantOffer.costB)
+            offerMap["result"] = getItemStackAsMap(merchantOffer.result)
+            offersMap[index++] = offerMap
+        }
+        return offersMap
+    }
+    private fun getItemStackAsMap(itemStack: ItemStack): MutableMap<String, Any> {
+        val itemStackMap : MutableMap<String, Any> = HashMap()
+        itemStackMap["count"] = itemStack.count
+//        var name = itemStack.displayName.string
+//        name = name.substring(0, name.length-1).substring(1, )
+        itemStackMap["name"] = formatID(itemStack.descriptionId)
+        if(itemStack.isEnchanted || itemStack.`is`(Items.ENCHANTED_BOOK)) itemStackMap["enchantments"] = getEnchantmentsAsMap(itemStack)
+        return itemStackMap
+    }
+
+    private fun getEnchantmentsAsMap(itemStack : ItemStack): MutableMap<String, Any> {
+        val enchantmentsMap : MutableMap<String, Any> = HashMap()
+        val enchantments: MutableMap<Enchantment, Int>? = EnchantmentHelper.getEnchantments(itemStack)
+        for(enchantment:MutableMap.MutableEntry<Enchantment, Int> in enchantments!!.entries) {
+            enchantmentsMap[formatID(enchantment.key.descriptionId)] = enchantment.value
+        }
+        return enchantmentsMap
+    }
+
+    private fun formatID(rawID: String): String {
+        return rawID.substring(rawID.indexOf(".") + 1).replace(".", ":")
     }
 }
