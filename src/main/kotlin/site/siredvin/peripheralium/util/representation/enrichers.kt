@@ -7,6 +7,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Shearable
 import net.minecraft.world.entity.animal.Animal
+import net.minecraft.world.entity.npc.Villager
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
@@ -22,6 +23,9 @@ fun animalData(entity: Entity, data: MutableMap<String, Any>) {
             data["shareable"] = entity.readyForShearing();
         }
     }
+}
+fun merchantData(entity: Entity, data: MutableMap<String, Any>) {
+    if (entity is Villager) data["offers"] = LuaRepresentation.getVillagerOffersAsMap(entity)
 }
 
 fun effectsData(entity: Entity, data: MutableMap<String, Any>) {
