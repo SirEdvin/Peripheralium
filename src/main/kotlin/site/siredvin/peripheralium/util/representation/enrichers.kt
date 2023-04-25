@@ -8,6 +8,8 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Shearable
 import net.minecraft.world.entity.animal.Animal
 import net.minecraft.world.entity.npc.Villager
+import net.minecraft.world.entity.npc.WanderingTrader
+import net.minecraft.world.item.trading.Merchant
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
@@ -25,7 +27,14 @@ fun animalData(entity: Entity, data: MutableMap<String, Any>) {
     }
 }
 fun merchantData(entity: Entity, data: MutableMap<String, Any>) {
-    if (entity is Villager) data["offers"] = LuaRepresentation.getVillagerOffersAsMap(entity)
+    if (entity is Merchant) data["offers"] = LuaRepresentation.forMerchantOffers(entity)
+}
+
+fun villagerData(entity: Entity, data: MutableMap<String, Any>) {
+    if (entity is Villager)
+        LuaRepresentation.forVillager(entity).forEach {
+            data[it.key] = it.value
+        }
 }
 
 fun effectsData(entity: Entity, data: MutableMap<String, Any>) {

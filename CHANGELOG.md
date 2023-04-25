@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.19] - 2023-04-25
+
+### Added
+
+- Many methods for working with trade entities
+
+### Changed
+
+- Mob effects migrated to normal ID format
+- ItemStack now will include enchantments
+
 ## [0.4.17] - 2022-12-26
 
 ### Added
