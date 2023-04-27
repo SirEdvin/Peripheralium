@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.20] - 2023-04-27
+
+### Added
+
+- `onFirstAttach` and `onLastDetach` hooks for plugins
+- `nbt` field for item details
+
 ## [0.4.19] - 2023-04-25
 
 ### Added

@@ -1,5 +1,6 @@
 package site.siredvin.peripheralium.util.representation
 
+import dan200.computercraft.shared.util.NBTUtil
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.Registry
@@ -9,7 +10,6 @@ import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.npc.Villager
 import net.minecraft.world.entity.npc.VillagerProfession
-import net.minecraft.world.entity.npc.WanderingTrader
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -85,6 +85,9 @@ object LuaRepresentation {
         map["tags"] = tagsToList(stack.tags)
         map["count"] = stack.count
         map["maxStackSize"] = stack.maxStackSize
+        val hash = NBTUtil.getNBTHash(stack.tag)
+        if (hash != null)
+            map["nbt"] = hash
         if(stack.isEnchanted || stack.`is`(Items.ENCHANTED_BOOK)) {
             val enchantments = EnchantmentHelper.getEnchantments(stack)
             if (enchantments != null)

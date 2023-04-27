@@ -8,6 +8,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess
 import dan200.computercraft.api.peripheral.IDynamicPeripheral
 import dan200.computercraft.api.peripheral.IPeripheral
 import kotlinx.atomicfu.locks.withLock
+import site.siredvin.peripheralium.api.peripheral.IObservingPeripheralPlugin
 import site.siredvin.peripheralium.api.peripheral.IPeripheralOperation
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 import site.siredvin.peripheralium.api.peripheral.IPluggablePeripheral
@@ -75,12 +76,22 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
     override fun attach(computer: IComputerAccess) {
         connectedComputersLock.withLock {
             _connectedComputers.add(computer)
+            if (_connectedComputers.size == 1)
+                plugins!!.forEach {
+                    if (it is IObservingPeripheralPlugin)
+                        it.onFirstAttach()
+                }
         }
     }
 
     override fun detach(computer: IComputerAccess) {
         connectedComputersLock.withLock {
             _connectedComputers.remove(computer)
+            if (_connectedComputers.isEmpty())
+                plugins!!.forEach {
+                    if (it is IObservingPeripheralPlugin)
+                        it.onLastDetach()
+                }
         }
     }
 
