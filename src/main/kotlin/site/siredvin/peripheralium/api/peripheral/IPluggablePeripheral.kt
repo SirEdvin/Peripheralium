@@ -7,7 +7,7 @@ interface IPluggablePeripheral {
     fun forEachComputer(func: Consumer<IComputerAccess>)
     fun queueEvent(event: String, vararg arguments: Any) {
         forEachComputer {
-            it.queueEvent(event, arguments)
+            it.queueEvent(event, *arguments)
         }
     }
     fun isComputerPresent(computerID: Int): Boolean
