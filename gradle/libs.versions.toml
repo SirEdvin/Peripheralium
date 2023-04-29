@@ -2,6 +2,7 @@
 # Base libraries
 kotlin = "1.8.20"
 kotlin-coroutines = "1.6.4"
+kotlin-atomicfu = "0.20.2"
 # Gradle plugins
 sponge = "0.2.1-SNAPSHOT"
 loom = "1.0-SNAPSHOT"
@@ -22,6 +23,7 @@ forgeconfigapirt-fabric = "6.0.2"
 # Base libraries
 kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-atomicfu = {module = "org.jetbrains.kotlinx:atomicfu-jvm", version.ref = "kotlin-atomicfu"}
 # Core mod dependencies
 cc-tweaked-common = {module = "cc.tweaked:cc-tweaked-1.19.4-common-api", version.ref = "cc-tweaked"}
 cc-tweaked-core = {module = "cc.tweaked:cc-tweaked-1.19.4-core", version.ref = "cc-tweaked"}
@@ -38,7 +40,7 @@ vanillaGradle = { id = "org.spongepowered.gradle.vanilla", version.ref = "sponge
 loom = {id = "fabric-loom", version.ref = "loom"}
 
 [bundles]
-kotlin = ["kotlin-stdlib", "kotlin-coroutines"]
+kotlin = ["kotlin-stdlib", "kotlin-coroutines", "kotlin-atomicfu"]
 cccommon = ["cc-tweaked-common", "cc-tweaked-core"]
 apicommon = ["common-config"]
 ccfabric = ["cc-tweaked-fabric", "cc-tweaked-core"]

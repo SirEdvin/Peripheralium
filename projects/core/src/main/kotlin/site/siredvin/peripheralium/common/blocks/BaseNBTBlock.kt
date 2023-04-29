@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.Property
 import net.minecraft.world.level.material.Material
 import site.siredvin.peripheralium.api.blockentities.ISyncingBlockEntity
+import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 
 abstract class BaseNBTBlock<T>(
     belongToTickingEntity: Boolean,
@@ -61,7 +62,7 @@ abstract class BaseNBTBlock<T>(
                 val data = stack.tag
                 if (data != null) {
                     if (data.contains(BLOCK_STATE_TAG)) {
-                        val savedState: BlockState = NbtUtils.readBlockState(data.getCompound(BLOCK_STATE_TAG))
+                        val savedState: BlockState = NbtUtils.readBlockState(PeripheraliumPlatform.getBlockRegistry(), data.getCompound(BLOCK_STATE_TAG))
                         for (property in savableProperties) {
                             property as Property<Comparable<Any>>
                             state = state.setValue(property, savedState.getValue(property) as Comparable<Any>)

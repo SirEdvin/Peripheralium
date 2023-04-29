@@ -1,9 +1,7 @@
 package site.siredvin.peripheralium.data
 
 import com.google.gson.JsonObject
-import net.minecraft.core.Registry
 import net.minecraft.data.recipes.FinishedRecipe
-import net.minecraft.data.recipes.ShapedRecipeBuilder
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.crafting.AbstractCookingRecipe
@@ -11,12 +9,10 @@ import net.minecraft.world.item.crafting.BlastingRecipe
 import net.minecraft.world.item.crafting.CampfireCookingRecipe
 import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.item.crafting.RecipeSerializer
-import net.minecraft.world.item.crafting.ShapedRecipe
-import net.minecraft.world.item.crafting.SimpleCookingSerializer
 import net.minecraft.world.item.crafting.SmeltingRecipe
 import net.minecraft.world.item.crafting.SmokingRecipe
 import net.minecraft.world.level.ItemLike
-import site.siredvin.peripheralium.api.PeripheraliumPlatform
+import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.function.Consumer
 
 class TweakedSmeltingRecipeBuilder<T: AbstractCookingRecipe>(

@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BeehiveBlockEntity
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.IntegerProperty
-import site.siredvin.peripheralium.api.PeripheraliumPlatform
+import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 
 
 fun animalData(entity: Entity, data: MutableMap<String, Any>) {

@@ -1,21 +1,19 @@
 package site.siredvin.peripheralium.computercraft.peripheral.owner
 
-import dan200.computercraft.ComputerCraft
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.TurtleSide
-import dan200.computercraft.shared.TurtlePermissions
-import dan200.computercraft.shared.util.InventoryUtil
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
 import site.siredvin.peripheralium.computercraft.peripheral.ability.TurtleFuelAbility
+import site.siredvin.peripheralium.util.ContainerHelpers
 import site.siredvin.peripheralium.util.DataStorageUtil
 import site.siredvin.peripheralium.util.world.FakePlayerProviderTurtle
-import site.siredvin.peripheralium.util.world.LibFakePlayer
 
 class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : BasePeripheralOwner() {
 
@@ -39,7 +37,7 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
         turtle.updateUpgradeNBTData(side)
     }
 
-    override fun <T> withPlayer(function: (LibFakePlayer) -> T, overwrittenDirection: Direction?): T {
+    override fun <T> withPlayer(function: (ServerPlayer) -> T, overwrittenDirection: Direction?): T {
         return FakePlayerProviderTurtle.withPlayer(turtle, function, overwrittenDirection = overwrittenDirection)
     }
 
@@ -47,7 +45,7 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
         get() = turtle.inventory.getItem(turtle.selectedSlot)
 
     override fun storeItem(stored: ItemStack): ItemStack {
-        return InventoryUtil.storeItems(stored, turtle.itemHandler, turtle.selectedSlot)
+        return ContainerHelpers.storeItems(stored, turtle.inventory, turtle.selectedSlot)
     }
 
     override fun destroyUpgrade() {
@@ -59,8 +57,6 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
             if (level.isOutsideBuildHeight(pos))
                 return@withPlayer false;
             if (!level.isInWorldBounds(pos))
-                return@withPlayer false;
-            if (ComputerCraft.turtlesObeyBlockProtection && !TurtlePermissions.isBlockEnterable(level, pos, player))
                 return@withPlayer false;
             if (!level.isLoaded(pos))
                 return@withPlayer false;

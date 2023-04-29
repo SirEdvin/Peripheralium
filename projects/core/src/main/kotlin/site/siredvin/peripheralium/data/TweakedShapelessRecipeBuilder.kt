@@ -10,7 +10,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.level.ItemLike
-import site.siredvin.peripheralium.api.PeripheraliumPlatform
+import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.function.Consumer
 
 class TweakedShapelessRecipeBuilder(itemLike: ItemLike, private val count: Int) {

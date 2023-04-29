@@ -3,12 +3,12 @@ package site.siredvin.peripheralium.api.peripheral
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.computercraft.peripheral.ability.OperationAbility
 import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
-import site.siredvin.peripheralium.util.world.LibFakePlayer
 
 interface IPeripheralOwner {
     val name: String?
@@ -26,7 +26,7 @@ interface IPeripheralOwner {
 
     fun markDataStorageDirty()
 
-    fun <T> withPlayer(function: (LibFakePlayer) ->  T, overwrittenDirection: Direction? = null): T
+    fun <T> withPlayer(function: (ServerPlayer) ->  T, overwrittenDirection: Direction? = null): T
     val toolInMainHand: ItemStack
     fun storeItem(stored: ItemStack): ItemStack
     fun destroyUpgrade()

@@ -3,6 +3,7 @@ package site.siredvin.peripheralium.computercraft.peripheral.owner
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -10,7 +11,6 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import site.siredvin.peripheralium.common.blocks.GenericBlockEntityBlock
 import site.siredvin.peripheralium.api.peripheral.IPeripheralTileEntity
 import site.siredvin.peripheralium.util.DataStorageUtil
-import site.siredvin.peripheralium.util.world.LibFakePlayer
 import java.util.*
 
 class BlockEntityPeripheralOwner<T>(val tileEntity: T) :
@@ -36,7 +36,7 @@ class BlockEntityPeripheralOwner<T>(val tileEntity: T) :
         tileEntity.setChanged()
     }
 
-    override fun <T> withPlayer(function: (LibFakePlayer) -> T, overwrittenDirection: Direction?): T {
+    override fun <T> withPlayer(function: (ServerPlayer) -> T, overwrittenDirection: Direction?): T {
         throw RuntimeException("Not implemented yet")
     }
 

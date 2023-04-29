@@ -22,7 +22,7 @@ object ContainerHelpers {
             return false
         return ItemStack.tagMatches(first, second)
     }
-    fun storeItems(output: ItemStack, inventory: Container, startSlot: Int): ItemStack {
+    fun storeItems(output: ItemStack, inventory: Container, startSlot: Int = 0): ItemStack {
         val maxStackSize = minOf(output.maxStackSize, inventory.maxStackSize)
         if (maxStackSize <= 0)
             return output

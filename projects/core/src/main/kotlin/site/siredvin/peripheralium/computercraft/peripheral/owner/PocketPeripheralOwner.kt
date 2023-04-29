@@ -4,11 +4,11 @@ import dan200.computercraft.api.pocket.IPocketAccess
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.util.DataStorageUtil
-import site.siredvin.peripheralium.util.world.LibFakePlayer
 
 class PocketPeripheralOwner(private val pocket: IPocketAccess?) : BasePeripheralOwner() {
     override val level: Level?
@@ -38,7 +38,7 @@ class PocketPeripheralOwner(private val pocket: IPocketAccess?) : BasePeripheral
         pocket?.updateUpgradeNBTData()
     }
 
-    override fun <T> withPlayer(function: (LibFakePlayer) -> T, overwrittenDirection: Direction?): T {
+    override fun <T> withPlayer(function: (ServerPlayer) -> T, overwrittenDirection: Direction?): T {
         throw RuntimeException("Not implemented yet")
     }
 

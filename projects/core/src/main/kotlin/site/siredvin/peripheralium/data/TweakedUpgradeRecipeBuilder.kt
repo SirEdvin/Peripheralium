@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.item.crafting.RecipeSerializer
-import site.siredvin.peripheralium.api.PeripheraliumPlatform
+import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.function.Consumer
 
 class TweakedUpgradeRecipeBuilder(

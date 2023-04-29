@@ -5,7 +5,6 @@ import com.google.common.collect.Maps
 import com.google.common.collect.Sets
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import net.minecraft.core.Registry
 import net.minecraft.data.recipes.FinishedRecipe
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
@@ -13,7 +12,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.level.ItemLike
-import site.siredvin.peripheralium.api.PeripheraliumPlatform
+import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.function.Consumer
 
 class TweakedShapedRecipeBuilder(val _result: Item, val count: Int) {
