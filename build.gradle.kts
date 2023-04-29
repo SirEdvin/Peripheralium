@@ -1,29 +1,27 @@
-
-// SPDX-FileCopyrightText: 2022 The CC: Tweaked Developers
-//
-// SPDX-License-Identifier: MPL-2.0
-
-
 plugins {
     alias(libs.plugins.kotlin)
 }
 
-tasks {
+subprojects {
+    apply(plugin = "kotlin")
+
     val javaVersion = JavaVersion.VERSION_17
-    withType<JavaCompile> {
-        options.encoding = "UTF-8"
-        sourceCompatibility = javaVersion.toString()
-        targetCompatibility = javaVersion.toString()
-        options.release.set(javaVersion.toString().toInt())
-    }
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions { jvmTarget = javaVersion.toString() }
-    }
     java {
         toolchain { languageVersion.set(JavaLanguageVersion.of(javaVersion.toString())) }
         sourceCompatibility = javaVersion
         targetCompatibility = javaVersion
         withSourcesJar()
+    }
+    tasks {
+        withType<JavaCompile> {
+            options.encoding = "UTF-8"
+            sourceCompatibility = javaVersion.toString()
+            targetCompatibility = javaVersion.toString()
+            options.release.set(javaVersion.toString().toInt())
+        }
+        withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+            kotlinOptions { jvmTarget = javaVersion.toString() }
+        }
     }
 }
 

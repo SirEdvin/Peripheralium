@@ -33,7 +33,7 @@ fabric-loader = {module = "net.fabricmc:fabric-loader", version.ref = "fabric-lo
 fabric-api = {module = "net.fabricmc.fabric-api:fabric-api", version.ref="fabric-api"}
 fabric-kotlin = {module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric-kotlin"}
 fabric-config = {module = "fuzs.forgeconfigapiport:forgeconfigapiport-fabric", version.ref = "forgeconfigapirt-fabric"}
-cc-tweaked-fabric = {module = "cc.tweaked:cc-tweaked-1.19.4-fabric-api", version.ref = "cc-tweaked"}
+cc-tweaked-fabric = {module = "cc.tweaked:cc-tweaked-1.19.4-fabric", version.ref = "cc-tweaked"}
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 vanillaGradle = { id = "org.spongepowered.gradle.vanilla", version.ref = "sponge"}

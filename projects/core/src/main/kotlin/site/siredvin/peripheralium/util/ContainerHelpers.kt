@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level
 
 object ContainerHelpers {
 
-    fun moveBetweenInventory(from: Container, fromSlot: Int, to: Container, toSlot: Int, limit: Int): Int {
+    fun moveBetweenInventories(from: Container, fromSlot: Int, to: Container, toSlot: Int, limit: Int): Int {
         TODO()
     }
 

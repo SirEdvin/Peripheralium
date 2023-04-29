@@ -9,6 +9,7 @@ import net.minecraft.world.Container
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 import site.siredvin.peripheralium.common.ExtractorProxy
+import site.siredvin.peripheralium.util.ContainerHelpers
 import site.siredvin.peripheralium.util.assertBetween
 import java.util.*
 
@@ -63,12 +64,12 @@ abstract class AbstractInventoryPlugin: IPeripheralPlugin {
 
         // Validate slots
         val actualLimit: Int = limit.orElse(Int.MAX_VALUE)
-        assertBetween(fromSlot, 1, itemStorage.size(), "fromtSlot")
+        assertBetween(fromSlot, 1, container.containerSize, "fromtSlot")
         if (toSlot.isPresent)
-            assertBetween(toSlot.get(), 1, toStorage.size(), "toSlot")
+            assertBetween(toSlot.get(), 1, toStorage.containerSize, "toSlot")
 
-        return if (actualLimit <= 0) 0 else CCItemStorageHelpers.moveBetweenInventories(
-            itemStorage,
+        return if (actualLimit <= 0) 0 else ContainerHelpers.moveBetweenInventories(
+            container,
             fromSlot - 1,
             toStorage,
             toSlot.orElse(0) - 1,
@@ -87,13 +88,13 @@ abstract class AbstractInventoryPlugin: IPeripheralPlugin {
 
         // Validate slots
         val actualLimit = limit.orElse(Int.MAX_VALUE)
-        assertBetween(fromSlot, 1, fromStorage.size(), "fromSlot")
+        assertBetween(fromSlot, 1, fromStorage.containerSize, "fromSlot")
         if (toSlot.isPresent)
-            assertBetween(toSlot.get(),1, itemStorage.size(), "toSlot")
-        return if (actualLimit <= 0) 0 else CCItemStorageHelpers.moveBetweenInventories(
+            assertBetween(toSlot.get(),1, container.containerSize, "toSlot")
+        return if (actualLimit <= 0) 0 else ContainerHelpers.moveBetweenInventories(
             fromStorage,
             fromSlot - 1,
-            itemStorage,
+            container,
             toSlot.orElse(0) - 1,
             actualLimit
         )

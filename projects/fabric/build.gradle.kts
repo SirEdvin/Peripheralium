@@ -1,6 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
+
 plugins {
     alias(libs.plugins.loom)
     alias(libs.plugins.kotlin)
+    idea
 }
 
 val modVersion: String by extra
@@ -32,22 +35,26 @@ repositories {
 }
 
 dependencies {
-    implementation(libs.bundles.kotlin)
     minecraft("com.mojang:minecraft:${minecraftVersion}")
     mappings(loom.officialMojangMappings())
 
+    implementation(libs.bundles.kotlin)
+
+    implementation(project(":core")) {
+        exclude("cc.tweaked")
+    }
+
     modImplementation(libs.bundles.fabric)
     modImplementation(libs.bundles.ccfabric)
-    modImplementation(project(":core"))
 }
 
 loom {
     runs {
-        register("FabricClient") {
-            client()
+        named("client") {
+            configName = "Fabric Client"
         }
-        register("FabricServer") {
-            server()
+        named("server") {
+            configName = "Fabric Server"
         }
         create("datagen") {
             client()
@@ -70,6 +77,9 @@ tasks {
         filesMatching("fabric.mod.json") { expand(mutableMapOf("version" to project.version)) }
     }
     withType<JavaCompile> {
+        source(project(":core").sourceSets.main.get().allSource)
+    }
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         source(project(":core").sourceSets.main.get().allSource)
     }
 }

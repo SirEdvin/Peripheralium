@@ -1,20 +1,20 @@
 package site.siredvin.peripheralium.extra.plugins
 
+import dan200.computercraft.api.detail.VanillaDetailRegistries
 import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
 import dan200.computercraft.api.peripheral.IComputerAccess
 import dan200.computercraft.api.peripheral.IPeripheral
-import dan200.computercraft.shared.peripheral.generic.data.ItemData
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
-import net.minecraft.core.Registry
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
-import site.siredvin.peripheralium.common.ExtractorProxy
+import site.siredvin.peripheralium.common.FabricExtractorProxy
 import site.siredvin.peripheralium.common.configuration.PeripheraliumConfig
 import java.util.*
 import java.util.function.Predicate
@@ -35,7 +35,7 @@ class ItemStoragePlugin(private val level: Level, private val storage: Storage<I
         transaction.use {
             storage.iterator().forEach {
                 if (!it.isResourceBlank)
-                    result.add(ItemData.fill(HashMap(), it.resource.toStack(it.amount.toInt())))
+                    result.add(VanillaDetailRegistries.ITEM_STACK.getDetails(it.resource.toStack(it.amount.toInt())))
             }
         }
         return result
@@ -46,13 +46,13 @@ class ItemStoragePlugin(private val level: Level, private val storage: Storage<I
         val location: IPeripheral = computer.getAvailablePeripheral(toName)
             ?: throw LuaException("Target '$toName' does not exist")
 
-        val toStorage = ExtractorProxy.extractItemStorage(level, location.target)
+        val toStorage = FabricExtractorProxy.extractItemStorage(level, location.target)
             ?: throw LuaException("Target '$toName' is not an fluid inventory")
 
         val predicate: Predicate<ItemVariant> = if (itemName.isEmpty) {
             Predicate { true }
         } else {
-            val item = Registry.ITEM.get(ResourceLocation(itemName.get()))
+            val item = BuiltInRegistries.ITEM.get(ResourceLocation(itemName.get()))
             if (item == Items.AIR)
                 throw LuaException("There is no item ${itemName.get()}")
             Predicate { it.isOf(item) }
@@ -66,13 +66,13 @@ class ItemStoragePlugin(private val level: Level, private val storage: Storage<I
         val location: IPeripheral = computer.getAvailablePeripheral(fromName)
             ?: throw LuaException("Target '$fromName' does not exist")
 
-        val fromStorage = ExtractorProxy.extractItemStorage(level, location.target)
+        val fromStorage = FabricExtractorProxy.extractItemStorage(level, location.target)
             ?: throw LuaException("Target '$fromName' is not an fluid inventory")
 
         val predicate: Predicate<ItemVariant> = if (itemName.isEmpty) {
             Predicate { true }
         } else {
-            val item = Registry.ITEM.get(ResourceLocation(itemName.get()))
+            val item = BuiltInRegistries.ITEM.get(ResourceLocation(itemName.get()))
             if (item == Items.AIR)
                 throw LuaException("There is no item ${itemName.get()}")
             Predicate { it.isOf(item) }

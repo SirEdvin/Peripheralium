@@ -1,10 +1,16 @@
 plugins {
     alias(libs.plugins.vanillaGradle)
     alias(libs.plugins.kotlin)
+    idea
 }
 
 val modVersion: String by extra
 val minecraftVersion: String by extra
+val modBaseName: String by extra
+
+base {
+    archivesName.set("${modBaseName}-common-${minecraftVersion}")
+}
 
 minecraft {
     version(minecraftVersion)
@@ -34,5 +40,4 @@ dependencies {
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.cccommon)
     api(libs.bundles.apicommon)
-//    minecraft("com.mojang:minecraft:$minecraftVersion")
 }

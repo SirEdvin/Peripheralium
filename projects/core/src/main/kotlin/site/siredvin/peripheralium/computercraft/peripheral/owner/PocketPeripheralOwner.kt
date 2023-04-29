@@ -13,7 +13,8 @@ import site.siredvin.peripheralium.util.DataStorageUtil
 class PocketPeripheralOwner(private val pocket: IPocketAccess?) : BasePeripheralOwner() {
     override val level: Level?
         get() {
-            val owner = pocket?.entity ?: return null
+            val owner = pocket?.
+            entity ?: return null
             return owner.commandSenderWorld
         }
     override val pos: BlockPos
