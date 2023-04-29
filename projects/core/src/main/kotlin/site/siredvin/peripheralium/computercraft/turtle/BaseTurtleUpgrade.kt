@@ -1,6 +1,7 @@
 package site.siredvin.peripheralium.computercraft.turtle
 
 import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.math.Axis
 import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
@@ -11,7 +12,6 @@ import dan200.computercraft.api.turtle.AbstractTurtleUpgrade
 import dan200.computercraft.api.turtle.TurtleUpgradeType
 import net.minecraft.client.resources.model.ModelResourceLocation
 import com.mojang.math.Transformation
-import com.mojang.math.Vector3f
 import dan200.computercraft.api.peripheral.IPeripheral
 import site.siredvin.peripheralium.computercraft.peripheral.DisabledPeripheral
 
@@ -30,11 +30,12 @@ abstract class BaseTurtleUpgrade<T : IOwnedPeripheral<*>>(
 
     protected abstract fun buildPeripheral(turtle: ITurtleAccess, side: TurtleSide): T
 
-    override fun getModel(turtleAccess: ITurtleAccess?, turtleSide: TurtleSide): TransformedModel {
+    open fun getModel(turtleAccess: ITurtleAccess?, turtleSide: TurtleSide): TransformedModel {
+        TODO("Migrate this code to new turtle modeler logic")
         if (leftModel == null) {
             val stack = PoseStack()
             stack.pushPose()
-            stack.mulPose(Vector3f.YN.rotationDegrees(90f))
+            stack.mulPose(Axis.YN.rotationDegrees(90f))
             if (turtleSide == TurtleSide.LEFT) {
                 stack.translate(0.0, 0.0, -0.6)
             } else {

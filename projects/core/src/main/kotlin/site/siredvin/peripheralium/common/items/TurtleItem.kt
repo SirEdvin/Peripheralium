@@ -8,7 +8,7 @@ import java.util.function.Supplier
 open class TurtleItem(p: Properties, var enableSup: Supplier<Boolean>, private val turtleIDSup: TurtleIDBuildFunction = TurtleIDBuildFunction.IDENTIC): DescriptiveItem(p){
 
     constructor(tab: CreativeModeTab, enableSup: Supplier<Boolean>,
-                turtleIDSup: TurtleIDBuildFunction = TurtleIDBuildFunction.IDENTIC): this(Properties().tab(tab), enableSup, turtleIDSup)
+                turtleIDSup: TurtleIDBuildFunction = TurtleIDBuildFunction.IDENTIC): this(Properties(), enableSup, turtleIDSup)
 
     open val turtleID: ResourceLocation
         get() = turtleIDSup.get(this)

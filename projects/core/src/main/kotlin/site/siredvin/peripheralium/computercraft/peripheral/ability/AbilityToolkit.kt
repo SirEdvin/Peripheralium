@@ -2,13 +2,13 @@ package site.siredvin.peripheralium.computercraft.peripheral.ability
 
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.TurtleSide
-import dan200.computercraft.shared.turtle.blocks.TileTurtle
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
 import site.siredvin.peripheralium.api.peripheral.IOwnerAbility
 import site.siredvin.peripheralium.util.Pair
+import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 
 object AbilityToolkit {
 
@@ -22,8 +22,8 @@ object AbilityToolkit {
     fun <T: IOwnerAbility> extractAbility(ability: PeripheralOwnerAbility<T>, level: Level, pos: BlockPos): Pair<T?, String?> {
         val entity: BlockEntity = level.getBlockEntity(pos)
             ?: return Pair.onlyRight("Target block doesn't posses required ability")
-        if (entity is TileTurtle) {
-            val turtle = entity.access
+        val turtle = PeripheraliumPlatform.getTurtleAccess(entity)
+        if (turtle != null) {
             val targetAbility = extractAbilityFromTurtle(turtle, TurtleSide.LEFT, ability) ?: extractAbilityFromTurtle(turtle, TurtleSide.RIGHT, ability)
             ?: return Pair.onlyRight("Turtle doesn't posses required ability")
             return Pair.onlyLeft(targetAbility)
