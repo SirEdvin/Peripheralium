@@ -47,7 +47,7 @@ val minecraftVersion: String by settings
 rootProject.name = "Peripheralium $minecraftVersion"
 
 include(":core")
-//include(":forge")
+include(":forge")
 include(":fabric")
 
 

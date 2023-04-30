@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.IntegerProperty
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
+import site.siredvin.peripheralium.xplat.XplatRegistries
 
 
 fun animalData(entity: Entity, data: MutableMap<String, Any>) {
@@ -85,7 +86,7 @@ fun beeNestAnalyze(entity: BlockEntity, data: MutableMap<String, Any>) {
             beeData["hasStung"] = entityData.getBoolean("HasStung")
             beeData["hasNectar"] = entityData.getBoolean("HasNectar")
             beeData["id"] = entityData.getString("id")
-            beeData["name"] = PeripheraliumPlatform.getEntityType(ResourceLocation(beeData["id"] as String)).description.string
+            beeData["name"] = XplatRegistries.ENTITY_TYPES.get(ResourceLocation(beeData["id"] as String)).description.string
             return@map beeData
         }
     }

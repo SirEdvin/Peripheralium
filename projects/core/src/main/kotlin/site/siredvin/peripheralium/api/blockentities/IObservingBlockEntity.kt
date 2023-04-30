@@ -6,6 +6,5 @@ interface IObservingBlockEntity {
     fun placed() {}
     fun destroy() {}
     fun onNeighbourChange(neighbour: BlockPos) {}
-    fun onChunkUnloaded() {}
     fun blockTick() {}
 }

@@ -3,20 +3,28 @@ package site.siredvin.peripheralium.xplat
 import com.mojang.authlib.GameProfile
 import dan200.computercraft.api.turtle.ITurtleAccess
 import net.minecraft.core.BlockPos
-import net.minecraft.core.HolderGetter
+import net.minecraft.core.Registry
+import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.Item
-import net.minecraft.world.level.Level
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.phys.BlockHitResult
+import net.minecraft.world.phys.EntityHitResult
+import site.siredvin.peripheralium.PeripheraliumCore
 import site.siredvin.peripheralium.common.items.DescriptiveBlockItem
+import java.util.function.Predicate
 import java.util.function.Supplier
 
-abstract class PeripheraliumPlatform {
+
+interface PeripheraliumPlatform {
 
     companion object {
         private var _IMPL: PeripheraliumPlatform? = null
@@ -31,52 +39,61 @@ abstract class PeripheraliumPlatform {
             return _IMPL!!
         }
 
-        fun getKey(item: Item): ResourceLocation {
-            return get().getKey(item)
+        fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T> {
+            return get().wrap(registry)
         }
 
-        fun getEntityType(key: ResourceLocation): EntityType<Entity> {
-            return get().getEntityType(key)
-        }
-
-        fun createFakePlayer(level: Level, profile: GameProfile?): ServerPlayer {
+        fun createFakePlayer(level: ServerLevel, profile: GameProfile): ServerPlayer {
             return get().createFakePlayer(level, profile)
         }
 
-        fun getBlockRegistry(): HolderGetter<Block> {
-            return get().getBlockRegistry()
-        }
-
-        fun <T: Item> registerItem(key: ResourceLocation, item: T): Supplier<T> {
+        fun <T: Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T> {
             return get().registerItem(key, item)
         }
 
-        fun <T: Block> registerBlock(key: ResourceLocation, block: T, itemFactory: (Block) -> (Item)): Supplier<T> {
+        fun <T: Item> registerItem(name: String, item: Supplier<T>): Supplier<T> {
+            return registerItem(ResourceLocation(PeripheraliumCore.MOD_ID, name), item)
+        }
+
+        fun <T: Block> registerBlock(key: ResourceLocation, block: Supplier<T>, itemFactory: (T) -> (Item)): Supplier<T> {
             return get().registerBlock(key, block, itemFactory)
+        }
+
+        fun <T: Block> registerBlock(name: String, block: Supplier<T>, itemFactory: (T) -> (Item) = { block -> DescriptiveBlockItem(block, Item.Properties()) }): Supplier<T> {
+            return get().registerBlock(ResourceLocation(PeripheraliumCore.MOD_ID, name), block, itemFactory)
         }
 
         fun getTurtleAccess(entity: BlockEntity): ITurtleAccess? {
             return get().getTurtleAccess(entity)
         }
 
-        fun isBlockBreakable(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean {
-            return get().isBlockBreakable(pos, state, player)
+        fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean {
+            return get().isBlockProtected(pos, state, player)
+        }
+
+        fun interactWithEntity(player: ServerPlayer, hand: InteractionHand, entity: Entity, hit: EntityHitResult): InteractionResult {
+            return get().interactWithEntity(player, hand, entity, hit)
+        }
+
+        fun useOn(player: ServerPlayer, stack: ItemStack, hit: BlockHitResult, canUseBlock: Predicate<BlockState>): InteractionResult {
+            return get().useOn(player, stack, hit, canUseBlock)
         }
     }
-    abstract fun getKey(item: Item): ResourceLocation
 
-    abstract fun getEntityType(key: ResourceLocation): EntityType<Entity>
+    fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T>
 
-    abstract fun createFakePlayer(level: Level, profile: GameProfile?): ServerPlayer
+    fun createFakePlayer(level: ServerLevel, profile: GameProfile): ServerPlayer
 
-    abstract fun getBlockRegistry(): HolderGetter<Block>
+    fun <T: Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T>
 
-    abstract fun <T: Item> registerItem(key: ResourceLocation, item: T): Supplier<T>
+    fun <T: Block> registerBlock(key: ResourceLocation, block: Supplier<T>, itemFactory: (T) -> (Item)): Supplier<T>
 
-    abstract fun <T: Block> registerBlock(key: ResourceLocation, block: T, itemFactory: (Block) -> (Item)): Supplier<T>
+    fun getTurtleAccess(entity: BlockEntity): ITurtleAccess?
 
-    abstract fun getTurtleAccess(entity: BlockEntity): ITurtleAccess?
+    fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean
 
-    abstract fun isBlockBreakable(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean
+    fun interactWithEntity(player: ServerPlayer, hand: InteractionHand, entity: Entity, hit: EntityHitResult): InteractionResult
+
+    fun useOn(player: ServerPlayer, stack: ItemStack, hit: BlockHitResult, canUseBlock: Predicate<BlockState>): InteractionResult
 
 }

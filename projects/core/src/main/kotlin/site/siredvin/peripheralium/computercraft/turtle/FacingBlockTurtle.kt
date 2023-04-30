@@ -32,22 +32,4 @@ abstract class FacingBlockTurtle<T : IOwnedPeripheral<*>>: PeripheralTurtleUpgra
             return constructor.build(turtle, side)
         }
     }
-
-    override fun getModel(turtleAccess: ITurtleAccess?, turtleSide: TurtleSide): TransformedModel {
-        TODO("Migrate this code to new turtle modeler logic")
-        if (leftModel == null) {
-            val stack = PoseStack()
-            stack.pushPose()
-            stack.scale(0.3f, 0.3f, 0.3f)
-            stack.mulPose(Axis.XN.rotationDegrees(90f))
-            stack.translate(0.0, -2.0, 1.05)
-            if (turtleSide == TurtleSide.LEFT) {
-                stack.translate(-0.6, 0.0, 0.0)
-            } else {
-                stack.translate(2.9, 0.0, 0.0)
-            }
-            return TransformedModel.of(craftingItem, Transformation(stack.last().pose()))
-        }
-        return TransformedModel.of(if (turtleSide == TurtleSide.LEFT) leftModel!! else rightModel!!)
-    }
 }

@@ -9,12 +9,13 @@ import site.siredvin.peripheralium.api.peripheral.IPeripheralTileEntity
 import net.minecraft.nbt.CompoundTag
 import dan200.computercraft.api.peripheral.IComputerAccess
 import net.minecraft.core.Direction
+import site.siredvin.peripheralium.api.peripheral.IPeripheralProvider
 
 abstract class PeripheralBlockEntity<T : IOwnedPeripheral<*>>(
     blockEntityType: BlockEntityType<*>,
     blockPos: BlockPos,
     blockState: BlockState
-) : BlockEntity(blockEntityType, blockPos, blockState), IPeripheralTileEntity {
+) : BlockEntity(blockEntityType, blockPos, blockState), IPeripheralTileEntity, IPeripheralProvider<T> {
     // Peripheral logic
     final override var peripheralSettings: CompoundTag
         protected set
@@ -28,8 +29,7 @@ abstract class PeripheralBlockEntity<T : IOwnedPeripheral<*>>(
         peripheralSettings = CompoundTag()
     }
 
-    fun getPeripheral(side: Direction): T? {
-        // TODO: okey, what to do with this now?
+    override fun getPeripheral(side: Direction): T? {
         ensurePeripheralCreated(side)
         return peripheral!!
     }

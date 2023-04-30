@@ -30,22 +30,6 @@ abstract class BaseTurtleUpgrade<T : IOwnedPeripheral<*>>(
 
     protected abstract fun buildPeripheral(turtle: ITurtleAccess, side: TurtleSide): T
 
-    open fun getModel(turtleAccess: ITurtleAccess?, turtleSide: TurtleSide): TransformedModel {
-        TODO("Migrate this code to new turtle modeler logic")
-        if (leftModel == null) {
-            val stack = PoseStack()
-            stack.pushPose()
-            stack.mulPose(Axis.YN.rotationDegrees(90f))
-            if (turtleSide == TurtleSide.LEFT) {
-                stack.translate(0.0, 0.0, -0.6)
-            } else {
-                stack.translate(0.0, 0.0, -1.4)
-            }
-            return TransformedModel.of(craftingItem, Transformation(stack.last().pose()))
-        }
-        return TransformedModel.of(if (turtleSide == TurtleSide.LEFT) leftModel!! else rightModel!!)
-    }
-
     override fun createPeripheral(turtle: ITurtleAccess, side: TurtleSide): IPeripheral? {
         val peripheral = buildPeripheral(turtle, side)
         return if (!peripheral.isEnabled) { DisabledPeripheral } else peripheral

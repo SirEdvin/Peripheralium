@@ -1,3 +1,4 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.vanillaGradle)
     alias(libs.plugins.kotlin)
@@ -10,6 +11,10 @@ val modBaseName: String by extra
 
 base {
     archivesName.set("${modBaseName}-common-${minecraftVersion}")
+}
+
+sourceSets.main.configure {
+    resources.srcDir("src/generated/resources")
 }
 
 minecraft {

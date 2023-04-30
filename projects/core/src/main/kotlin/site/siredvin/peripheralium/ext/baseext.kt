@@ -15,3 +15,5 @@ fun BlockPos.toRelative(facing: Direction): BlockPos {
         Direction.WEST -> this.rotate(Rotation.CLOCKWISE_180)
     }
 }
+
+fun Vec3.toBlockPos() = BlockPos(x.toInt(), y.toInt(), z.toInt())

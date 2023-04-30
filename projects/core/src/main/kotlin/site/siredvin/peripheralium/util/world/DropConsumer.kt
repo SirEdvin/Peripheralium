@@ -67,6 +67,11 @@ object DropConsumer {
         return false
     }
 
-    fun onLivingDrop(entity: Entity, stack: ItemStack): Boolean
+    fun onLivingDrop(entity: Entity, stack: ItemStack): Boolean {
+        if (entity != targetEntity)
+            return false
+        consume(stack)
+        return true
+    }
 
 }

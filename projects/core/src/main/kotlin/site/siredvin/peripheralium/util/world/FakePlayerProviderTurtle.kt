@@ -21,10 +21,10 @@ object FakePlayerProviderTurtle {
     private val registeredPlayers: WeakHashMap<ITurtleAccess, ServerPlayer> =
         WeakHashMap<ITurtleAccess, ServerPlayer>()
 
-    private fun getPlayer(turtle: ITurtleAccess, profile: GameProfile?): ServerPlayer {
+    private fun getPlayer(turtle: ITurtleAccess, profile: GameProfile): ServerPlayer {
         var fake: ServerPlayer? = registeredPlayers[turtle]
         if (fake == null) {
-            fake = PeripheraliumPlatform.createFakePlayer(turtle.level, profile)
+            fake = PeripheraliumPlatform.createFakePlayer(turtle.level as ServerLevel, profile)
             registeredPlayers[turtle] = fake
         }
         return fake
@@ -97,7 +97,7 @@ object FakePlayerProviderTurtle {
     }
 
     fun <T> withPlayer(turtle: ITurtleAccess, function: Function<ServerPlayer, T>, overwrittenDirection: Direction? = null): T {
-        val player: ServerPlayer = getPlayer(turtle, turtle.owningPlayer)
+        val player: ServerPlayer = getPlayer(turtle, turtle.owningPlayer?: FakePlayerProxy.DUMMY_PROFILE)
         load(player, turtle, overwrittenDirection = overwrittenDirection)
         val result = function.apply(player)
         unload(player, turtle)
