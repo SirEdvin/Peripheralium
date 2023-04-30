@@ -12,6 +12,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.state.BlockState
 import site.siredvin.peripheralium.common.items.DescriptiveBlockItem
 import java.util.function.Supplier
 
@@ -57,6 +58,10 @@ abstract class PeripheraliumPlatform {
         fun getTurtleAccess(entity: BlockEntity): ITurtleAccess? {
             return get().getTurtleAccess(entity)
         }
+
+        fun isBlockBreakable(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean {
+            return get().isBlockBreakable(pos, state, player)
+        }
     }
     abstract fun getKey(item: Item): ResourceLocation
 
@@ -71,5 +76,7 @@ abstract class PeripheraliumPlatform {
     abstract fun <T: Block> registerBlock(key: ResourceLocation, block: T, itemFactory: (Block) -> (Item)): Supplier<T>
 
     abstract fun getTurtleAccess(entity: BlockEntity): ITurtleAccess?
+
+    abstract fun isBlockBreakable(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean
 
 }

@@ -1,122 +1,28 @@
 package site.siredvin.peripheralium.util.world
 
-import com.mojang.authlib.GameProfile
-import dan200.computercraft.ComputerCraft
-import dan200.computercraft.api.turtle.FakePlayer
-import dan200.computercraft.shared.TurtlePermissions
-import dan200.computercraft.shared.util.DropConsumer
-import dan200.computercraft.shared.util.InventoryUtil
-import dan200.computercraft.shared.util.ItemStorage
-import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
-import net.fabricmc.fabric.api.event.player.UseEntityCallback
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket
-import net.minecraft.server.level.ServerLevel
-import net.minecraft.sounds.SoundEvent
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
-import net.minecraft.stats.Stat
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.EntitySelector
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.Pose
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.entity.SignBlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
-import site.siredvin.peripheralium.PeripheraliumCore
 import site.siredvin.peripheralium.ext.toVec3
 import site.siredvin.peripheralium.util.Pair
-import java.lang.ref.WeakReference
-import java.util.*
 import java.util.function.Predicate
 
-class LibFakePlayer(
-    level: ServerLevel, owner: Entity?, profile: GameProfile?,
-    private val range: Double = 4.0
-): FakePlayer(
-    level,
-    if (profile != null && profile.isComplete) profile else PROFILE
-) {
-    companion object {
-        val PROFILE = GameProfile(UUID.fromString("6e483f02-30db-4454-b612-3a167614b276"), "[" + PeripheraliumCore.MOD_ID + "]")
-        private val collidablePredicate = EntitySelector.NO_SPECTATORS
-    }
-
-    private val owner: WeakReference<Entity>?
-    private var digPosition: BlockPos? = null
-    private var digBlock: Block? = null
-    private var currentDamage = 0f
-
-    init {
-        if (owner != null) {
-            customName = owner.name
-            this.owner = WeakReference(owner)
-        } else {
-            this.owner = null
-        }
-        attackStrengthTicker = 100
-    }
-
-    override fun awardStat(stat: Stat<*>) {
-        val server = level.server
-        if (server != null && gameProfile !== PROFILE) {
-            val player: Player? = server.playerList.getPlayer(getUUID())
-            player?.awardStat(stat)
-        }
-    }
-
-    override fun openTextEdit(p_175141_1_: SignBlockEntity) {}
-
-
-    override fun isSilent(): Boolean {
-        return true
-    }
-
-    override fun getEyeY(): Double {
-        // Override this to make eye position correspond turtle eyes
-        return y + 0.2
-    }
-
-    override fun playSound(soundIn: SoundEvent, volume: Float, pitch: Float) {}
-
-    private fun setState(block: Block?, pos: BlockPos?) {
-        if (digPosition != null) {
-            gameMode.handleBlockBreakAction(
-                digPosition!!,
-                ServerboundPlayerActionPacket.Action.ABORT_DESTROY_BLOCK,
-                Direction.EAST,
-                1, 1
-            )
-        }
-        digPosition = pos
-        digBlock = block
-        currentDamage = 0f
-    }
-
-    override fun getEyeHeight(pose: Pose): Float {
-        return 0f;
-    }
-
-    fun isBlockProtected(pos: BlockPos, state: BlockState): Boolean {
-        if (!ComputerCraft.turtlesObeyBlockProtection)
-            return false
-        if(!PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(level, this, pos, state, null ))
-            return true
-        if(!TurtlePermissions.isBlockEditable(level, pos, this ))
-            return true
-        return false
-    }
+class FakePlayerProxy(private val fakePlayer: ServerPlayer, private val range: Int = 4) {
 
     fun <T> withConsumer(entity: Entity, func: () -> (T)): T {
         DropConsumer.set(entity) { stack -> InventoryUtil.storeItems(stack, ItemStorage.wrap(this.inventory)) }
@@ -137,10 +43,10 @@ class LibFakePlayer(
     }
 
     fun findHit(skipEntity: Boolean, skipBlock: Boolean, entityFilter: Predicate<Entity>?): HitResult {
-        val origin = Vec3(x, y, z)
-        val look = lookAngle
+        val origin = Vec3(fakePlayer.x, fakePlayer.y, fakePlayer.z)
+        val look = fakePlayer.lookAngle
         val target = Vec3(origin.x + look.x * range, origin.y + look.y * range, origin.z + look.z * range)
-        val traceContext = ClipContext(origin, target, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, this)
+        val traceContext = ClipContext(origin, target, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, fakePlayer)
         val directionVec = traceContext.from.subtract(traceContext.to)
         val traceDirection = Direction.getNearest(directionVec.x, directionVec.y, directionVec.z)
         val blockHit: HitResult = if (skipBlock) {
@@ -148,7 +54,7 @@ class LibFakePlayer(
         } else {
             BlockGetter.traverseBlocks(traceContext.from, traceContext.to, traceContext,
                 { _: ClipContext?, blockPos: BlockPos ->
-                    if (level.isEmptyBlock(blockPos)) {
+                    if (fakePlayer.level.isEmptyBlock(blockPos)) {
                         return@traverseBlocks null
                     }
                     BlockHitResult(
@@ -169,8 +75,8 @@ class LibFakePlayer(
         if (skipEntity) {
             return blockHit
         }
-        val entities = level.getEntities(
-            this, boundingBox.expandTowards(look.x * range, look.y * range, look.z * range).inflate(1.0, 1.0, 1.0),
+        val entities = fakePlayer.level.getEntities(
+            this, fakePlayer.boundingBox.expandTowards(look.x * range, look.y * range, look.z * range).inflate(1.0, 1.0, 1.0),
             collidablePredicate
         )
         var closestEntity: LivingEntity? = null
