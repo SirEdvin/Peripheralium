@@ -7,6 +7,8 @@ import net.minecraft.world.entity.vehicle.AbstractMinecartContainer
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.AABB
+import site.siredvin.peripheralium.api.storage.SlottedStorage
+import site.siredvin.peripheralium.api.storage.TargetableContainer
 import site.siredvin.peripheralium.util.MergedContainer
 
 object MinecartHelpers {
@@ -27,7 +29,7 @@ object MinecartHelpers {
         return level.getEntitiesOfClass(AbstractMinecartContainer::class.java, getSearchShape(pos))
     }
 
-    fun minecartExtractor(level: Level, obj: Any?): Container? {
+    fun minecartExtractor(level: Level, obj: Any?): SlottedStorage? {
         if (obj !is BlockPos)
             return null
         val state = level.getBlockState(obj)
@@ -36,6 +38,6 @@ object MinecartHelpers {
         val containers = getContainerMinecarts(level, obj)
         if(containers.isEmpty())
             return null
-        return MergedContainer(containers)
+        return TargetableContainer(MergedContainer(containers))
     }
 }

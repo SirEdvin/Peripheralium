@@ -5,32 +5,30 @@ import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
 import dan200.computercraft.api.peripheral.IComputerAccess
 import dan200.computercraft.api.peripheral.IPeripheral
-import net.minecraft.world.Container
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
-import site.siredvin.peripheralium.common.ExtractorProxy
-import site.siredvin.peripheralium.util.ContainerHelpers
+import site.siredvin.peripheralium.api.storage.SlottedStorage
+import site.siredvin.peripheralium.api.storage.ExtractorProxy
+import site.siredvin.peripheralium.api.storage.StorageUtils
+import site.siredvin.peripheralium.api.storage.TargetableSlottedStorage
 import site.siredvin.peripheralium.util.assertBetween
 import java.util.*
 
 abstract class AbstractInventoryPlugin: IPeripheralPlugin {
-
-    /*Kotlin rework from https://github.com/cc-tweaked/cc-restitched/blob/mc-1.18.x%2Fstable/src/main/java/dan200/computercraft/shared/peripheral/generic/methods/InventoryMethods.java */
-
-    abstract val container: Container
+    abstract val storage: SlottedStorage
     abstract val level: Level
 
     @LuaFunction(mainThread = true)
     fun size(): Int {
-        return container.containerSize
+        return storage.size
     }
 
     @LuaFunction(mainThread = true)
     fun list(): Map<Int, Map<String, *>> {
         val result: MutableMap<Int, Map<String, *>> = hashMapOf()
-        val size = container.containerSize
+        val size = storage.size
         for (i in 0 until size) {
-            val stack = container.getItem(i)
+            val stack = storage.getItem(i)
             if (!stack.isEmpty) result[i + 1] = VanillaDetailRegistries.ITEM_STACK.getBasicDetails(stack)
         }
         return result
@@ -38,15 +36,15 @@ abstract class AbstractInventoryPlugin: IPeripheralPlugin {
 
     @LuaFunction(mainThread = true)
     fun getItemDetail(slot: Int): Map<String, *>? {
-        assertBetween(slot, 1, container.containerSize, "slot")
-        val stack = container.getItem(slot - 1)
+        assertBetween(slot, 1, storage.size, "slot")
+        val stack = storage.getItem(slot - 1)
         return if (stack.isEmpty) null else VanillaDetailRegistries.ITEM_STACK.getDetails(stack)
     }
 
     @LuaFunction(mainThread = true)
     fun getItemLimit(slot: Int): Int {
-        assertBetween(slot, 1, container.containerSize, "slot")
-        return container.getItem(slot - 1).maxStackSize
+        assertBetween(slot, 1, storage.size, "slot")
+        return storage.getItem(slot - 1).maxStackSize
     }
 
     @LuaFunction(mainThread = true)
@@ -57,23 +55,26 @@ abstract class AbstractInventoryPlugin: IPeripheralPlugin {
         val location: IPeripheral = computer.getAvailablePeripheral(toName)
             ?: throw LuaException("Target '$toName' does not exist")
 
-        val toStorage = ExtractorProxy.extractCCItemStorage(level, location.target)
+        val toStorage = ExtractorProxy.extractTargetableStorage(level, location.target)
             ?: throw LuaException("Target '$toName' is not an inventory")
 
         // Validate slots
 
         // Validate slots
         val actualLimit: Int = limit.orElse(Int.MAX_VALUE)
-        assertBetween(fromSlot, 1, container.containerSize, "fromtSlot")
-        if (toSlot.isPresent)
-            assertBetween(toSlot.get(), 1, toStorage.containerSize, "toSlot")
+        assertBetween(fromSlot, 1, storage.size, "fromtSlot")
+        if (toSlot.isPresent) {
+            if (toStorage !is TargetableSlottedStorage)
+                throw LuaException("Target '$toName' is not slotted storage, so you can't provide slot")
+            assertBetween(toSlot.get(), 1, toStorage.size, "toSlot")
+        }
 
-        return if (actualLimit <= 0) 0 else ContainerHelpers.moveBetweenInventories(
-            container,
-            fromSlot - 1,
+        return if (actualLimit <= 0) 0 else StorageUtils.moveBetweenStorages(
+            storage,
             toStorage,
+            actualLimit,
+            fromSlot - 1,
             toSlot.orElse(0) - 1,
-            actualLimit
         )
     }
 
@@ -83,20 +84,23 @@ abstract class AbstractInventoryPlugin: IPeripheralPlugin {
         // Find location to transfer to
         val location =
             computer.getAvailablePeripheral(fromName) ?: throw LuaException("Source '$fromName' does not exist")
-        val fromStorage = ExtractorProxy.extractCCItemStorage(level, location.target)
+        val fromStorage = ExtractorProxy.extractTargetableStorage(level, location.target)
             ?: throw LuaException("Source '$fromName' is not an inventory")
+
+        if (fromStorage !is SlottedStorage)
+            throw LuaException("Source '$fromName' is not slotted storage")
 
         // Validate slots
         val actualLimit = limit.orElse(Int.MAX_VALUE)
-        assertBetween(fromSlot, 1, fromStorage.containerSize, "fromSlot")
+        assertBetween(fromSlot, 1, fromStorage.size, "fromSlot")
         if (toSlot.isPresent)
-            assertBetween(toSlot.get(),1, container.containerSize, "toSlot")
-        return if (actualLimit <= 0) 0 else ContainerHelpers.moveBetweenInventories(
+            assertBetween(toSlot.get(),1, storage.size, "toSlot")
+        return if (actualLimit <= 0) 0 else StorageUtils.moveBetweenStorages(
             fromStorage,
+            storage,
+            actualLimit,
             fromSlot - 1,
-            container,
             toSlot.orElse(0) - 1,
-            actualLimit
         )
     }
 }

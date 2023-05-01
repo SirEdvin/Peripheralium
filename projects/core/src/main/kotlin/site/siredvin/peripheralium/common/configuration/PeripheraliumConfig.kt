@@ -15,9 +15,9 @@ object PeripheraliumConfig {
     val xpToFuelRate: Int
         get() = ConfigHolder.COMMON_CONFIG.XP_TO_FUEL_RATE.get()
 
-    val itemStorageTransferLimit: Long
+    val itemStorageTransferLimit: Int
         get() = ConfigHolder.COMMON_CONFIG.ITEM_STORAGE_TRANSFER_LIMIT.get()
-    val fluidStorageTransferLimit: Long
+    val fluidStorageTransferLimit: Int
         get() = ConfigHolder.COMMON_CONFIG.FLUID_STORAGE_TRANSFER_LIMIT.get()
 
     class CommonConfig internal constructor(builder: ForgeConfigSpec.Builder) {
@@ -26,15 +26,15 @@ object PeripheraliumConfig {
         var INITIAL_COOLDOWN_SENSENTIVE_LEVEL: ForgeConfigSpec.IntValue
         var COOLDOWN_TRASHOLD_LEVEL: ForgeConfigSpec.IntValue
         var XP_TO_FUEL_RATE: ForgeConfigSpec.IntValue
-        val ITEM_STORAGE_TRANSFER_LIMIT: ForgeConfigSpec.LongValue
-        val FLUID_STORAGE_TRANSFER_LIMIT: ForgeConfigSpec.LongValue
+        val ITEM_STORAGE_TRANSFER_LIMIT: ForgeConfigSpec.IntValue
+        val FLUID_STORAGE_TRANSFER_LIMIT: ForgeConfigSpec.IntValue
 
         init {
             builder.push("limitations")
             ITEM_STORAGE_TRANSFER_LIMIT = builder.comment("Limits max item transfer per one operation")
-                .defineInRange("itemStorageTransferLimit", 128L, 1L, Long.MAX_VALUE)
+                .defineInRange("itemStorageTransferLimit", 128, 1, Int.MAX_VALUE)
             FLUID_STORAGE_TRANSFER_LIMIT = builder.comment("Limits max fluid transfer per one operation")
-                .defineInRange("fluidStorageTransferLimit", 5305500L, 1L, Long.MAX_VALUE)
+                .defineInRange("fluidStorageTransferLimit", 5305500, 1, Int.MAX_VALUE)
             builder.pop()
             builder.push("cooldown")
             IS_INITIAL_COOLDOWN_ENABLED = builder.comment("Enables initial cooldown on peripheral initialization")

@@ -1,15 +1,12 @@
 package site.siredvin.peripheralium.util.world
 
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Direction
-import net.minecraft.world.ContainerHelper
 import net.minecraft.world.Containers
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.AABB
-import site.siredvin.peripheralium.util.ContainerHelpers
 
 object DropConsumer {
     private var consumer: ((ItemStack) -> ItemStack)? = null

@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
 import site.siredvin.peripheralium.computercraft.peripheral.ability.TurtleFuelAbility
-import site.siredvin.peripheralium.util.ContainerHelpers
+import site.siredvin.peripheralium.api.storage.StorageUtils
 import site.siredvin.peripheralium.util.DataStorageUtil
 import site.siredvin.peripheralium.util.world.FakePlayerProviderTurtle
 
@@ -45,7 +45,7 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
         get() = turtle.inventory.getItem(turtle.selectedSlot)
 
     override fun storeItem(stored: ItemStack): ItemStack {
-        return ContainerHelpers.storeItems(stored, turtle.inventory, turtle.selectedSlot)
+        return StorageUtils.storeItems(stored, turtle.inventory, turtle.selectedSlot)
     }
 
     override fun destroyUpgrade() {
