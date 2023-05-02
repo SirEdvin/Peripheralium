@@ -8,8 +8,6 @@ interface SlottedStorage: Storage, TargetableSlottedStorage {
 
     fun getItem(slot: Int): ItemStack
 
-    fun setItem(slot: Int, item: ItemStack)
-
     fun canPlaceItem(slot: Int, item: ItemStack): Boolean
 
     override fun getItems(): Iterator<ItemStack> {

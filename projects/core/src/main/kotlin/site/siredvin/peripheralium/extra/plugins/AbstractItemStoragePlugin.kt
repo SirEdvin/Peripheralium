@@ -23,6 +23,9 @@ abstract class AbstractItemStoragePlugin: IPeripheralPlugin {
     abstract val storage: Storage
     abstract val level: Level
 
+    override val additionalType: String
+        get() = PeripheralPluginUtils.TYPES.ITEM_STORAGE
+
     @LuaFunction(mainThread = true)
     fun items(): List<Map<String, *>> {
         val result: MutableList<Map<String, *>> = mutableListOf()

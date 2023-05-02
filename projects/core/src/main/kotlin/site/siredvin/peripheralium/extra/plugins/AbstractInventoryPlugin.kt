@@ -18,6 +18,9 @@ abstract class AbstractInventoryPlugin: IPeripheralPlugin {
     abstract val storage: SlottedStorage
     abstract val level: Level
 
+    override val additionalType: String
+        get() = PeripheralPluginUtils.TYPES.INVENTORY
+
     @LuaFunction(mainThread = true)
     fun size(): Int {
         return storage.size

@@ -8,9 +8,11 @@ import net.minecraftforge.fml.config.ModConfig
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
 import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.ForgeRegistries
+import site.siredvin.peripheralium.api.storage.ExtractorProxy
 import site.siredvin.peripheralium.common.configuration.ConfigHolder
 import site.siredvin.peripheralium.forge.ForgeIngredients
 import site.siredvin.peripheralium.forge.ForgePeripheraliumPlatform
+import site.siredvin.peripheralium.storage.ForgeStorageUtils
 import site.siredvin.peripheralium.xplat.LibCommonHooks
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.RecipeIngredients
@@ -26,8 +28,9 @@ object ForgePeripheralium {
         DeferredRegister.create(ForgeRegistries.ITEMS, PeripheraliumCore.MOD_ID)
 
     init {
-        PeripheraliumPlatform.configure(ForgePeripheraliumPlatform())
-        RecipeIngredients.configure(ForgeIngredients)
+        PeripheraliumCore.configure(ForgePeripheraliumPlatform(), ForgeIngredients)
+        // Register extract storages
+        ExtractorProxy.addStorageExtractor(ForgeStorageUtils::extractStorage)
         val eventBus = MOD_CONTEXT.getKEventBus()
         eventBus.register(this::commonSetup)
         LibCommonHooks.onRegister()
