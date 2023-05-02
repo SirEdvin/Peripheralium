@@ -11,6 +11,7 @@ val modBaseName: String by extra
 
 base {
     archivesName.set("${modBaseName}-common-${minecraftVersion}")
+    version = modVersion
 }
 
 sourceSets.main.configure {
@@ -45,4 +46,16 @@ dependencies {
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.cccommon)
     api(libs.bundles.apicommon)
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifactId = base.archivesName.get()
+            from(components["java"])
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }

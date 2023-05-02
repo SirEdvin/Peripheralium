@@ -9,7 +9,7 @@ import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.item.ItemStack
-import site.siredvin.peripheralium.api.storage.StorageUtils
+import site.siredvin.peripheralium.api.storage.ContainerUtils
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.*
 import java.util.function.Function
@@ -90,7 +90,7 @@ object FakePlayerProviderTurtle {
         for (i in size until largerSize) {
             val remaining = playerInventory.getItem(i)
             if (!remaining.isEmpty) {
-                StorageUtils.toInventoryOrToWorld(remaining, turtleInventory, 0, turtle.position, turtle.level)
+                ContainerUtils.toInventoryOrToWorld(remaining, turtleInventory, 0, turtle.position, turtle.level)
             }
             playerInventory.setItem(i, ItemStack.EMPTY)
         }

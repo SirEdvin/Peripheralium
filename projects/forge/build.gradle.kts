@@ -110,11 +110,6 @@ tasks {
         }
         exclude(".cache")
     }
-//    withType<JavaCompile> {
-//        if (this.name != "compileTestJava") {
-//            source(project(":core").sourceSets.main.get().allSource)
-//        }
-//    }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         source(project(":core").sourceSets.main.get().allSource)
     }
@@ -123,4 +118,17 @@ tasks {
 tasks.jar {
     finalizedBy("reobfJar")
     archiveClassifier.set("slim")
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifactId = base.archivesName.get()
+            from(components["java"])
+            fg.component(this)
+            // jarJar.component is broken (https://github.com/MinecraftForge/ForgeGradle/issues/914), so declare the
+            // artifact explicitly.
+            artifact(tasks.jarJar)
+        }
+    }
 }

@@ -68,10 +68,6 @@ class FabricSlottedStorageWrapper(private val storage: net.fabricmc.fabric.api.t
         return storage.getSlot(slot)
     }
 
-    override fun setItem(slot: Int, item: ItemStack) {
-        throw IllegalAccessError("Please, use movable methods for this!")
-    }
-
     override fun canPlaceItem(slot: Int, item: ItemStack): Boolean {
         return true
     }

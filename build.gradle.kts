@@ -5,6 +5,9 @@ plugins {
 
 subprojects {
     apply(plugin = "kotlin")
+    apply(plugin = "maven-publish")
+
+    group = "siredvin.site"
 
     val javaVersion = JavaVersion.VERSION_17
     java {

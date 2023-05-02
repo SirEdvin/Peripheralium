@@ -24,8 +24,8 @@ import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import site.siredvin.peripheralium.PeripheraliumCore
+import site.siredvin.peripheralium.api.storage.ContainerUtils
 import site.siredvin.peripheralium.ext.toBlockPos
-import site.siredvin.peripheralium.api.storage.StorageUtils
 import site.siredvin.peripheralium.util.Pair
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.*
@@ -69,14 +69,14 @@ class FakePlayerProxy(private val fakePlayer: ServerPlayer, private val range: I
     }
 
     fun <T> withConsumer(entity: Entity, func: () -> (T)): T {
-        DropConsumer.configure(entity,  { stack: ItemStack -> StorageUtils.storeItems(stack, inventory) })
+        DropConsumer.configure(entity,  { stack: ItemStack -> ContainerUtils.storeItem(inventory, stack) })
         val result = func()
         DropConsumer.resetAndDrop(level, fakePlayer.blockPosition().above())
         return result
     }
 
     fun <T> withConsumer(level: Level, pos: BlockPos, func: () -> (T)): T {
-        DropConsumer.configure(level, pos, { stack -> StorageUtils.storeItems(stack, inventory) })
+        DropConsumer.configure(level, pos, { stack -> ContainerUtils.storeItem(inventory, stack) })
         val result = func()
         DropConsumer.resetAndDrop(level, fakePlayer.blockPosition().above())
         return result

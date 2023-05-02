@@ -110,3 +110,21 @@ tasks {
         source(project(":core").sourceSets.main.get().allSource)
     }
 }
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifact(tasks.remapJar) {
+                artifactId = base.archivesName.get()
+                builtBy(tasks.remapJar)
+            }
+            artifact(tasks.remapSourcesJar) {
+                artifactId = base.archivesName.get()
+                builtBy(tasks.remapSourcesJar)
+            }
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
