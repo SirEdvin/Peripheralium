@@ -4,11 +4,12 @@ import dan200.computercraft.api.lua.LuaException
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
 import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.storage.*
 import java.util.function.Predicate
 
-class FabricSlottedStorageWrapper(private val storage: net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage<ItemVariant>): MovableSlottedStorage {
+class FabricSlottedStorageWrapper(private val storage: net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage<ItemVariant>): SlottedStorage {
 
     override fun moveTo(
         to: TargetableStorage,
@@ -56,7 +57,36 @@ class FabricSlottedStorageWrapper(private val storage: net.fabricmc.fabric.api.t
     }
 
     override fun takeItems(limit: Int, startSlot: Int, endSlot: Int, predicate: Predicate<ItemStack>): ItemStack {
-        throw IllegalAccessError("Please, use movable methods for this!")
+        var slidingStack = ItemStack.EMPTY
+        var slidingLimit = limit
+        Transaction.openOuter().use {
+            for (currentSlot in startSlot..endSlot) {
+                val slotStorage = getSingleSlot(currentSlot)
+                val extractionTarget = StorageUtil.findExtractableContent(slotStorage, FabricStorageUtils.wrap(predicate), it)
+                    ?: continue
+                if (extractionTarget.amount == 0L)
+                    continue
+                val potentialStack = extractionTarget.resource.toStack(extractionTarget.amount.toInt())
+                if (slidingStack.isEmpty || StorageUtils.canMerge(slidingStack, potentialStack, slidingLimit)) {
+                    val extractedAmount = slotStorage.extract(extractionTarget.resource, limit.toLong(), it).toInt()
+                    if (extractedAmount < 1)
+                        continue
+                    val extractedStack = extractionTarget.resource.toStack(extractedAmount)
+                    if (slidingStack.isEmpty) {
+                        slidingStack = extractedStack
+                        slidingLimit = minOf(slidingLimit, slidingStack.maxStackSize) - slidingStack.count
+                    } else {
+                        val remainder = StorageUtils.inplaceMerge(slidingStack, extractedStack)
+                        if (!remainder.isEmpty)
+                            slotStorage.insert(ItemVariant.of(remainder), remainder.count.toLong(), it)
+                        slidingLimit -= extractedStack.count - remainder.count
+                    }
+                }
+                if (slidingLimit <= 0)
+                    break
+            }
+            return slidingStack
+        }
     }
 
     override fun getItem(slot: Int): ItemStack {
@@ -73,7 +103,16 @@ class FabricSlottedStorageWrapper(private val storage: net.fabricmc.fabric.api.t
     }
 
     override fun storeItem(stack: ItemStack, startSlot: Int, endSlot: Int): ItemStack {
-        throw IllegalAccessError("Please, use movable methods for this!")
+        Transaction.openOuter().use {
+            for (currentSlot in startSlot..endSlot) {
+                val storageSlot = getSingleSlot(currentSlot)
+                val insertedAmount = storageSlot.insert(ItemVariant.of(stack), stack.count.toLong(), it).toInt()
+                stack.shrink(insertedAmount)
+                if (stack.isEmpty)
+                    return ItemStack.EMPTY
+            }
+            return stack
+        }
     }
 
     override fun setChanged() {

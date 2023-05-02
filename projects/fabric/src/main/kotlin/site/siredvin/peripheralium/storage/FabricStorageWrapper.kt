@@ -1,14 +1,16 @@
 package site.siredvin.peripheralium.storage
 
 import dan200.computercraft.api.lua.LuaException
+import dan200.computercraft.api.lua.MethodResult
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage as FabricStorage
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
 import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.storage.*
 import java.util.function.Predicate
 
-class FabricStorageWrapper(val storage: FabricStorage<ItemVariant>): MovableStorage {
+class FabricStorageWrapper(val storage: FabricStorage<ItemVariant>): Storage {
     companion object {
         const val MOVABLE_TYPE = "fabricTransaction"
     }
@@ -52,11 +54,29 @@ class FabricStorageWrapper(val storage: FabricStorage<ItemVariant>): MovableStor
     }
 
     override fun takeItems(predicate: Predicate<ItemStack>, limit: Int): ItemStack {
-        throw IllegalAccessError("Please, use movable methods for this!")
+        Transaction.openOuter().use {
+            val extractionTarget = StorageUtil.findExtractableContent(storage, FabricStorageUtils.wrap(predicate), it)
+                ?: return ItemStack.EMPTY
+            if (extractionTarget.amount == 0L)
+                return ItemStack.EMPTY
+            val amount = storage.extract(extractionTarget.resource, limit.toLong(), it)
+            if (amount < 1) {
+                it.abort()
+                return ItemStack.EMPTY
+            }
+            return extractionTarget.resource.toStack(amount.toInt())
+        }
     }
 
     override fun storeItem(stack: ItemStack): ItemStack {
-        throw IllegalAccessError("Please, use movable methods for this!")
+        Transaction.openOuter().use {
+            val amount = storage.insert(ItemVariant.of(stack), stack.count.toLong(), it).toInt()
+            stack.shrink(amount)
+            if (stack.isEmpty) {
+                return ItemStack.EMPTY
+            }
+            return stack
+        }
     }
 
     override fun setChanged() {

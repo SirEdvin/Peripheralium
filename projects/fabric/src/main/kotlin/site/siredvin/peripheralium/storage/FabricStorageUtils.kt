@@ -86,7 +86,7 @@ object FabricStorageUtils {
         }
     }
 
-    fun extractStorage(level: Level, obj: Any?): MovableStorage? {
+    fun extractStorage(level: Level, obj: Any?): Storage? {
         val itemStorage = when (obj) {
             is BlockPos -> {
                 ItemStorage.SIDED.find(level, obj, null)

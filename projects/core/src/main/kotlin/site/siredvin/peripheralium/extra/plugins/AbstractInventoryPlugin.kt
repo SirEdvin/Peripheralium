@@ -72,13 +72,7 @@ abstract class AbstractInventoryPlugin: IPeripheralPlugin {
             assertBetween(toSlot.get(), 1, toStorage.size, "toSlot")
         }
 
-        return if (actualLimit <= 0) 0 else StorageUtils.moveBetweenStorages(
-            storage,
-            toStorage,
-            actualLimit,
-            fromSlot - 1,
-            toSlot.orElse(0) - 1,
-        )
+        return if (actualLimit <= 0) 0 else storage.moveTo(toStorage, actualLimit, fromSlot - 1, toSlot.orElse(0) - 1, StorageUtils.ALWAYS)
     }
 
     @LuaFunction(mainThread = true)
@@ -98,12 +92,6 @@ abstract class AbstractInventoryPlugin: IPeripheralPlugin {
         assertBetween(fromSlot, 1, fromStorage.size, "fromSlot")
         if (toSlot.isPresent)
             assertBetween(toSlot.get(),1, storage.size, "toSlot")
-        return if (actualLimit <= 0) 0 else StorageUtils.moveBetweenStorages(
-            fromStorage,
-            storage,
-            actualLimit,
-            fromSlot - 1,
-            toSlot.orElse(0) - 1,
-        )
+        return if (actualLimit <= 0) 0 else storage.moveFrom(fromStorage, actualLimit, toSlot.orElse(0) -1, fromSlot -1, StorageUtils.ALWAYS)
     }
 }

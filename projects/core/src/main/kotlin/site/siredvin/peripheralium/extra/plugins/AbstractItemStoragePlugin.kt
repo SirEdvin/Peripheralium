@@ -10,7 +10,6 @@ import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 import site.siredvin.peripheralium.api.storage.ExtractorProxy
 import site.siredvin.peripheralium.api.storage.Storage
-import site.siredvin.peripheralium.api.storage.StorageUtils
 import site.siredvin.peripheralium.common.configuration.PeripheraliumConfig
 import java.util.*
 import java.util.function.Predicate
@@ -43,7 +42,7 @@ abstract class AbstractItemStoragePlugin: IPeripheralPlugin {
 
         val predicate: Predicate<ItemStack> = PeripheralPluginUtils.itemQueryToPredicate(itemQuery)
         val realLimit = min(PeripheraliumConfig.itemStorageTransferLimit, limit.orElse(Int.MAX_VALUE))
-        return StorageUtils.moveBetweenStorages(storage, toStorage, realLimit, takePredicate = predicate)
+        return storage.moveTo(toStorage, realLimit, takePredicate = predicate)
     }
 
     @LuaFunction(mainThread = true)
@@ -56,6 +55,6 @@ abstract class AbstractItemStoragePlugin: IPeripheralPlugin {
 
         val predicate: Predicate<ItemStack> = PeripheralPluginUtils.itemQueryToPredicate(itemQuery)
         val realLimit = min(PeripheraliumConfig.itemStorageTransferLimit, limit.orElse(Int.MAX_VALUE))
-        return StorageUtils.moveBetweenStorages(fromStorage, storage, realLimit, takePredicate = predicate)
+        return storage.moveFrom(fromStorage, realLimit, takePredicate = predicate)
     }
 }

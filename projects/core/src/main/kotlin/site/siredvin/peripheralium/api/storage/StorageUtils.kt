@@ -9,42 +9,10 @@ import java.util.function.Predicate
 
 @Suppress("MemberVisibilityCanBePrivate")
 object StorageUtils {
-    private val ALWAYS_PREDICATE: Predicate<ItemStack> = Predicate { true }
 
-    private fun moveForMovableStorages(from: Storage, to: TargetableStorage, limit: Int, fromSlot: Int, toSlot: Int, takePredicate: Predicate<ItemStack>): Int {
-        if (from is MovableStorage) {
-            if (to is MovableStorage && from.movableType != to.movableType)
-                throw IllegalArgumentException("To ${to.movableType} and from ${from.movableType} shouldn't compete!")
-            return if (fromSlot < 0) {
-                from.moveTo(to, limit, toSlot, takePredicate)
-            } else {
-                if (from !is MovableSlottedStorage)
-                    throw LuaException("From storage doesn't support slotting")
-                from.moveTo(to, limit, fromSlot, toSlot, takePredicate)
-            }
-        } else if (to is MovableStorage) {
-            return if (toSlot < 0) {
-                to.moveFrom(from, limit, fromSlot, takePredicate)
-            } else {
-                if (to !is MovableSlottedStorage)
-                    throw LuaException("To storage doesn't support slotting")
-                to.moveTo(from, limit, fromSlot, toSlot, takePredicate)
-            }
-        }
-        return -1
-    }
+    val ALWAYS: Predicate<ItemStack> = Predicate { true }
 
-    fun moveBetweenStorages(
-        from: Storage, to: TargetableStorage, limit: Int, fromSlot: Int = -1,
-        toSlot: Int = -1, takePredicate: Predicate<ItemStack> = ALWAYS_PREDICATE): Int {
-        // Moving nothing is easy
-        if (limit == 0) {
-            return 0
-        }
-        // Process movable storage logic first
-        val movableMoved = moveForMovableStorages(from, to, limit, fromSlot, toSlot, takePredicate)
-        if (movableMoved != -1)
-            return movableMoved
+    fun naiveMove(from: Storage, to: TargetableStorage, limit: Int, fromSlot: Int = -1, toSlot: Int = -1, takePredicate: Predicate<ItemStack>): Int {
 
         // Get stack to move
         val stack = if (fromSlot < 0) {
