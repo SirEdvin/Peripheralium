@@ -23,3 +23,10 @@ mandatory=true
 versionRange="[${forgeVersion},46)"
 ordering="NONE"
 side="BOTH"
+
+[[dependencies.peripheralium]]
+modId="computercraft"
+mandatory=true
+versionRange="[${computercraftVersion},)"
+ordering="NONE"
+side="BOTH"

@@ -83,9 +83,9 @@ class FabricPeripheraliumPlatform: PeripheraliumPlatform {
     }
 
     override fun <T : Block> registerBlock(key: ResourceLocation, block: Supplier<T>, itemFactory: (T) -> Item): Supplier<T> {
-        Registry.register(BuiltInRegistries.BLOCK, key, block.get())
-        Registry.register(BuiltInRegistries.ITEM, key, itemFactory(block.get()))
-        return Supplier { block.get() }
+        val registeredBlock = Registry.register(BuiltInRegistries.BLOCK, key, block.get())
+        Registry.register(BuiltInRegistries.ITEM, key, itemFactory(registeredBlock))
+        return Supplier { registeredBlock }
     }
 
     override fun getTurtleAccess(entity: BlockEntity): ITurtleAccess? {

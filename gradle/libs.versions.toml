@@ -3,17 +3,22 @@
 kotlin = "1.8.21"
 kotlin-coroutines = "1.6.4"
 kotlin-atomicfu = "0.20.2"
+
 # Gradle plugins
 sponge = "0.2.1-SNAPSHOT"
 loom = "1.1.9"
 forgegradle = "5.1.+"
+
 # Core mod dependencies
 cc-tweaked = "1.104.0"
+mixin = "0.8.5"
+
 # Fabric dependencies
 fabric-api = "0.79.0+1.19.4"
 fabric-loader = "0.14.9"
 fabric-kotlin = "1.9.4+kotlin.1.8.21"
 forgeconfigapirt-fabric = "6.0.2"
+
 # Forge dependencies
 forge = "45.0.42"
 forge-kotlin = "4.2.0"
@@ -24,15 +29,26 @@ parchmentMc = "1.19.3"
 # Dev mod dependenceis
 jei = "13.1.0.6"
 
+# Testing
+autoService = "1.0.1"
+byteBuddy = "1.14.2"
+hamcrest = "2.2"
+jqwik = "1.7.2"
+junit = "5.9.2"
+
+
 [libraries]
 # Base libraries
 kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlin-atomicfu = {module = "org.jetbrains.kotlinx:atomicfu-jvm", version.ref = "kotlin-atomicfu"}
+
 # Core mod dependencies
 cc-tweaked-common = {module = "cc.tweaked:cc-tweaked-1.19.4-common-api", version.ref = "cc-tweaked"}
 cc-tweaked-core = {module = "cc.tweaked:cc-tweaked-1.19.4-core", version.ref = "cc-tweaked"}
 common-config = {module = "fuzs.forgeconfigapiport:forgeconfigapiport-common", version.ref = "forgeconfigapirt-fabric"}
+mixin = { module = "org.spongepowered:mixin", version.ref = "mixin" }
+
 # Fabric mod dependencies
 fabric-loader = {module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader"}
 fabric-api = {module = "net.fabricmc.fabric-api:fabric-api", version.ref="fabric-api"}
@@ -40,12 +56,25 @@ fabric-kotlin = {module = "net.fabricmc:fabric-language-kotlin", version.ref = "
 fabric-config = {module = "fuzs.forgeconfigapiport:forgeconfigapiport-fabric", version.ref = "forgeconfigapirt-fabric"}
 cc-tweaked-fabric-api = {module = "cc.tweaked:cc-tweaked-1.19.4-fabric-api", version.ref = "cc-tweaked"}
 cc-tweaked-fabric = {module = "cc.tweaked:cc-tweaked-1.19.4-fabric", version.ref = "cc-tweaked"}
+
 # Forge mod dependencies
 cc-tweaked-forge =  {module = "cc.tweaked:cc-tweaked-1.19.4-forge", version.ref="cc-tweaked"}
 forge-kotlin = {module = "thedarkcolour:kotlinforforge", version.ref = "forge-kotlin"}
+
 # Dev mod dependencies
 jei-fabric = { module = "mezz.jei:jei-1.19.4-fabric", version.ref = "jei" }
 jei-forge = { module = "mezz.jei:jei-1.19.4-forge", version.ref = "jei" }
+
+# Testing
+autoService = { module = "com.google.auto.service:auto-service", version.ref = "autoService" }
+byteBuddyAgent = { module = "net.bytebuddy:byte-buddy-agent", version.ref = "byteBuddy" }
+byteBuddy = { module = "net.bytebuddy:byte-buddy", version.ref = "byteBuddy" }
+hamcrest = { module = "org.hamcrest:hamcrest", version.ref = "hamcrest" }
+jqwik-api = { module = "net.jqwik:jqwik-api", version.ref = "jqwik" }
+jqwik-engine = { module = "net.jqwik:jqwik-engine", version.ref = "jqwik" }
+junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 vanillaGradle = { id = "org.spongepowered.gradle.vanilla", version.ref = "sponge"}
@@ -71,5 +100,5 @@ externalMods-forge-runtime = ["jei-forge"]
 externalMods-fabric-runtime = ["jei-fabric"]
 #
 ## Testing
-#test = ["junit-jupiter-api", "junit-jupiter-params", "hamcrest", "jqwik-api"]
+test = ["junit-jupiter-api", "junit-jupiter-params", "hamcrest", "jqwik-api"]
 #testRuntime = ["junit-jupiter-engine", "jqwik-engine"]

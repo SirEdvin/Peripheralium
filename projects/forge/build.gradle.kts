@@ -1,3 +1,5 @@
+import site.siredvin.peripheralium.gradle.mavenDependencies
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.kotlin)
@@ -98,15 +100,21 @@ sourceSets.main.configure {
 tasks {
     val extractedLibs = project.extensions.getByType<VersionCatalogsExtension>().named("libs")
     val forgeVersion = extractedLibs.findVersion("forge").get()
+    val computercraftVersion = extractedLibs.findVersion("cc-tweaked").get()
 
     processResources {
         from(project(":core").sourceSets.main.get().resources)
 
         inputs.property("version", project.version)
         inputs.property("forgeVersion", forgeVersion)
+        inputs.property("computercraftVersion", computercraftVersion)
 
         filesMatching("META-INF/mods.toml") {
-            expand(mapOf("forgeVersion" to forgeVersion, "file" to mapOf("jarVersion" to project.version)))
+            expand(mapOf(
+                "forgeVersion" to forgeVersion,
+                "file" to mapOf("jarVersion" to project.version),
+                "computercraftVersion" to computercraftVersion
+            ))
         }
         exclude(".cache")
     }
@@ -129,6 +137,12 @@ publishing {
             // jarJar.component is broken (https://github.com/MinecraftForge/ForgeGradle/issues/914), so declare the
             // artifact explicitly.
             artifact(tasks.jarJar)
+
+            mavenDependencies {
+                exclude(dependencies.create("site.siredvin:"))
+                exclude(libs.jei.forge.get())
+
+            }
         }
     }
 }

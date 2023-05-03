@@ -34,3 +34,5 @@ run/
 
 .env
 Peripheralium-1.19
+
+**/logs/

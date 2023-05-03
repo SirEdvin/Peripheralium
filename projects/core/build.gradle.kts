@@ -46,6 +46,13 @@ dependencies {
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.cccommon)
     api(libs.bundles.apicommon)
+
+    testImplementation(kotlin("test"))
+    testImplementation(libs.bundles.test)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 publishing {

@@ -76,10 +76,11 @@ class FabricSlottedStorageWrapper(private val storage: net.fabricmc.fabric.api.t
                         slidingStack = extractedStack
                         slidingLimit = minOf(slidingLimit, slidingStack.maxStackSize) - slidingStack.count
                     } else {
+                        val extractedCount = extractedStack.count
                         val remainder = StorageUtils.inplaceMerge(slidingStack, extractedStack)
                         if (!remainder.isEmpty)
                             slotStorage.insert(ItemVariant.of(remainder), remainder.count.toLong(), it)
-                        slidingLimit -= extractedStack.count - remainder.count
+                        slidingLimit -= extractedCount - remainder.count
                     }
                 }
                 if (slidingLimit <= 0)

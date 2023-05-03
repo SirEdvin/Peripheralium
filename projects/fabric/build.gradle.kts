@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
+import site.siredvin.peripheralium.gradle.mavenDependencies
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
@@ -70,6 +70,14 @@ dependencies {
         exclude("net.fabricmc.fabric-api")
         exclude("net.fabricmc", "fabric-loader")
     }
+
+    testImplementation(kotlin("test"))
+
+    testCompileOnly(libs.autoService)
+    testAnnotationProcessor(libs.autoService)
+    testImplementation(libs.byteBuddy)
+    testImplementation(libs.byteBuddyAgent)
+    testImplementation(libs.bundles.test)
 }
 
 loom {
@@ -94,6 +102,12 @@ sourceSets.main.configure {
     resources.srcDir("src/generated/resources")
 }
 
+tasks.test {
+    dependsOn(tasks.generateDLIConfig)
+    useJUnitPlatform()
+    systemProperty("junit.jupiter.extensions.autodetection.enabled", true)
+}
+
 tasks {
     processResources {
         from(project(":core").sourceSets.main.get().resources)
@@ -107,20 +121,22 @@ tasks {
         }
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        source(project(":core").sourceSets.main.get().allSource)
+        if (this.name != "compileTestKotlin") {
+            source(project(":core").sourceSets.main.get().allSource)
+        }
     }
 }
 
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            artifact(tasks.remapJar) {
-                artifactId = base.archivesName.get()
-                builtBy(tasks.remapJar)
-            }
-            artifact(tasks.remapSourcesJar) {
-                artifactId = base.archivesName.get()
-                builtBy(tasks.remapSourcesJar)
+            artifactId = base.archivesName.get()
+            from(components["java"])
+
+            mavenDependencies {
+                exclude(dependencies.create("site.siredvin:"))
+                exclude(libs.jei.fabric.get())
+
             }
         }
     }

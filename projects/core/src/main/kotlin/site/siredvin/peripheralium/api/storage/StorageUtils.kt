@@ -13,7 +13,7 @@ object StorageUtils {
     val ALWAYS: Predicate<ItemStack> = Predicate { true }
 
     fun naiveMove(from: Storage, to: TargetableStorage, limit: Int, fromSlot: Int = -1, toSlot: Int = -1, takePredicate: Predicate<ItemStack>): Int {
-
+        // TODO: This is not critical, but ideally this function should be able to move limit above (!) maxStackSize
         // Get stack to move
         val stack = if (fromSlot < 0) {
             from.takeItems(takePredicate, limit)
@@ -22,6 +22,9 @@ object StorageUtils {
                 throw LuaException("From storage doesn't support slotting")
             from.takeItems(limit, fromSlot, fromSlot, takePredicate)
         }
+        if (stack.isEmpty)
+            return 0
+        
         val stackCount = stack.count
 
         // Move item to
