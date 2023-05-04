@@ -86,6 +86,7 @@ class FabricSlottedStorageWrapper(private val storage: net.fabricmc.fabric.api.t
                 if (slidingLimit <= 0)
                     break
             }
+            it.commit()
             return slidingStack
         }
     }
@@ -109,9 +110,12 @@ class FabricSlottedStorageWrapper(private val storage: net.fabricmc.fabric.api.t
                 val storageSlot = getSingleSlot(currentSlot)
                 val insertedAmount = storageSlot.insert(ItemVariant.of(stack), stack.count.toLong(), it).toInt()
                 stack.shrink(insertedAmount)
-                if (stack.isEmpty)
+                if (stack.isEmpty) {
+                    it.commit()
                     return ItemStack.EMPTY
+                }
             }
+            it.commit()
             return stack
         }
     }

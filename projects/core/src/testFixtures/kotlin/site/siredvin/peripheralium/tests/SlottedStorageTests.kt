@@ -74,12 +74,9 @@ abstract class SlottedStorageTests {
         val to = createStorage(argument.initialTo, grassBlock, true)
         val movedAmount = from.moveTo(to, argument.moveLimit, argument.fromSlot, argument.toSlot, takePredicate = StorageUtils.ALWAYS)
         assertEquals(argument.expectedMoveAmount, movedAmount)
-        argument.expectedFrom.forEachIndexed { index, amount ->
-            assertEquals(amount, from.getItem(index).count)
-        }
-        argument.expectedTo.forEachIndexed { index, amount ->
-            assertEquals(amount, to.getItem(index).count)
-        }
+        StorageTestHelpers.assertSlottedStorage(from, argument.expectedFrom, "from")
+        StorageTestHelpers.assertSlottedStorage(to, argument.expectedTo, "to")
+        StorageTestHelpers.assertNoOverlap(from, to)
     }
 
     @ParameterizedTest
@@ -90,11 +87,8 @@ abstract class SlottedStorageTests {
         val to = createStorage(argument.initialTo, grassBlock, true)
         val movedAmount = to.moveFrom(from, argument.moveLimit, argument.toSlot, argument.fromSlot, takePredicate = StorageUtils.ALWAYS)
         assertEquals(argument.expectedMoveAmount, movedAmount)
-        argument.expectedFrom.forEachIndexed { index, amount ->
-            assertEquals(amount, from.getItem(index).count)
-        }
-        argument.expectedTo.forEachIndexed { index, amount ->
-            assertEquals(amount, to.getItem(index).count)
-        }
+        StorageTestHelpers.assertSlottedStorage(from, argument.expectedFrom, "from")
+        StorageTestHelpers.assertSlottedStorage(to, argument.expectedTo, "to")
+        StorageTestHelpers.assertNoOverlap(from, to)
     }
 }

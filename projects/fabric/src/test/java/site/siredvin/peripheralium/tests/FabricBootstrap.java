@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
  *
  * @see net.fabricmc.loader.impl.launch.knot.Knot
  */
-//@AutoService(Extension.class)
+@AutoService(Extension.class)
 public class FabricBootstrap implements Extension {
     private static final Logger LOG = LoggerFactory.getLogger(FabricBootstrap.class);
 

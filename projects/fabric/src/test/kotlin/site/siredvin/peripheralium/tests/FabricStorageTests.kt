@@ -16,7 +16,6 @@ internal class TweakedFabricStorageWrapper(private val inventoryStorage: Invento
 
 }
 
-@ExtendWith(FabricBootstrap::class)
 @WithMinecraft
 internal class FabricSlottedStorageTests: SlottedStorageTests() {
 
@@ -30,8 +29,6 @@ internal class FabricSlottedStorageTests: SlottedStorageTests() {
     }
 }
 
-
-@ExtendWith(FabricBootstrap::class)
 @WithMinecraft
 internal class FabricStorageTests: StorageTests() {
 
@@ -45,7 +42,6 @@ internal class FabricStorageTests: StorageTests() {
     }
 }
 
-@ExtendWith(FabricBootstrap::class)
 @WithMinecraft
 internal class CompactFabricSlottedStorageTests: SlottedStorageTests() {
 
@@ -61,8 +57,6 @@ internal class CompactFabricSlottedStorageTests: SlottedStorageTests() {
     }
 }
 
-
-@ExtendWith(FabricBootstrap::class)
 @WithMinecraft
 internal class CompactFabricStorageTests: StorageTests() {
 

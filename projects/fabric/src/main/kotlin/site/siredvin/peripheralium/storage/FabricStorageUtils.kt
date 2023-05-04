@@ -50,6 +50,7 @@ object FabricStorageUtils {
             if (!remainder.isEmpty) {
                 storage.insert(resource, remainder.count.toLong(), it)
             }
+            it.commit()
             return insertedCount
         }
     }
@@ -82,6 +83,7 @@ object FabricStorageUtils {
                     from.storeItem(insertionStack.copyWithCount(remainCount.toInt()))
                 }
             }
+            it.commit()
             return insertedAmount.toInt()
         }
     }

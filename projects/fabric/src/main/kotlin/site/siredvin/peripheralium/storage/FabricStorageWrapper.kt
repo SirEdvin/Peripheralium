@@ -64,6 +64,7 @@ open class FabricStorageWrapper(val storage: FabricStorage<ItemVariant>): Storag
                 it.abort()
                 return ItemStack.EMPTY
             }
+            it.commit()
             return extractionTarget.resource.toStack(amount.toInt())
         }
     }
@@ -72,6 +73,7 @@ open class FabricStorageWrapper(val storage: FabricStorage<ItemVariant>): Storag
         Transaction.openOuter().use {
             val amount = storage.insert(ItemVariant.of(stack), stack.count.toLong(), it).toInt()
             stack.shrink(amount)
+            it.commit()
             if (stack.isEmpty) {
                 return ItemStack.EMPTY
             }

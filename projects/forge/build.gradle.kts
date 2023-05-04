@@ -78,6 +78,13 @@ minecraft {
     }
 }
 
+sourceSets {
+    test {
+        compileClasspath += project(":core").sourceSets["testFixtures"].output
+        runtimeClasspath += project(":core").sourceSets["testFixtures"].output
+    }
+}
+
 dependencies {
     val extractedLibs = project.extensions.getByType<VersionCatalogsExtension>().named("libs")
     minecraft("net.minecraftforge:forge:${minecraftVersion}-${extractedLibs.findVersion("forge").get()}")
@@ -91,6 +98,13 @@ dependencies {
     implementation(fg.deobf("cc.tweaked:cc-tweaked-1.19.4-forge:${extractedLibs.findVersion("cc-tweaked").get()}"))
 
     libs.bundles.externalMods.forge.runtime.get().map { runtimeOnly(fg.deobf(it))}
+
+    testImplementation(kotlin("test"))
+    testCompileOnly(libs.autoService)
+    testAnnotationProcessor(libs.autoService)
+    testImplementation(libs.byteBuddy)
+    testImplementation(libs.byteBuddyAgent)
+    testImplementation(libs.bundles.test)
 }
 
 sourceSets.main.configure {
@@ -119,9 +133,16 @@ tasks {
         exclude(".cache")
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        source(project(":core").sourceSets.main.get().allSource)
+        if (name != "compileTestKotlin") {
+            source(project(":core").sourceSets.main.get().allSource)
+        }
     }
 }
+
+tasks.test {
+    useJUnitPlatform()
+}
+
 
 tasks.jar {
     finalizedBy("reobfJar")

@@ -5,9 +5,12 @@ import net.minecraft.world.item.Items
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import site.siredvin.peripheralium.api.storage.Storage
 import site.siredvin.peripheralium.api.storage.StorageUtils
 import site.siredvin.peripheralium.storage.TestableStorage
+import java.util.*
 import kotlin.test.assertEquals
+
 
 abstract class StorageTests {
 
@@ -40,7 +43,7 @@ abstract class StorageTests {
             return listOf(
                 Arguments.of(MoveArguments(
                     listOf(64, 64, 64), listOf(64, 64, 0),
-                    128, 64,
+                    64, 64,
                     listOf(64, 64), listOf(64, 64, 64)
                 )),
                 Arguments.of(MoveArguments(
@@ -51,7 +54,7 @@ abstract class StorageTests {
                 Arguments.of(MoveArguments(
                     listOf(64, 64, 64),  listOf(64, 64, 32),
                     128, 32,
-                    listOf(64, 64, 32), listOf(64, 64, 64)
+                    listOf(32, 64, 64), listOf(64, 64, 64)
                 )),
             )
         }
@@ -67,12 +70,9 @@ abstract class StorageTests {
         val to = createStorage(argument.initialTo, grassBlock, secondary = true)
         val movedAmount = from.moveTo(to, argument.moveLimit, takePredicate = StorageUtils.ALWAYS)
         assertEquals(argument.expectedMoveAmount, movedAmount)
-        argument.expectedFrom.forEachIndexed { index, amount ->
-            assertEquals(amount, from.getItem(index).count)
-        }
-        argument.expectedTo.forEachIndexed { index, amount ->
-            assertEquals(amount, to.getItem(index).count)
-        }
+        StorageTestHelpers.assertStorage(from, argument.expectedFrom, "from")
+        StorageTestHelpers.assertStorage(to, argument.expectedTo, "to")
+        StorageTestHelpers.assertNoOverlap(from, to)
     }
 
     @ParameterizedTest
@@ -83,11 +83,8 @@ abstract class StorageTests {
         val to = createStorage(argument.initialTo, grassBlock, secondary = true)
         val movedAmount = to.moveFrom(from, argument.moveLimit, takePredicate = StorageUtils.ALWAYS)
         assertEquals(argument.expectedMoveAmount, movedAmount)
-        argument.expectedFrom.forEachIndexed { index, amount ->
-            assertEquals(amount, from.getItem(index).count)
-        }
-        argument.expectedTo.forEachIndexed { index, amount ->
-            assertEquals(amount, to.getItem(index).count)
-        }
+        StorageTestHelpers.assertStorage(from, argument.expectedFrom, "from")
+        StorageTestHelpers.assertStorage(to, argument.expectedTo, "to")
+        StorageTestHelpers.assertNoOverlap(from, to)
     }
 }
