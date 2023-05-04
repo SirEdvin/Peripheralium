@@ -20,22 +20,23 @@ object ContainerUtils {
     }
 
     fun takeItems(container: Container, limit: Int, startSlot: Int = 0, endSlot: Int = -1, predicate: Predicate<ItemStack>): ItemStack {
+        var slidingPredicate = predicate
         val realEndSlot = if (endSlot == -1) container.containerSize - 1 else endSlot
         var slidingLimit = limit
         var stack = ItemStack.EMPTY
         for (currentSlot in startSlot..realEndSlot) {
             if (limit <= 0)
                 return stack
-            val extractedStack = if (stack.isEmpty)
-                extract(container, currentSlot, slidingLimit, stack)
-            else
-                extract(container, currentSlot, slidingLimit, predicate)
+            val extractedStack = extract(container, currentSlot, slidingLimit, predicate)
             if (extractedStack.isEmpty)
                 continue
             slidingLimit -= extractedStack.count
             if (stack.isEmpty) { // first time something successfully extracted
                 stack = extractedStack
                 slidingLimit = minOf(slidingLimit, stack.maxStackSize)
+                slidingPredicate = slidingPredicate.and {
+                    StorageUtils.canStack(stack, it)
+                }
             } else {
                 stack.grow(extractedStack.count)
             }
@@ -45,7 +46,7 @@ object ContainerUtils {
     }
 
     fun storeItem(container: Container, stack: ItemStack, startSlot: Int = 0, endSlot: Int = -1): ItemStack {
-        val maxStackSize = minOf(stack.maxStackSize, container.containerSize)
+        val maxStackSize = minOf(stack.maxStackSize, container.maxStackSize)
         val realEndSlot = if (endSlot == -1) container.containerSize - 1 else endSlot
         if (maxStackSize <= 0)
             return stack

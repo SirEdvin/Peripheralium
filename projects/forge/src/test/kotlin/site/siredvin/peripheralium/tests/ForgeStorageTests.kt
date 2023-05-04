@@ -4,12 +4,12 @@ import net.minecraft.world.SimpleContainer
 import net.minecraft.world.item.ItemStack
 import net.minecraftforge.items.wrapper.InvWrapper
 import site.siredvin.peripheralium.api.storage.SlottedStorage
-import site.siredvin.peripheralium.storage.DummySlottedStorage
+import site.siredvin.peripheralium.api.storage.TargetableContainer
 import site.siredvin.peripheralium.storage.ItemHandlerWrapper
 
 @WithMinecraft
 class ForgeSlottedStorageTests: SlottedStorageTests() {
-    override fun createStorage(items: List<ItemStack>, secondary: Boolean): SlottedStorage {
+    override fun createSlottedStorage(items: List<ItemStack>, secondary: Boolean): SlottedStorage {
         val baseContainer = SimpleContainer(items.size)
         items.forEachIndexed { index, itemStack ->
             baseContainer.setItem(index, itemStack)
@@ -21,9 +21,15 @@ class ForgeSlottedStorageTests: SlottedStorageTests() {
 
 @WithMinecraft
 class CompactForgeSlottedStorageTests: SlottedStorageTests() {
-    override fun createStorage(items: List<ItemStack>, secondary: Boolean): SlottedStorage {
-        if (secondary)
-            return DummySlottedStorage(items.size, items)
+    override fun createSlottedStorage(items: List<ItemStack>, secondary: Boolean): SlottedStorage {
+        if (secondary) {
+            val container = SimpleContainer(items.size)
+            items.forEachIndexed { index, itemStack ->
+                if (!itemStack.isEmpty)
+                    container.setItem(index, itemStack)
+            }
+            return TargetableContainer(container)
+        }
         val baseContainer = SimpleContainer(items.size)
         items.forEachIndexed { index, itemStack ->
             baseContainer.setItem(index, itemStack)

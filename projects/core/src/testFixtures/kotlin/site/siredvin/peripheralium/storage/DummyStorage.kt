@@ -1,10 +1,8 @@
 package site.siredvin.peripheralium.storage
 
 import net.minecraft.world.item.ItemStack
-import site.siredvin.peripheralium.api.storage.Storage
 import site.siredvin.peripheralium.api.storage.StorageUtils
 import java.util.function.Predicate
-import kotlin.math.max
 
 class DummyStorage(private val maxSlots: Int, initialItems: List<ItemStack>): TestableStorage {
 

@@ -3,9 +3,12 @@ package site.siredvin.peripheralium.tests
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage
 import net.minecraft.world.SimpleContainer
 import net.minecraft.world.item.ItemStack
-import org.junit.jupiter.api.extension.ExtendWith
 import site.siredvin.peripheralium.api.storage.SlottedStorage
-import site.siredvin.peripheralium.storage.*
+import site.siredvin.peripheralium.api.storage.TargetableContainer
+import site.siredvin.peripheralium.storage.DummyStorage
+import site.siredvin.peripheralium.storage.FabricSlottedStorageWrapper
+import site.siredvin.peripheralium.storage.FabricStorageWrapper
+import site.siredvin.peripheralium.storage.TestableStorage
 
 
 internal class TweakedFabricStorageWrapper(private val inventoryStorage: InventoryStorage): FabricStorageWrapper(inventoryStorage), TestableStorage {
@@ -19,7 +22,7 @@ internal class TweakedFabricStorageWrapper(private val inventoryStorage: Invento
 @WithMinecraft
 internal class FabricSlottedStorageTests: SlottedStorageTests() {
 
-    override fun createStorage(items: List<ItemStack>, secondary: Boolean): SlottedStorage {
+    override fun createSlottedStorage(items: List<ItemStack>, secondary: Boolean): SlottedStorage {
         val container = SimpleContainer(items.size)
         items.forEachIndexed { index, itemStack ->
             if (!itemStack.isEmpty)
@@ -45,9 +48,15 @@ internal class FabricStorageTests: StorageTests() {
 @WithMinecraft
 internal class CompactFabricSlottedStorageTests: SlottedStorageTests() {
 
-    override fun createStorage(items: List<ItemStack>, secondary: Boolean): SlottedStorage {
-        if (secondary)
-            return DummySlottedStorage(items.size, items)
+    override fun createSlottedStorage(items: List<ItemStack>, secondary: Boolean): SlottedStorage {
+        if (secondary) {
+            val container = SimpleContainer(items.size)
+            items.forEachIndexed { index, itemStack ->
+                if (!itemStack.isEmpty)
+                    container.setItem(index, itemStack)
+            }
+            return TargetableContainer(container)
+        }
         val container = SimpleContainer(items.size)
         items.forEachIndexed { index, itemStack ->
             if (!itemStack.isEmpty)

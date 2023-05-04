@@ -11,11 +11,12 @@ class ItemHandlerWrapper(private val handler: IItemHandler): SlottedStorage {
         var slidingLimit = limit
         var slidingItemStack = ItemStack.EMPTY
         for (currentSlot in startSlot..endSlot) {
+            val tryExtractedStack = handler.extractItem(currentSlot, limit, true)
+            if (tryExtractedStack.isEmpty)
+                continue
+            if (!predicate.test(tryExtractedStack))
+                continue
             val extractedStack = handler.extractItem(currentSlot, limit, false)
-            if (extractedStack.isEmpty)
-                continue
-            if (!predicate.test(extractedStack))
-                continue
             if (slidingItemStack.isEmpty) {
                 slidingItemStack = extractedStack
                 // So, update actual limit to have a little more sense

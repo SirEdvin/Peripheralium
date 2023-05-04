@@ -7,13 +7,42 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import site.siredvin.peripheralium.api.storage.SlottedStorage
 import site.siredvin.peripheralium.api.storage.StorageUtils
+import site.siredvin.peripheralium.storage.TestableStorage
+import java.util.function.Predicate
 import kotlin.test.assertEquals
 
-abstract class SlottedStorageTests {
-    abstract fun createStorage(items: List<ItemStack>, secondary: Boolean): SlottedStorage
+abstract class SlottedStorageTests: StorageTests() {
 
-    fun createStorage(sizes: List<Int>, stack: ItemStack, secondary: Boolean): SlottedStorage {
-        return createStorage(sizes.map {
+    internal class TestableWrap(private val storage: SlottedStorage): TestableStorage {
+        override fun getItem(slot: Int): ItemStack {
+            return storage.getItem(slot)
+        }
+
+        override fun getItems(): Iterator<ItemStack> {
+            return storage.getItems()
+        }
+
+        override fun takeItems(predicate: Predicate<ItemStack>, limit: Int): ItemStack {
+            return storage.takeItems(predicate, limit)
+        }
+
+        override fun storeItem(stack: ItemStack): ItemStack {
+            return storage.storeItem(stack)
+        }
+
+        override fun setChanged() {
+            storage.setChanged()
+        }
+
+    }
+
+    override fun createStorage(items: List<ItemStack>, secondary: Boolean): TestableStorage {
+        return TestableWrap(createSlottedStorage(items, secondary))
+    }
+    abstract fun createSlottedStorage(items: List<ItemStack>, secondary: Boolean): SlottedStorage
+
+    fun createSlottedStorage(sizes: List<Int>, stack: ItemStack, secondary: Boolean): SlottedStorage {
+        return createSlottedStorage(sizes.map {
             if (it == 0)
                 ItemStack.EMPTY
             else
@@ -70,8 +99,8 @@ abstract class SlottedStorageTests {
     @MethodSource("generateMoveSlottedParameters")
     fun testMoveToSlotted(argument: MoveArguments) {
         val grassBlock = ItemStack(Items.GRASS_BLOCK, 64)
-        val from = createStorage(argument.initialFrom, grassBlock, false)
-        val to = createStorage(argument.initialTo, grassBlock, true)
+        val from = createSlottedStorage(argument.initialFrom, grassBlock, false)
+        val to = createSlottedStorage(argument.initialTo, grassBlock, true)
         val movedAmount = from.moveTo(to, argument.moveLimit, argument.fromSlot, argument.toSlot, takePredicate = StorageUtils.ALWAYS)
         assertEquals(argument.expectedMoveAmount, movedAmount)
         StorageTestHelpers.assertSlottedStorage(from, argument.expectedFrom, "from")
@@ -83,8 +112,8 @@ abstract class SlottedStorageTests {
     @MethodSource("generateMoveSlottedParameters")
     fun testMoveFromSlotted(argument: MoveArguments) {
         val grassBlock = ItemStack(Items.GRASS_BLOCK, 64)
-        val from = createStorage(argument.initialFrom, grassBlock, false)
-        val to = createStorage(argument.initialTo, grassBlock, true)
+        val from = createSlottedStorage(argument.initialFrom, grassBlock, false)
+        val to = createSlottedStorage(argument.initialTo, grassBlock, true)
         val movedAmount = to.moveFrom(from, argument.moveLimit, argument.toSlot, argument.fromSlot, takePredicate = StorageUtils.ALWAYS)
         assertEquals(argument.expectedMoveAmount, movedAmount)
         StorageTestHelpers.assertSlottedStorage(from, argument.expectedFrom, "from")
