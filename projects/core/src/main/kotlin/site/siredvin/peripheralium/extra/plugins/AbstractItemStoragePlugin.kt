@@ -33,7 +33,7 @@ abstract class AbstractItemStoragePlugin: IPeripheralPlugin {
     }
 
     @LuaFunction(mainThread = true)
-    fun pushItem(computer: IComputerAccess, toName: String, itemQuery: Optional<Any>, limit: Optional<Int>): Int {
+    fun pushItem(computer: IComputerAccess, toName: String, itemQuery: Any?, limit: Optional<Int>): Int {
         val location: IPeripheral = computer.getAvailablePeripheral(toName)
             ?: throw LuaException("Target '$toName' does not exist")
 
@@ -46,7 +46,7 @@ abstract class AbstractItemStoragePlugin: IPeripheralPlugin {
     }
 
     @LuaFunction(mainThread = true)
-    fun pullItem(computer: IComputerAccess, fromName: String, itemQuery: Optional<Any>, limit: Optional<Int>): Int {
+    fun pullItem(computer: IComputerAccess, fromName: String, itemQuery: Any?, limit: Optional<Int>): Int {
         val location: IPeripheral = computer.getAvailablePeripheral(fromName)
             ?: throw LuaException("Target '$fromName' does not exist")
 

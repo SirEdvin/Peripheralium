@@ -3,6 +3,7 @@ package site.siredvin.peripheralium.fabric
 import com.mojang.authlib.GameProfile
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.shared.turtle.blocks.TurtleBlockEntity
+import dan200.computercraft.shared.util.NBTUtil
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.fabricmc.fabric.api.event.player.UseBlockCallback
 import net.fabricmc.fabric.api.event.player.UseEntityCallback
@@ -11,6 +12,7 @@ import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
@@ -122,5 +124,9 @@ class FabricPeripheraliumPlatform: PeripheraliumPlatform {
             if (useResult.consumesAction()) return useResult
         }
         return stack.useOn(UseOnContext(player, InteractionHand.MAIN_HAND, hit))
+    }
+
+    override fun nbtHash(tag: CompoundTag?): String? {
+        return NBTUtil.getNBTHash(tag)
     }
 }

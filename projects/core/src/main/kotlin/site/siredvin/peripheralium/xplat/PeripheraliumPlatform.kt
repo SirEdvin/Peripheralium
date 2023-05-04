@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile
 import dan200.computercraft.api.turtle.ITurtleAccess
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
@@ -78,6 +79,10 @@ interface PeripheraliumPlatform {
         fun useOn(player: ServerPlayer, stack: ItemStack, hit: BlockHitResult, canUseBlock: Predicate<BlockState>): InteractionResult {
             return get().useOn(player, stack, hit, canUseBlock)
         }
+
+        fun nbtHash(tag: CompoundTag?): String? {
+            return get().nbtHash(tag)
+        }
     }
 
     fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T>
@@ -95,5 +100,7 @@ interface PeripheraliumPlatform {
     fun interactWithEntity(player: ServerPlayer, hand: InteractionHand, entity: Entity, hit: EntityHitResult): InteractionResult
 
     fun useOn(player: ServerPlayer, stack: ItemStack, hit: BlockHitResult, canUseBlock: Predicate<BlockState>): InteractionResult
+
+    fun nbtHash(tag: CompoundTag?): String?
 
 }
