@@ -146,7 +146,7 @@ object LuaRepresentation {
      * So, this function exists mostly for converting ids like minecraft.looting to more
      * simple for anyone minecraft:looting. Mostly applicable for enchantments and effects
      */
-    private fun fromLegacyToNewID(legacyID: String): String {
+    fun fromLegacyToNewID(legacyID: String): String {
         return legacyID.substring(legacyID.indexOf(".") + 1).replace(".", ":")
     }
 }
