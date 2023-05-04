@@ -19,9 +19,8 @@ class DummySlottedStorage(override val size: Int, initialItems: List<ItemStack>)
     override fun takeItems(limit: Int, startSlot: Int, endSlot: Int, predicate: Predicate<ItemStack>): ItemStack {
         var slidingStack = ItemStack.EMPTY
         var slidingLimit = limit
-        val toRemove = mutableListOf<Int>()
         for (currentSlot in startSlot..endSlot) {
-            val stack = getItem(currentSlot)
+            val stack = items[currentSlot]
                 if (!stack.isEmpty && predicate.test(stack)) {
                     if (slidingStack.isEmpty) {
                         slidingStack = stack

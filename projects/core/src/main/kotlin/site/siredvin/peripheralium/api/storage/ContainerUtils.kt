@@ -16,15 +16,7 @@ object ContainerUtils {
         val existingStack = container.getItem(slot)
         if (existingStack.isEmpty || !predicate.test(existingStack))
             return ItemStack.EMPTY
-        if (existingStack.count < limit) {
-            container.setItem(slot, ItemStack.EMPTY)
-            container.setChanged()
-            return existingStack
-        }
-        val resultedStack = existingStack.split(limit)
-        container.setItem(slot, existingStack)
-        container.setChanged()
-        return resultedStack
+        return container.removeItem(slot, limit)
     }
 
     fun takeItems(container: Container, limit: Int, startSlot: Int = 0, endSlot: Int = -1, predicate: Predicate<ItemStack>): ItemStack {
@@ -48,6 +40,7 @@ object ContainerUtils {
                 stack.grow(extractedStack.count)
             }
         }
+        container.setChanged()
         return stack
     }
 
@@ -78,10 +71,13 @@ object ContainerUtils {
 
                 slidingStack = StorageUtils.inplaceMerge(slotStack, slidingStack)
 
-                if (slidingStack.isEmpty)
+                if (slidingStack.isEmpty) {
+                    container.setChanged()
                     return ItemStack.EMPTY
+                }
             }
         }
+        container.setChanged()
         return slidingStack
     }
 
