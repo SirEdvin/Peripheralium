@@ -1,18 +1,18 @@
-package site.siredvin.peripheralium.tests.storage
+package site.siredvin.peripheralium.storage
 
 import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.storage.SlottedStorage
 import site.siredvin.peripheralium.api.storage.StorageUtils
 import java.util.function.Predicate
 
-class DummySlottedStorage(override val size: Int): SlottedStorage {
+class DummySlottedStorage(override val size: Int, initialItems: List<ItemStack>): SlottedStorage {
 
     val items: Array<ItemStack> = Array(size) { ItemStack.EMPTY }
 
-    constructor(sizes: List<Int>, fillStack: ItemStack): this(sizes.size) {
-        sizes.forEachIndexed{ index, it ->
-            if (it > 0)
-                items[index] = fillStack.copyWithCount(it)
+    init {
+        initialItems.forEachIndexed { index, itemStack ->
+            if (!itemStack.isEmpty)
+                items[index] = itemStack.copy()
         }
     }
 

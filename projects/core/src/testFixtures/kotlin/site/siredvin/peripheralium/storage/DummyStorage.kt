@@ -1,27 +1,28 @@
-package site.siredvin.peripheralium.tests.storage
+package site.siredvin.peripheralium.storage
 
 import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.storage.Storage
 import site.siredvin.peripheralium.api.storage.StorageUtils
 import java.util.function.Predicate
+import kotlin.math.max
 
-class DummyStorage(private val maxSlots: Int, vararg stacks: ItemStack): Storage {
+class DummyStorage(private val maxSlots: Int, initialItems: List<ItemStack>): TestableStorage {
 
     val items: MutableList<ItemStack> = mutableListOf()
 
-    constructor(sizes: List<Int>, fillStack: ItemStack) : this(sizes.size) {
-        sizes.forEach {
-            if (it > 0)
-                items.add(fillStack.copyWithCount(it))
+    init {
+        if (initialItems.size > maxSlots)
+            throw IllegalArgumentException("Max slots is too low for you?")
+        initialItems.forEach {
+            items.add(it)
         }
+        clean()
     }
 
-    init {
-        if (stacks.size > maxSlots)
-            throw IllegalArgumentException("Stacks amount should be lower then max slots")
-        // Make here copy always
-        stacks.forEach { items.add(it.copy()) }
+    override fun getItem(slot: Int): ItemStack {
+        return items[slot]
     }
+
     override fun getItems(): Iterator<ItemStack> {
         return items.iterator()
     }

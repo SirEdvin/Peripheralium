@@ -44,6 +44,13 @@ repositories {
     }
 }
 
+sourceSets {
+    test {
+        compileClasspath += project(":core").sourceSets["testFixtures"].output
+        runtimeClasspath += project(":core").sourceSets["testFixtures"].output
+    }
+}
+
 dependencies {
     minecraft("com.mojang:minecraft:${minecraftVersion}")
     mappings(loom.officialMojangMappings())
@@ -72,7 +79,6 @@ dependencies {
     }
 
     testImplementation(kotlin("test"))
-
     testCompileOnly(libs.autoService)
     testAnnotationProcessor(libs.autoService)
     testImplementation(libs.byteBuddy)

@@ -39,10 +39,10 @@ class FabricSlottedStorageWrapper(private val storage: net.fabricmc.fabric.api.t
         fromSlot: Int,
         takePredicate: Predicate<ItemStack>
     ): Int {
-        val operableStorage = if (fromSlot < 0) {
+        val operableStorage = if (toSlot < 0) {
             storage
         } else {
-            getSingleSlot(fromSlot)
+            getSingleSlot(toSlot)
         }
         if (from is FabricSlottedStorageWrapper) {
             val slotStorage = from.getSingleSlot(fromSlot)

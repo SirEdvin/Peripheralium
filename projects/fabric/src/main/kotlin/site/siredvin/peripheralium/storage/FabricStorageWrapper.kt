@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.storage.*
 import java.util.function.Predicate
 
-class FabricStorageWrapper(val storage: FabricStorage<ItemVariant>): Storage {
+open class FabricStorageWrapper(val storage: FabricStorage<ItemVariant>): Storage {
     companion object {
         const val MOVABLE_TYPE = "fabricTransaction"
     }

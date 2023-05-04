@@ -55,10 +55,6 @@ public class FabricBootstrap implements Extension {
     public FabricBootstrap() throws ReflectiveOperationException, IOException {
         Log.init(new Slf4jLogHandler());
 
-        for (int i = 0; i < 1000; i++)
-            System.out.println("SDFGJSDVFHJGSDFVHSDGFVSDHFGVSDHFGVSDF");
-
-
         readProperties();
         {
             var method = FabricLauncherBase.class.getDeclaredMethod("setProperties", Map.class);
