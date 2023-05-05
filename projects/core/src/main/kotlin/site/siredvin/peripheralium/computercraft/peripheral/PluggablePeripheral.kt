@@ -12,6 +12,7 @@ import site.siredvin.peripheralium.api.peripheral.IObservingPeripheralPlugin
 import site.siredvin.peripheralium.api.peripheral.IPeripheralOperation
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 import site.siredvin.peripheralium.api.peripheral.IPluggablePeripheral
+import site.siredvin.peripheralium.extra.plugins.PeripheralPluginUtils
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import java.util.function.Consumer
@@ -28,10 +29,15 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
     val connectedComputers: List<IComputerAccess>
         get() = _connectedComputers
 
+    protected fun initAdditionalTypeStorage() {
+        additionalTypeStorage = mutableSetOf()
+        additionalTypeStorage!!.add(PeripheralPluginUtils.TYPES.PLUGGABLE)
+    }
+
     protected open fun addAdditionalType(additionalType: String?) {
         if (additionalType != null && additionalType != peripheralType) {
             if (additionalTypeStorage == null)
-                additionalTypeStorage = mutableSetOf()
+                initAdditionalTypeStorage()
             additionalTypeStorage!!.add(additionalType)
         }
     }
@@ -51,7 +57,7 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
             initialized = true
             pluggedMethods.clear()
             if (additionalTypeStorage == null) {
-                additionalTypeStorage = mutableSetOf()
+                initAdditionalTypeStorage()
             } else {
                 additionalTypeStorage?.clear()
             }

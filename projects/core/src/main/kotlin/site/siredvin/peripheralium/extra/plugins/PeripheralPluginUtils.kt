@@ -15,6 +15,7 @@ object PeripheralPluginUtils {
         const val FLUID_STORAGE = "fluid_storage"
         const val ITEM_STORAGE = "item_storage"
         const val ENERGY_STORAGE = "energy_storage"
+        const val PLUGGABLE = "pluggable"
     }
 
     private object ITEM_QUERY_FIELD {

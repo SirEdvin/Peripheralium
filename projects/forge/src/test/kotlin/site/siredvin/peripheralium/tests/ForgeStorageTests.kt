@@ -2,10 +2,14 @@ package site.siredvin.peripheralium.tests
 
 import net.minecraft.world.SimpleContainer
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraftforge.items.wrapper.InvWrapper
+import org.junit.jupiter.api.Test
 import site.siredvin.peripheralium.api.storage.SlottedStorage
+import site.siredvin.peripheralium.api.storage.StorageUtils
 import site.siredvin.peripheralium.api.storage.TargetableContainer
 import site.siredvin.peripheralium.storage.ItemHandlerWrapper
+import kotlin.test.assertEquals
 
 @WithMinecraft
 class ForgeSlottedStorageTests: SlottedStorageTests() {
