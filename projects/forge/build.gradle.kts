@@ -95,7 +95,7 @@ dependencies {
         exclude("fuzs.forgeconfigapiport")
     }
     implementation(libs.bundles.forge.raw)
-    implementation(fg.deobf("cc.tweaked:cc-tweaked-1.19.4-forge:${extractedLibs.findVersion("cc-tweaked").get()}"))
+    libs.bundles.forge.base.get().map { implementation(fg.deobf(it))}
 
     libs.bundles.externalMods.forge.runtime.get().map { runtimeOnly(fg.deobf(it))}
 
@@ -143,10 +143,14 @@ tasks.test {
     useJUnitPlatform()
 }
 
-
 tasks.jar {
     finalizedBy("reobfJar")
-    archiveClassifier.set("slim")
+    archiveClassifier.set("")
+}
+
+tasks.jarJar {
+    finalizedBy("reobfJarJar")
+    archiveClassifier.set("jarjar")
 }
 
 publishing {
@@ -155,9 +159,6 @@ publishing {
             artifactId = base.archivesName.get()
             from(components["java"])
             fg.component(this)
-            // jarJar.component is broken (https://github.com/MinecraftForge/ForgeGradle/issues/914), so declare the
-            // artifact explicitly.
-            artifact(tasks.jarJar)
 
             mavenDependencies {
                 exclude(dependencies.create("site.siredvin:"))

@@ -37,6 +37,10 @@ import java.util.function.Supplier
 
 
 class FabricPeripheraliumPlatform: PeripheraliumPlatform {
+
+    companion object {
+        const val FORGE_COMPACT_DEVIDER = 81.0
+    }
     
     private class FabricRegistryWrapper<T>(private val name: ResourceLocation, private val registry: Registry<T>): RegistryWrapper<T> {
         override fun getId(something: T): Int {
@@ -70,6 +74,10 @@ class FabricPeripheraliumPlatform: PeripheraliumPlatform {
         }
 
     }
+
+    override val fluidCompactDivider: Double
+        get() = FORGE_COMPACT_DEVIDER
+
     override fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T> {
         val targetRegistry: Registry<T> = (BuiltInRegistries.REGISTRY.get(registry.location()) ?: throw IllegalArgumentException("Cannot find registry $registry")) as Registry<T>
         return FabricRegistryWrapper(registry.location(), targetRegistry)

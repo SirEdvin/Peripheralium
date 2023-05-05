@@ -89,7 +89,7 @@ ccfabric = ["cc-tweaked-fabric", "cc-tweaked-core"]
 fabric-core = ["fabric-loader"]
 fabric = ["fabric-api", "fabric-kotlin", "fabric-config"]
 forge-raw = ["forge-kotlin"]
-forge = ["cc-tweaked-forge"]
+forge-base = ["cc-tweaked-forge"]
 
 # Minecraft
 #externalMods-common = ["jei-api", "nightConfig-core", "nightConfig-toml"]

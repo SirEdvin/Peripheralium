@@ -14,14 +14,12 @@ import net.minecraft.world.level.material.Fluids
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 import site.siredvin.peripheralium.common.FabricExtractorProxy
 import site.siredvin.peripheralium.common.configuration.PeripheraliumConfig
+import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.*
 import java.util.function.Predicate
 
 class FluidStoragePlugin(private val level: Level, private val storage: Storage<FluidVariant>): IPeripheralPlugin {
 
-    companion object {
-        const val FORGE_COMPACT_DEVIDER = 81.0
-    }
 
     override val additionalType: String
         get() = PeripheralPluginUtils.TYPES.FLUID_STORAGE
@@ -32,8 +30,8 @@ class FluidStoragePlugin(private val level: Level, private val storage: Storage<
         storage.iterator().forEach {
             data.add(hashMapOf(
                 "name" to BuiltInRegistries.FLUID.getKey(it.resource.fluid).toString(),
-                "amount" to it.amount / FORGE_COMPACT_DEVIDER,
-                "capacity" to it.capacity / FORGE_COMPACT_DEVIDER
+                "amount" to it.amount / PeripheraliumPlatform.fluidCompactDivider,
+                "capacity" to it.capacity / PeripheraliumPlatform.fluidCompactDivider
             ))
         }
         return data
@@ -55,8 +53,8 @@ class FluidStoragePlugin(private val level: Level, private val storage: Storage<
                 throw LuaException("There is no fluid ${fluidName.get()}")
             Predicate { it.fluid.isSame(fluid) }
         }
-        val realLimit = minOf(PeripheraliumConfig.fluidStorageTransferLimit.toLong(), limit.map { it * FORGE_COMPACT_DEVIDER.toLong() }.orElse(Long.MAX_VALUE))
-        return StorageUtil.move(storage, toStorage, predicate, realLimit, null) / FORGE_COMPACT_DEVIDER
+        val realLimit = minOf(PeripheraliumConfig.fluidStorageTransferLimit.toLong(), limit.map { it * PeripheraliumPlatform.fluidCompactDivider.toLong() }.orElse(Long.MAX_VALUE))
+        return StorageUtil.move(storage, toStorage, predicate, realLimit, null) / PeripheraliumPlatform.fluidCompactDivider
     }
 
     @LuaFunction(mainThread = true)
@@ -75,7 +73,7 @@ class FluidStoragePlugin(private val level: Level, private val storage: Storage<
                 throw LuaException("There is no fluid ${fluidName.get()}")
             Predicate { it.fluid.isSame(fluid) }
         }
-        val realLimit = minOf(PeripheraliumConfig.fluidStorageTransferLimit.toLong(), limit.map { it * FORGE_COMPACT_DEVIDER.toLong() }.orElse(Long.MAX_VALUE))
-        return StorageUtil.move(fromStorage, storage, predicate, realLimit, null) / FORGE_COMPACT_DEVIDER
+        val realLimit = minOf(PeripheraliumConfig.fluidStorageTransferLimit.toLong(), limit.map { it * PeripheraliumPlatform.fluidCompactDivider.toLong() }.orElse(Long.MAX_VALUE))
+        return StorageUtil.move(fromStorage, storage, predicate, realLimit, null) / PeripheraliumPlatform.fluidCompactDivider
     }
 }

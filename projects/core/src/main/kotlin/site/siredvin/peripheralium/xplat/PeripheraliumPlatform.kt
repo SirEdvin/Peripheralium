@@ -40,6 +40,9 @@ interface PeripheraliumPlatform {
             return _IMPL!!
         }
 
+        val fluidCompactDivider: Double
+            get() = get().fluidCompactDivider
+
         fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T> {
             return get().wrap(registry)
         }
@@ -84,6 +87,8 @@ interface PeripheraliumPlatform {
             return get().nbtHash(tag)
         }
     }
+
+    val fluidCompactDivider: Double
 
     fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T>
 

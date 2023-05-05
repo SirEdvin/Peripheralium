@@ -29,17 +29,17 @@ object ForgePeripheralium {
 
     init {
         PeripheraliumCore.configure(ForgePeripheraliumPlatform(), ForgeIngredients)
+        val context = ModLoadingContext.get()
+        context.registerConfig(ModConfig.Type.COMMON, ConfigHolder.COMMON_SPEC)
         // Register extract storages
         ExtractorProxy.addStorageExtractor(ForgeStorageUtils::extractStorage)
         val eventBus = MOD_CONTEXT.getKEventBus()
-        eventBus.register(this::commonSetup)
+        eventBus.addListener(this::commonSetup)
         LibCommonHooks.onRegister()
         blocksRegistry.register(eventBus)
         itemsRegistry.register(eventBus)
     }
 
     fun commonSetup(event: FMLCommonSetupEvent) {
-        val context = ModLoadingContext.get()
-        context.registerConfig(ModConfig.Type.COMMON, ConfigHolder.COMMON_SPEC)
     }
 }
