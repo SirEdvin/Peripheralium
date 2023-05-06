@@ -5,6 +5,7 @@ import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
 import dan200.computercraft.api.peripheral.IComputerAccess
 import dan200.computercraft.api.peripheral.IPeripheral
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 import site.siredvin.peripheralium.api.storage.SlottedStorage
@@ -21,13 +22,11 @@ abstract class AbstractInventoryPlugin: IPeripheralPlugin {
     override val additionalType: String
         get() = PeripheralPluginUtils.TYPES.INVENTORY
 
-    @LuaFunction(mainThread = true)
-    fun size(): Int {
+    open fun sizeImpl(): Int {
         return storage.size
     }
 
-    @LuaFunction(mainThread = true)
-    fun list(): Map<Int, Map<String, *>> {
+    open fun listImpl(): Map<Int, Map<String, *>> {
         val result: MutableMap<Int, Map<String, *>> = hashMapOf()
         val size = storage.size
         for (i in 0 until size) {
@@ -37,17 +36,35 @@ abstract class AbstractInventoryPlugin: IPeripheralPlugin {
         return result
     }
 
+    open fun getItemDetailImpl(slot: Int): Map<String, *>? {
+        val stack = storage.getItem(slot)
+        return if (stack.isEmpty) null else VanillaDetailRegistries.ITEM_STACK.getDetails(stack)
+    }
+
+    open fun getItemLimitImpl(slot: Int): Int {
+        return storage.getItem(slot).maxStackSize
+    }
+
+    @LuaFunction(mainThread = true)
+    fun size(): Int {
+        return sizeImpl()
+    }
+
+    @LuaFunction(mainThread = true)
+    fun list(): Map<Int, Map<String, *>> {
+        return listImpl()
+    }
+
     @LuaFunction(mainThread = true)
     fun getItemDetail(slot: Int): Map<String, *>? {
         assertBetween(slot, 1, storage.size, "slot")
-        val stack = storage.getItem(slot - 1)
-        return if (stack.isEmpty) null else VanillaDetailRegistries.ITEM_STACK.getDetails(stack)
+        return getItemDetailImpl(slot - 1)
     }
 
     @LuaFunction(mainThread = true)
     fun getItemLimit(slot: Int): Int {
         assertBetween(slot, 1, storage.size, "slot")
-        return storage.getItem(slot - 1).maxStackSize
+        return getItemLimitImpl(slot - 1)
     }
 
     @LuaFunction(mainThread = true)

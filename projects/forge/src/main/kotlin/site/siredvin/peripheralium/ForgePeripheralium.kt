@@ -40,6 +40,10 @@ object ForgePeripheralium {
         itemsRegistry.register(eventBus)
     }
 
+    fun sayHi() {
+
+    }
+
     fun commonSetup(event: FMLCommonSetupEvent) {
     }
 }
