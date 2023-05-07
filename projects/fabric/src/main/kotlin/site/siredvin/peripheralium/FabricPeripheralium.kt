@@ -19,6 +19,8 @@ object FabricPeripheralium: ModInitializer {
         ExtractorProxy.addStorageExtractor(FabricStorageUtils::extractStorage)
     }
 
+    fun sayHi() {}
+
     override fun onInitialize() {
         ForgeConfigRegistry.INSTANCE.register(PeripheraliumCore.MOD_ID, ModConfig.Type.COMMON, ConfigHolder.COMMON_SPEC)
         LibCommonHooks.onRegister()
