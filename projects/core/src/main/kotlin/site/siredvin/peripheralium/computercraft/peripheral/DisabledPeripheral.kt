@@ -1,8 +1,8 @@
 package site.siredvin.peripheralium.computercraft.peripheral
 
-import site.siredvin.peripheralium.computercraft.peripheral.owner.PocketPeripheralOwner
+import site.siredvin.peripheralium.computercraft.peripheral.owner.DisabledPeripheralOwner
 
-object DisabledPeripheral: OwnedPeripheral<PocketPeripheralOwner>("disabled", PocketPeripheralOwner(null)) {
+object DisabledPeripheral: OwnedPeripheral<DisabledPeripheralOwner>("disabled", DisabledPeripheralOwner()) {
     override val isEnabled: Boolean
         get() = true
 }

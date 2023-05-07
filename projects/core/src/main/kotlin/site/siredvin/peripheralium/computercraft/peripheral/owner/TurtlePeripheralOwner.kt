@@ -38,8 +38,8 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
         turtle.updateUpgradeNBTData(side)
     }
 
-    override fun <T> withPlayer(function: (ServerPlayer) -> T, overwrittenDirection: Direction?): T {
-        return FakePlayerProviderTurtle.withPlayer(turtle, function, overwrittenDirection = overwrittenDirection)
+    override fun <T> withPlayer(function: (ServerPlayer) -> T, overwrittenDirection: Direction?, skipInventory: Boolean): T {
+        return FakePlayerProviderTurtle.withPlayer(turtle, function, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
     }
 
     override val toolInMainHand: ItemStack
@@ -54,7 +54,7 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
     }
 
     override fun isMovementPossible(level: Level, pos: BlockPos): Boolean {
-        return FakePlayerProviderTurtle.withPlayer(turtle, { player ->
+        return FakePlayerProviderTurtle.withPlayer(turtle, { _ ->
             if (level.isOutsideBuildHeight(pos))
                 return@withPlayer false;
             if (!level.isInWorldBounds(pos))

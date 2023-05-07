@@ -26,7 +26,7 @@ interface IPeripheralOwner {
 
     fun markDataStorageDirty()
 
-    fun <T> withPlayer(function: (ServerPlayer) ->  T, overwrittenDirection: Direction? = null): T
+    fun <T> withPlayer(function: (ServerPlayer) ->  T, overwrittenDirection: Direction? = null, skipInventory: Boolean = false): T
     val toolInMainHand: ItemStack
     fun storeItem(stored: ItemStack): ItemStack
     fun destroyUpgrade()

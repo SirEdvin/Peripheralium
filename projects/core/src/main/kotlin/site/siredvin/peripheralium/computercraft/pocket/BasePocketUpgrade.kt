@@ -12,7 +12,7 @@ import site.siredvin.peripheralium.util.pocketAdjective
 abstract class BasePocketUpgrade<T : IOwnedPeripheral<*>> : AbstractPocketUpgrade {
     protected var peripheral: T? = null
 
-    protected constructor(id: ResourceLocation, adjective: String?, stack: ItemStack?) : super(
+    protected constructor(id: ResourceLocation, adjective: String?, stack: ItemStack) : super(
         id,
         adjective,
         stack
@@ -26,7 +26,7 @@ abstract class BasePocketUpgrade<T : IOwnedPeripheral<*>> : AbstractPocketUpgrad
     ) {
     }
 
-    protected abstract fun getPeripheral(access: IPocketAccess?): T
+    protected abstract fun getPeripheral(access: IPocketAccess): T
     override fun createPeripheral(access: IPocketAccess): IPeripheral? {
         peripheral = getPeripheral(access)
         return if (!peripheral!!.isEnabled) DisabledPeripheral else peripheral

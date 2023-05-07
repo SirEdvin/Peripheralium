@@ -8,47 +8,46 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import site.siredvin.peripheralium.api.storage.ContainerUtils
 import site.siredvin.peripheralium.util.DataStorageUtil
+import site.siredvin.peripheralium.util.world.FakePlayerProviderPocket
 
-class PocketPeripheralOwner(private val pocket: IPocketAccess?) : BasePeripheralOwner() {
+class PocketPeripheralOwner(private val pocket: IPocketAccess) : BasePeripheralOwner() {
     override val level: Level?
         get() {
-            val owner = pocket?.
-            entity ?: return null
+            val owner = pocket.entity ?: return null
             return owner.commandSenderWorld
         }
     override val pos: BlockPos
         get() {
-            val owner = pocket?.entity ?: return BlockPos(0, 0, 0)
+            val owner = pocket.entity ?: return BlockPos(0, 0, 0)
             return owner.blockPosition()
         }
     override val facing: Direction
         get() {
-            val owner = pocket?.entity ?: return Direction.NORTH
+            val owner = pocket.entity ?: return Direction.NORTH
             return owner.direction
         }
     override val owner: Player?
-        get() {
-            val owner = pocket?.entity
-            return if (owner is Player) owner else null
-        }
+        get() = pocket.entity as? Player
+
     override val dataStorage: CompoundTag
-        get() = pocket?.let { DataStorageUtil.getDataStorage(it) } ?: CompoundTag()
+        get() = pocket.let { DataStorageUtil.getDataStorage(it) }
 
     override fun markDataStorageDirty() {
-        pocket?.updateUpgradeNBTData()
+        pocket.updateUpgradeNBTData()
     }
 
-    override fun <T> withPlayer(function: (ServerPlayer) -> T, overwrittenDirection: Direction?): T {
-        throw RuntimeException("Not implemented yet")
+    override fun <T> withPlayer(function: (ServerPlayer) -> T, overwrittenDirection: Direction?, skipInventory: Boolean): T {
+        return FakePlayerProviderPocket.withPlayer(pocket, function, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
     }
 
     override val toolInMainHand: ItemStack
-        get() = ItemStack.EMPTY
+        get() = owner?.mainHandItem ?: ItemStack.EMPTY
 
     override fun storeItem(stored: ItemStack): ItemStack {
-        // Tricks with inventory needed
-        throw RuntimeException("Not implemented yet")
+        val player = owner ?: return stored
+        return ContainerUtils.storeItem(player.inventory, stored)
     }
 
     override fun destroyUpgrade() {

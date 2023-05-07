@@ -13,8 +13,8 @@ import site.siredvin.peripheralium.storage.TestableStorage
 
 internal class TweakedFabricStorageWrapper(private val inventoryStorage: InventoryStorage): FabricStorageWrapper(inventoryStorage), TestableStorage {
     override fun getItem(slot: Int): ItemStack {
-        val slot = inventoryStorage.getSlot(slot)
-        return slot.resource.toStack(slot.amount.toInt())
+        val variantInSlot = inventoryStorage.getSlot(slot)
+        return variantInSlot.resource.toStack(variantInSlot.amount.toInt())
     }
 
 }

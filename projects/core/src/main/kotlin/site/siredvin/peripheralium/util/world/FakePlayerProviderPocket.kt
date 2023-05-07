@@ -1,39 +1,38 @@
 package site.siredvin.peripheralium.util.world
 
 import com.mojang.authlib.GameProfile
-import dan200.computercraft.api.turtle.ITurtleAccess
+import dan200.computercraft.api.lua.LuaException
+import dan200.computercraft.api.pocket.IPocketAccess
 import net.minecraft.core.Direction
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.storage.ContainerUtils
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.*
 import java.util.function.Function
 
-object FakePlayerProviderTurtle {
-    /*
-    Highly inspired by https://github.com/SquidDev-CC/plethora/blob/minecraft-1.12/src/main/java/org/squiddev/plethora/integration/computercraft/FakePlayerProviderTurtle.java
-    */
-    private val registeredPlayers: WeakHashMap<ITurtleAccess, ServerPlayer> =
-        WeakHashMap<ITurtleAccess, ServerPlayer>()
+object FakePlayerProviderPocket {
+    private val registeredPlayers: WeakHashMap<IPocketAccess, ServerPlayer> =
+        WeakHashMap<IPocketAccess, ServerPlayer>()
 
-    private fun getPlayer(turtle: ITurtleAccess, profile: GameProfile): ServerPlayer {
-        var fake: ServerPlayer? = registeredPlayers[turtle]
+    private fun getPlayer(pocket: IPocketAccess, profile: GameProfile): ServerPlayer {
+        var fake: ServerPlayer? = registeredPlayers[pocket]
         if (fake == null) {
-            fake = PeripheraliumPlatform.createFakePlayer(turtle.level as ServerLevel, profile)
-            registeredPlayers[turtle] = fake
+            fake = PeripheraliumPlatform.createFakePlayer(pocket.entity!!.level as ServerLevel, profile)
+            registeredPlayers[pocket] = fake
         }
         return fake
     }
 
-    private fun load(player: ServerPlayer, turtle: ITurtleAccess, overwrittenDirection: Direction? = null, skipInventory: Boolean = false) {
-        val direction = overwrittenDirection ?: turtle.direction
-        player.setLevel(turtle.level as ServerLevel)
-        val position = turtle.position
+    private fun load(player: ServerPlayer, realPlayer: Player, overwrittenDirection: Direction? = null, skipInventory: Boolean = false) {
+        val direction = overwrittenDirection ?: realPlayer.direction
+        player.setLevel(realPlayer.level as ServerLevel)
+        val position = realPlayer.blockPosition()
         // Player position
         val pitch: Float = if (direction == Direction.UP) -90f else if (direction == Direction.DOWN) 90f else 0f
         val yaw: Float =
@@ -45,18 +44,20 @@ object FakePlayerProviderTurtle {
         val y = 0.5 + sideVec.y / 1.9
         val z = if (a === Direction.Axis.Z && ad == Direction.AxisDirection.NEGATIVE) -.5 else .5 + sideVec.z / 1.9
         player.moveTo(position.x + x, position.y + y, position.z + z, yaw, pitch)
+
         if (!skipInventory) {
+
             // Player inventory
             val playerInventory: Inventory = player.inventory
             playerInventory.selected = 0
 
             // Copy primary items into player inventory and empty the rest
-            val turtleInventory = turtle.inventory
-            val size = turtleInventory.containerSize
+            val realPlayerInventory = realPlayer.inventory
+            val size = realPlayerInventory.containerSize
             val largerSize = playerInventory.containerSize
-            playerInventory.selected = turtle.selectedSlot
+            playerInventory.selected = realPlayer.inventory.selected
             for (i in 0 until size) {
-                playerInventory.setItem(i, turtleInventory.getItem(i))
+                playerInventory.setItem(i, realPlayerInventory.getItem(i))
             }
             for (i in size until largerSize) {
                 playerInventory.setItem(i, ItemStack.EMPTY)
@@ -70,7 +71,7 @@ object FakePlayerProviderTurtle {
         }
     }
 
-    private fun unload(player: ServerPlayer, turtle: ITurtleAccess, skipInventory: Boolean = false) {
+    private fun unload(player: ServerPlayer, realPlayer: Player, skipInventory: Boolean = false) {
         val playerInventory: Inventory = player.inventory
         playerInventory.selected = 0
 
@@ -80,31 +81,40 @@ object FakePlayerProviderTurtle {
             player.attributes.removeAttributeModifiers(activeStack.getAttributeModifiers(EquipmentSlot.MAINHAND))
         }
 
+        // Copy primary items into turtle inventory and then insert/drop the rest
         if (!skipInventory) {
-            // Copy primary items into turtle inventory and then insert/drop the rest
-            val turtleInventory = turtle.inventory
-            val size: Int = turtleInventory.containerSize
+            val realPlayerInventory = realPlayer.inventory
+            val size: Int = realPlayerInventory.containerSize
             val largerSize = playerInventory.containerSize
-            playerInventory.selected = turtle.selectedSlot
+            playerInventory.selected = realPlayer.score
             for (i in 0 until size) {
-                turtleInventory.setItem(i, playerInventory.getItem(i))
+                realPlayerInventory.setItem(i, playerInventory.getItem(i))
                 playerInventory.setItem(i, ItemStack.EMPTY)
             }
             for (i in size until largerSize) {
                 val remaining = playerInventory.getItem(i)
                 if (!remaining.isEmpty) {
-                    ContainerUtils.toInventoryOrToWorld(remaining, turtleInventory, 0, turtle.position, turtle.level)
+                    ContainerUtils.toInventoryOrToWorld(
+                        remaining,
+                        realPlayerInventory,
+                        0,
+                        realPlayer.blockPosition(),
+                        realPlayer.level
+                    )
                 }
                 playerInventory.setItem(i, ItemStack.EMPTY)
             }
         }
     }
 
-    fun <T> withPlayer(turtle: ITurtleAccess, function: Function<ServerPlayer, T>, overwrittenDirection: Direction? = null, skipInventory: Boolean = false): T {
-        val player: ServerPlayer = getPlayer(turtle, turtle.owningPlayer?: FakePlayerProxy.DUMMY_PROFILE)
-        load(player, turtle, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
+    fun <T> withPlayer(pocket: IPocketAccess, function: Function<ServerPlayer, T>, overwrittenDirection: Direction? = null, skipInventory: Boolean = false): T {
+        val realPlayer = pocket.entity as? Player
+            ?: throw LuaException("Cannot init player for this pocket computer for some reason")
+        val player: ServerPlayer =
+            getPlayer(pocket, realPlayer.gameProfile ?: FakePlayerProxy.DUMMY_PROFILE)
+        load(player, realPlayer, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
         val result = function.apply(player)
-        unload(player, turtle, skipInventory = skipInventory)
+        unload(player, realPlayer, skipInventory = skipInventory)
         return result
     }
 }
