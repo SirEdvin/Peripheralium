@@ -5,7 +5,6 @@ import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.storage.SlottedStorage
 import site.siredvin.peripheralium.api.storage.TargetableContainer
 import site.siredvin.peripheralium.storage.DummyStorage
-import site.siredvin.peripheralium.storage.TestableStorage
 
 @WithMinecraft
 internal class BaseStorageTests: StorageTests() {

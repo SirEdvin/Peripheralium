@@ -45,8 +45,22 @@ class FabricSlottedStorageWrapper(private val storage: net.fabricmc.fabric.api.t
             getSingleSlot(toSlot)
         }
         if (from is FabricSlottedStorageWrapper) {
-            val slotStorage = from.getSingleSlot(fromSlot)
-            return StorageUtil.move(slotStorage, operableStorage,  FabricStorageUtils.wrap(takePredicate), limit.toLong(), null).toInt()
+            if (fromSlot > 0) {
+                val slotStorage = from.getSingleSlot(fromSlot)
+                return StorageUtil.move(
+                    slotStorage,
+                    operableStorage,
+                    FabricStorageUtils.wrap(takePredicate),
+                    limit.toLong(),
+                    null
+                ).toInt()
+            } else {
+                return StorageUtil.move(
+                    from.storage, operableStorage, FabricStorageUtils.wrap(takePredicate),
+                    limit.toLong(),
+                    null
+                ).toInt()
+            }
         }
         if (from is FabricStorageWrapper) {
             if (fromSlot > -1)
@@ -127,5 +141,5 @@ class FabricSlottedStorageWrapper(private val storage: net.fabricmc.fabric.api.t
         get() = storage.slotCount
 
     override val movableType: String
-        get() = FabricStorageWrapper.MOVABLE_TYPE
+        get() = FabricStorageUtils.MOVABLE_TYPE
 }

@@ -4,10 +4,8 @@ import dan200.computercraft.api.lua.LuaException
 import net.minecraft.world.item.ItemStack
 import java.util.function.Predicate
 
-interface SlottedStorage: Storage, TargetableSlottedStorage {
+interface SlottedStorage: Storage, TargetableSlottedStorage, AccessibleStorage {
     fun takeItems(limit: Int, startSlot: Int, endSlot: Int, predicate: Predicate<ItemStack>): ItemStack
-
-    fun getItem(slot: Int): ItemStack
 
     fun canPlaceItem(slot: Int, item: ItemStack): Boolean
 

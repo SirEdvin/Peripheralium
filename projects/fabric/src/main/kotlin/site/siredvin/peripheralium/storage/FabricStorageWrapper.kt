@@ -11,9 +11,6 @@ import site.siredvin.peripheralium.api.storage.*
 import java.util.function.Predicate
 
 open class FabricStorageWrapper(val storage: FabricStorage<ItemVariant>): Storage {
-    companion object {
-        const val MOVABLE_TYPE = "fabricTransaction"
-    }
 
     override fun moveTo(to: TargetableStorage, limit: Int, toSlot: Int, takePredicate: Predicate<ItemStack>): Int {
         if (to is FabricSlottedStorageWrapper)
@@ -47,7 +44,7 @@ open class FabricStorageWrapper(val storage: FabricStorage<ItemVariant>): Storag
     }
 
     override val movableType: String
-        get() = MOVABLE_TYPE
+        get() = FabricStorageUtils.MOVABLE_TYPE
 
     override fun getItems(): Iterator<ItemStack> {
         return SlidingIterator(storage.iterator())

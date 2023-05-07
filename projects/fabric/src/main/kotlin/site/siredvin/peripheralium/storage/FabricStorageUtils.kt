@@ -15,6 +15,9 @@ import java.util.function.Predicate
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage as FabricStorage
 
 object FabricStorageUtils {
+
+    const val MOVABLE_TYPE = "fabricTransaction"
+
     private class PredicateWrapper(private val predicate: Predicate<ItemStack>): Predicate<ItemVariant> {
         override fun test(p0: ItemVariant): Boolean {
             return predicate.test(p0.toStack())
@@ -30,7 +33,7 @@ object FabricStorageUtils {
      * Generic move to any targetable storage, should be used only after make sure that to is not fabric one related!
      */
     fun moveToTargetable(storage: FabricStorage<ItemVariant>, to: TargetableStorage, limit: Int, toSlot: Int, takePredicate: Predicate<ItemStack>): Int {
-        assert(to !is FabricStorageWrapper)
+        assert(to.movableType != MOVABLE_TYPE)
 
         val transaction = Transaction.openOuter()
         transaction.use {
@@ -59,7 +62,7 @@ object FabricStorageUtils {
      * Generic move from any targetable storage, should be used only after make sure that to is not fabric one related!
      */
     fun moveFromTargetable(from: Storage, to: FabricStorage<ItemVariant>, limit: Int, fromSlot: Int, takePredicate: Predicate<ItemStack>): Int {
-        assert(from !is FabricStorageWrapper)
+        assert(from.movableType != MOVABLE_TYPE)
 
         val insertionStack = if (fromSlot < 0) {
             from.takeItems(takePredicate, limit)

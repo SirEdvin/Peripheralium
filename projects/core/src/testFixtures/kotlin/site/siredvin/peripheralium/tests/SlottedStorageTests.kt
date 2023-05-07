@@ -5,39 +5,15 @@ import net.minecraft.world.item.Items
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import site.siredvin.peripheralium.api.storage.AccessibleStorage
 import site.siredvin.peripheralium.api.storage.SlottedStorage
 import site.siredvin.peripheralium.api.storage.StorageUtils
-import site.siredvin.peripheralium.storage.TestableStorage
-import java.util.function.Predicate
 import kotlin.test.assertEquals
 
 abstract class SlottedStorageTests: StorageTests() {
 
-    internal class TestableWrap(private val storage: SlottedStorage): TestableStorage {
-        override fun getItem(slot: Int): ItemStack {
-            return storage.getItem(slot)
-        }
-
-        override fun getItems(): Iterator<ItemStack> {
-            return storage.getItems()
-        }
-
-        override fun takeItems(predicate: Predicate<ItemStack>, limit: Int): ItemStack {
-            return storage.takeItems(predicate, limit)
-        }
-
-        override fun storeItem(stack: ItemStack): ItemStack {
-            return storage.storeItem(stack)
-        }
-
-        override fun setChanged() {
-            storage.setChanged()
-        }
-
-    }
-
-    override fun createStorage(items: List<ItemStack>, secondary: Boolean): TestableStorage {
-        return TestableWrap(createSlottedStorage(items, secondary))
+    override fun createStorage(items: List<ItemStack>, secondary: Boolean): AccessibleStorage {
+        return createSlottedStorage(items, secondary)
     }
     abstract fun createSlottedStorage(items: List<ItemStack>, secondary: Boolean): SlottedStorage
 

@@ -6,9 +6,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import site.siredvin.peripheralium.api.storage.Storage
+import site.siredvin.peripheralium.api.storage.AccessibleStorage
 import site.siredvin.peripheralium.api.storage.StorageUtils
-import site.siredvin.peripheralium.storage.TestableStorage
 import java.util.*
 import java.util.function.Predicate
 import kotlin.test.assertEquals
@@ -16,9 +15,9 @@ import kotlin.test.assertEquals
 
 abstract class StorageTests {
 
-    abstract fun createStorage(items: List<ItemStack>, secondary: Boolean): TestableStorage
+    abstract fun createStorage(items: List<ItemStack>, secondary: Boolean): AccessibleStorage
 
-    fun createStorage(sizes: List<Int>, stack: ItemStack, secondary: Boolean): TestableStorage {
+    fun createStorage(sizes: List<Int>, stack: ItemStack, secondary: Boolean): AccessibleStorage {
         return createStorage(sizes.map {
             if (it == 0)
                 ItemStack.EMPTY

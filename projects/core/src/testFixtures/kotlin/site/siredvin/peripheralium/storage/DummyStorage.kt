@@ -1,10 +1,11 @@
 package site.siredvin.peripheralium.storage
 
 import net.minecraft.world.item.ItemStack
+import site.siredvin.peripheralium.api.storage.AccessibleStorage
 import site.siredvin.peripheralium.api.storage.StorageUtils
 import java.util.function.Predicate
 
-class DummyStorage(private val maxSlots: Int, initialItems: List<ItemStack>): TestableStorage {
+class DummyStorage(private val maxSlots: Int, initialItems: List<ItemStack>): AccessibleStorage {
 
     val items: MutableList<ItemStack> = mutableListOf()
 
