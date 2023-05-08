@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.storage.*
 import java.util.function.Predicate
 
-class FabricSlottedStorageWrapper(private val storage: net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage<ItemVariant>): SlottedStorage {
+class FabricSlottedStorageWrapper(internal val storage: net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage<ItemVariant>): SlottedStorage {
 
     override fun moveTo(
         to: TargetableStorage,

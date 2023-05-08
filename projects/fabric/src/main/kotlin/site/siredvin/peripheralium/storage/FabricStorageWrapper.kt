@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.storage.*
 import java.util.function.Predicate
 
-open class FabricStorageWrapper(val storage: FabricStorage<ItemVariant>): Storage {
+open class FabricStorageWrapper(internal val storage: FabricStorage<ItemVariant>): Storage {
 
     override fun moveTo(to: TargetableStorage, limit: Int, toSlot: Int, takePredicate: Predicate<ItemStack>): Int {
         if (to is FabricSlottedStorageWrapper)
@@ -32,8 +32,12 @@ open class FabricStorageWrapper(val storage: FabricStorage<ItemVariant>): Storag
         takePredicate: Predicate<ItemStack>
     ): Int {
         if (from is FabricSlottedStorageWrapper) {
-            val slotStorage = from.getSingleSlot(fromSlot)
-            return StorageUtil.move(slotStorage, storage,  FabricStorageUtils.wrap(takePredicate), limit.toLong(), null).toInt()
+            if (fromSlot > 0 ) {
+                val slotStorage = from.getSingleSlot(fromSlot)
+                return StorageUtil.move(slotStorage, storage,  FabricStorageUtils.wrap(takePredicate), limit.toLong(), null).toInt()
+            }
+            return StorageUtil.move(from.storage, storage,  FabricStorageUtils.wrap(takePredicate), limit.toLong(), null).toInt()
+            // TODO: catch this case with testing!
         }
         if (from is FabricStorageWrapper) {
             if (fromSlot > -1)

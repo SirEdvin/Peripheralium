@@ -102,3 +102,23 @@ internal class VerificationFabricStorageTests: StorageTests() {
     }
 }
 
+@WithMinecraft
+internal class ReverseVerificationFabricStorageTests: StorageTests() {
+    override fun createStorage(items: List<ItemStack>, secondary: Boolean): AccessibleStorage {
+        if (!secondary) {
+            val container = SimpleContainer(items.size)
+            items.forEachIndexed { index, itemStack ->
+                if (!itemStack.isEmpty)
+                    container.setItem(index, itemStack)
+            }
+            return FabricSlottedStorageWrapper(InventoryStorage.of(container, null))
+        }
+        val container = SimpleContainer(items.size)
+        items.forEachIndexed { index, itemStack ->
+            if (!itemStack.isEmpty)
+                container.setItem(index, itemStack)
+        }
+        return TweakedFabricStorageWrapper(InventoryStorage.of(container, null))
+    }
+}
+
