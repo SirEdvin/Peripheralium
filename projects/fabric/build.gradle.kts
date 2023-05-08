@@ -1,10 +1,19 @@
 import site.siredvin.peripheralium.gradle.mavenDependencies
+import org.jetbrains.changelog.date
+import com.matthewprenger.cursegradle.CurseArtifact
+import com.matthewprenger.cursegradle.CurseProject
+import com.matthewprenger.cursegradle.CurseUploadTask
+import com.matthewprenger.cursegradle.CurseRelation
+import com.matthewprenger.cursegradle.Options
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.loom)
     alias(libs.plugins.kotlin)
     idea
+    id("com.matthewprenger.cursegradle") version "1.4.0"
+    id("org.jetbrains.changelog") version "1.3.1"
+    id("com.modrinth.minotaur") version "2.+"
 }
 
 val modVersion: String by extra
@@ -130,6 +139,82 @@ tasks {
         if (this.name != "compileTestKotlin") {
             source(project(":core").sourceSets.main.get().allSource)
         }
+    }
+}
+
+val rootProjectDir: File by extra
+
+changelog {
+    version.set(modVersion)
+    path.set("${rootProjectDir}/CHANGELOG.md")
+    header.set(provider { "[${version.get()}] - ${date()}" })
+    itemPrefix.set("-")
+    keepUnreleasedSection.set(true)
+    unreleasedTerm.set("[Unreleased]")
+    groups.set(listOf())
+}
+
+
+val CURSEFORGE_RELEASE_TYPE: String by extra
+val CURSEFORGE_ID: String by extra
+val curseforgeKey: String by extra
+
+curseforge {
+    options(closureOf<Options> {
+        forgeGradleIntegration = false
+    })
+    apiKey = curseforgeKey
+    project(closureOf<CurseProject> {
+        id = CURSEFORGE_ID
+        releaseType = CURSEFORGE_RELEASE_TYPE
+        addGameVersion("Fabric")
+        addGameVersion(minecraftVersion)
+        try {
+            changelog = "${project.changelog.get(project.version as String).withHeader(false).toText()}"
+            changelogType = "markdown"
+        } catch (ignored: Exception) {
+            changelog = "Seems not real release"
+            changelogType = "markdown"
+        }
+        mainArtifact(tasks.remapJar.get().archivePath, closureOf<CurseArtifact> {
+            displayName = "Peripheralium $version for $minecraftVersion"
+            relations(closureOf<CurseRelation> {
+                requiredDependency("cc-tweaked")
+                requiredDependency("forge-config-api-port-fabric")
+                requiredDependency("fabric-language-kotlin")
+            })
+        })
+    })
+}
+project.afterEvaluate {
+    tasks.getByName<CurseUploadTask>("curseforge${CURSEFORGE_ID}") {
+        dependsOn(tasks.remapJar)
+    }
+}
+
+
+val MODRINTH_ID: String by extra
+val MODRINTH_RELEASE_TYPE: String by extra
+val modrinthKey: String by extra
+
+modrinth {
+    token.set(modrinthKey)
+    projectId.set(MODRINTH_ID)
+    versionNumber.set("${minecraftVersion}-${project.version}")
+    versionName.set("Peripheralium ${version} for ${minecraftVersion}")
+    versionType.set(MODRINTH_RELEASE_TYPE)
+    uploadFile.set(tasks.remapJar.get())
+    gameVersions.set(listOf(minecraftVersion))
+    loaders.set(listOf("fabric")) // Must also be an array - no need to specify this if you're using Loom or ForgeGradl
+    try {
+        changelog.set("${project.changelog.get(project.version as String).withHeader(false).toText()}")
+    } catch (ignored: Exception) {
+        changelog.set("")
+    }
+    dependencies {
+        required.project("fabric-language-kotlin")
+        required.project("cc-tweaked")
+        required.project("forge-config-api-port")
     }
 }
 
