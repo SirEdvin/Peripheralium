@@ -1,7 +1,11 @@
 package site.siredvin.peripheralium.forge
 
 import com.mojang.authlib.GameProfile
+import dan200.computercraft.api.pocket.IPocketUpgrade
 import dan200.computercraft.api.turtle.ITurtleAccess
+import dan200.computercraft.api.turtle.ITurtleUpgrade
+import dan200.computercraft.impl.PocketUpgrades
+import dan200.computercraft.impl.TurtleUpgrades
 import dan200.computercraft.shared.turtle.blocks.TurtleBlockEntity
 import dan200.computercraft.shared.util.NBTUtil
 import net.minecraft.core.BlockPos
@@ -158,5 +162,21 @@ class ForgePeripheraliumPlatform: PeripheraliumPlatform {
 
     override fun nbtHash(tag: CompoundTag?): String? {
         return NBTUtil.getNBTHash(tag)
+    }
+
+    override fun getTurtleUpgrade(stack: ItemStack): ITurtleUpgrade? {
+        return TurtleUpgrades.instance().get(stack)
+    }
+
+    override fun getPocketUpgrade(stack: ItemStack): IPocketUpgrade? {
+        return PocketUpgrades.instance().get(stack)
+    }
+
+    override fun getTurtleUpgrade(key: String): ITurtleUpgrade? {
+        return TurtleUpgrades.instance().get(key)
+    }
+
+    override fun getPocketUpgrade(key: String): IPocketUpgrade? {
+        return PocketUpgrades.instance().get(key)
     }
 }

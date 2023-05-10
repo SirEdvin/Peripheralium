@@ -1,7 +1,9 @@
 package site.siredvin.peripheralium.xplat
 
 import com.mojang.authlib.GameProfile
+import dan200.computercraft.api.pocket.IPocketUpgrade
 import dan200.computercraft.api.turtle.ITurtleAccess
+import dan200.computercraft.api.turtle.ITurtleUpgrade
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
 import net.minecraft.nbt.CompoundTag
@@ -86,6 +88,22 @@ interface PeripheraliumPlatform {
         fun nbtHash(tag: CompoundTag?): String? {
             return get().nbtHash(tag)
         }
+
+        fun getTurtleUpgrade(stack: ItemStack): ITurtleUpgrade? {
+            return get().getTurtleUpgrade(stack)
+        }
+
+        fun getPocketUpgrade(stack: ItemStack): IPocketUpgrade? {
+            return get().getPocketUpgrade(stack)
+        }
+
+        fun getTurtleUpgrade(key: String): ITurtleUpgrade? {
+            return get().getTurtleUpgrade(key)
+        }
+
+        fun getPocketUpgrade(key: String): IPocketUpgrade? {
+            return get().getPocketUpgrade(key)
+        }
     }
 
     val fluidCompactDivider: Double
@@ -107,5 +125,13 @@ interface PeripheraliumPlatform {
     fun useOn(player: ServerPlayer, stack: ItemStack, hit: BlockHitResult, canUseBlock: Predicate<BlockState>): InteractionResult
 
     fun nbtHash(tag: CompoundTag?): String?
+
+    fun getTurtleUpgrade(stack: ItemStack): ITurtleUpgrade?
+
+    fun getPocketUpgrade(stack: ItemStack): IPocketUpgrade?
+
+    fun getTurtleUpgrade(key: String): ITurtleUpgrade?
+
+    fun getPocketUpgrade(key: String): IPocketUpgrade?
 
 }
