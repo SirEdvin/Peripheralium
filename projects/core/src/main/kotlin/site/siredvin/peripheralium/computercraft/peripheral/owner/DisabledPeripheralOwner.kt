@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import site.siredvin.peripheralium.api.storage.SlottedStorage
 
 class DisabledPeripheralOwner: BasePeripheralOwner() {
     override val level: Level?
@@ -19,6 +20,9 @@ class DisabledPeripheralOwner: BasePeripheralOwner() {
         get() = null
     override val dataStorage: CompoundTag
         get() = CompoundTag()
+
+    override val storage: SlottedStorage?
+        get() = null
 
     override fun markDataStorageDirty() {
     }

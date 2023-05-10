@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import site.siredvin.peripheralium.api.storage.SlottedStorage
 import site.siredvin.peripheralium.computercraft.peripheral.ability.OperationAbility
 import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
 
@@ -23,6 +24,7 @@ interface IPeripheralOwner {
     val facing: Direction
     val owner: Player?
     val dataStorage: CompoundTag
+    val storage: SlottedStorage?
 
     fun markDataStorageDirty()
 

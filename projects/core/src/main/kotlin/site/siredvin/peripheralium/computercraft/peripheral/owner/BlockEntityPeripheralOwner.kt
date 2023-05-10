@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import site.siredvin.peripheralium.common.blocks.GenericBlockEntityBlock
 import site.siredvin.peripheralium.api.peripheral.IPeripheralTileEntity
+import site.siredvin.peripheralium.api.storage.SlottedStorage
 import site.siredvin.peripheralium.util.DataStorageUtil
 import java.util.*
 
@@ -31,6 +32,9 @@ class BlockEntityPeripheralOwner<T>(val tileEntity: T) :
         get() = null
     override val dataStorage: CompoundTag
         get() = DataStorageUtil.getDataStorage(tileEntity)
+
+    override val storage: SlottedStorage?
+        get() = null
 
     override fun markDataStorageDirty() {
         tileEntity.setChanged()

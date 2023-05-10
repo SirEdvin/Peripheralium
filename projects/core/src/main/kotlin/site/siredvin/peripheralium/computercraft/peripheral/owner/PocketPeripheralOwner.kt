@@ -9,10 +9,12 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.storage.ContainerUtils
+import site.siredvin.peripheralium.api.storage.SlottedStorage
+import site.siredvin.peripheralium.api.storage.TargetableContainer
 import site.siredvin.peripheralium.util.DataStorageUtil
 import site.siredvin.peripheralium.util.world.FakePlayerProviderPocket
 
-class PocketPeripheralOwner(private val pocket: IPocketAccess) : BasePeripheralOwner() {
+class PocketPeripheralOwner(val pocket: IPocketAccess) : BasePeripheralOwner() {
     override val level: Level?
         get() {
             val owner = pocket.entity ?: return null
@@ -33,6 +35,9 @@ class PocketPeripheralOwner(private val pocket: IPocketAccess) : BasePeripheralO
 
     override val dataStorage: CompoundTag
         get() = pocket.let { DataStorageUtil.getDataStorage(it) }
+
+    override val storage: SlottedStorage?
+        get() = owner?.inventory?.let { TargetableContainer(it) }
 
     override fun markDataStorageDirty() {
         pocket.updateUpgradeNBTData()
