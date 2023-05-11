@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import site.siredvin.peripheralium.util.itemTooltip
 
-class DescriptiveBlockItem(block: Block, properties: Properties) : BlockItem(block, properties) {
+open class DescriptiveBlockItem(block: Block, properties: Properties) : BlockItem(block, properties) {
     private var _description: MutableComponent? = null
 
     private val extraDescription: MutableComponent

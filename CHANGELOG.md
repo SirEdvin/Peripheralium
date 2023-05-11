@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PeripheralOwner now provides access to inventory, if possible
 - PocketPeripheralOwner.pocket is now public
 - XPlat API for retrieving turtle and pocket upgrades
+- PeripheralItem/PeripheralBlockItem with tooltip logic
 
 ## [0.5.1] - 2023-05-08
 

@@ -3,5 +3,7 @@
   "item.peripheralium.peripheralium_dust": "Періфераліумний пил",
   "item.peripheralium.peripheralium_block": "Блок періфераліуму",
 
-  "block.peripheralium.peripheralium_block": "Блок періфераліуму"
+  "block.peripheralium.peripheralium_block": "Блок періфераліуму",
+
+  "text.peripheralium.press_for_description": "[§3Left shift§r] показити опис"
 }
