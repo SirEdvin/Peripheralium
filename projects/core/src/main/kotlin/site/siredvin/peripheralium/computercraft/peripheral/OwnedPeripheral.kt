@@ -55,29 +55,4 @@ abstract class OwnedPeripheral<O : IPeripheralOwner>(peripheralType: String, fin
         val dir = direction.uppercase()
         return OrientationUtil.getDirection(peripheralOwner.facing, dir)
     }
-
-    @Throws(LuaException::class)
-    protected fun <T> withOperation(
-        operation: IPeripheralOperation<T>,
-        context: T,
-        check: IPeripheralCheck<T>?,
-        method: IPeripheralFunction<T, MethodResult>,
-        successCallback: Consumer<T>?
-    ): MethodResult {
-        return withOperation(operation, context, check, method, successCallback, null)
-    }
-
-    @Throws(LuaException::class)
-    protected fun <T> withOperation(
-        operation: IPeripheralOperation<T>,
-        context: T,
-        check: IPeripheralCheck<T>?,
-        method: IPeripheralFunction<T, MethodResult>,
-        successCallback: Consumer<T>?,
-        failCallback: BiConsumer<MethodResult?, OperationAbility.FailReason?>?
-    ): MethodResult {
-        val operationAbility = peripheralOwner.getAbility(PeripheralOwnerAbility.OPERATION)
-            ?: throw IllegalArgumentException("This shouldn't happen at all")
-        return operationAbility.performOperation(operation, context, check, method, successCallback, failCallback)
-    }
 }

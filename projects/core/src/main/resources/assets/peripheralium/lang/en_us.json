@@ -5,5 +5,6 @@
 
   "block.peripheralium.peripheralium_block": "Peripheralium block",
 
-  "text.peripheralium.press_for_description": "[§3Left shift§r] show description"
+  "text.peripheralium.press_for_description": "[§3Left shift§r] show description",
+  "text.peripheralium.creative_tab": "Peripheralium"
 }

@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.phys.AABB
 import site.siredvin.peripheralium.api.peripheral.*
 import site.siredvin.peripheralium.common.configuration.PeripheraliumConfig
-import site.siredvin.peripheralium.computercraft.peripheral.operation.UnconditionalOperations
+import site.siredvin.peripheralium.computercraft.peripheral.operation.UnconditionalOperation
 import site.siredvin.peripheralium.util.radiusCorrect
 import site.siredvin.peripheralium.util.representation.LuaInterpretation
 import kotlin.math.min
@@ -23,7 +23,7 @@ class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadi
     }
 
     override val operations: Array<IPeripheralOperation<*>>
-        get() = arrayOf(UnconditionalOperations.XP_TRANSFER)
+        get() = arrayOf(UnconditionalOperation.XP_TRANSFER)
 
     override fun collectConfiguration(data: MutableMap<String, Any>) {
         data["xpToFuelRate"] = PeripheraliumConfig.xpToFuelRate
@@ -43,7 +43,7 @@ class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadi
         function: IPeripheralFunction<Any?, MethodResult>
     ): MethodResult {
         val ability: OperationAbility = owner.getAbility(PeripheralOwnerAbility.OPERATION)!!
-        return ability.performOperation(UnconditionalOperations.XP_TRANSFER, null, null, function, null, null)
+        return ability.performOperation(UnconditionalOperation.XP_TRANSFER, null, null, function, null, null)
     }
 
     @LuaFunction(mainThread = true)

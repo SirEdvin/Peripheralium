@@ -1,9 +1,13 @@
 package site.siredvin.peripheralium
 
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
+import net.minecraftforge.event.CreativeModeTabEvent
+import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.ModLoadingContext
 import net.minecraftforge.fml.common.Mod
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.config.ModConfig
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
 import net.minecraftforge.registries.DeferredRegister
@@ -14,12 +18,11 @@ import site.siredvin.peripheralium.forge.ForgeIngredients
 import site.siredvin.peripheralium.forge.ForgePeripheraliumPlatform
 import site.siredvin.peripheralium.storage.ForgeStorageUtils
 import site.siredvin.peripheralium.xplat.LibCommonHooks
-import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
-import site.siredvin.peripheralium.xplat.RecipeIngredients
 import thedarkcolour.kotlinforforge.forge.MOD_CONTEXT
 
 
 @Mod(PeripheraliumCore.MOD_ID)
+@EventBusSubscriber(modid = PeripheraliumCore.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 object ForgePeripheralium {
 
     val blocksRegistry: DeferredRegister<Block> =
@@ -34,7 +37,6 @@ object ForgePeripheralium {
         // Register extract storages
         ExtractorProxy.addStorageExtractor(ForgeStorageUtils::extractStorage)
         val eventBus = MOD_CONTEXT.getKEventBus()
-        eventBus.addListener(this::commonSetup)
         LibCommonHooks.onRegister()
         blocksRegistry.register(eventBus)
         itemsRegistry.register(eventBus)
@@ -44,6 +46,9 @@ object ForgePeripheralium {
 
     }
 
-    fun commonSetup(event: FMLCommonSetupEvent) {
+    @SubscribeEvent
+    fun registerCreativeTab(event: CreativeModeTabEvent.Register) {
+        event.registerCreativeModeTab(ResourceLocation(PeripheraliumCore.MOD_ID, "tab"), PeripheraliumCore::configureCreativeTab)
     }
+
 }

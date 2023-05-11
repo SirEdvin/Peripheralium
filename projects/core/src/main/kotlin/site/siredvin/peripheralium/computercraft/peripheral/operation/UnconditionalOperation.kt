@@ -4,7 +4,7 @@ import net.minecraftforge.common.ForgeConfigSpec
 import site.siredvin.peripheralium.api.peripheral.IPeripheralOperation
 import java.util.*
 
-enum class UnconditionalOperations(
+enum class UnconditionalOperation(
     private val defaultCooldown: Int,
     private val defaultCost: Int
 ) : IPeripheralOperation<Any?> {

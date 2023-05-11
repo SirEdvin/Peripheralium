@@ -52,7 +52,7 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
         check: IPeripheralCheck<T>?,
         method: IPeripheralFunction<T, MethodResult>,
         successCallback: Consumer<T>?,
-        failCallback: BiConsumer<MethodResult?, FailReason?>?
+        failCallback: BiConsumer<MethodResult, FailReason>?
     ): MethodResult {
         if (isOnCooldown(operation)) {
             val result = MethodResult.of(null, String.format("%s is on cooldown", operation.settingsName()))

@@ -1,5 +1,7 @@
 package site.siredvin.peripheralium.api.peripheral
 
+import dan200.computercraft.api.lua.LuaException
+import dan200.computercraft.api.lua.MethodResult
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
@@ -10,6 +12,8 @@ import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.storage.SlottedStorage
 import site.siredvin.peripheralium.computercraft.peripheral.ability.OperationAbility
 import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
+import java.util.function.BiConsumer
+import java.util.function.Consumer
 
 interface IPeripheralOwner {
     val name: String?
@@ -47,5 +51,19 @@ interface IPeripheralOwner {
         val operationAbility = OperationAbility(this, reduceRate = reduceRate)
         attachAbility(PeripheralOwnerAbility.OPERATION, operationAbility)
         for (operation in operations) operationAbility.registerOperation(operation)
+    }
+
+    @Throws(LuaException::class)
+    fun <T> withOperation(
+        operation: IPeripheralOperation<T>,
+        context: T,
+        method: IPeripheralFunction<T, MethodResult>,
+        check: IPeripheralCheck<T>? = null,
+        successCallback: Consumer<T>? = null,
+        failCallback: BiConsumer<MethodResult, OperationAbility.FailReason>? = null
+    ): MethodResult {
+        val operationAbility = getAbility(PeripheralOwnerAbility.OPERATION)
+            ?: throw IllegalArgumentException("Owner doesn't have ability to store operations logic, which is very strange!")
+        return operationAbility.performOperation(operation, context, check, method, successCallback, failCallback)
     }
 }
