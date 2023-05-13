@@ -10,7 +10,6 @@ import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 import site.siredvin.peripheralium.api.storage.ExtractorProxy
 import site.siredvin.peripheralium.api.storage.Storage
-import site.siredvin.peripheralium.common.configuration.PeripheraliumConfig
 import java.util.*
 import java.util.function.Predicate
 import kotlin.math.min
@@ -18,6 +17,7 @@ import kotlin.math.min
 abstract class AbstractItemStoragePlugin: IPeripheralPlugin {
     abstract val storage: Storage
     abstract val level: Level
+    abstract val itemStorageTransferLimit: Int
 
     override val additionalType: String
         get() = PeripheralPluginUtils.TYPES.ITEM_STORAGE
@@ -45,7 +45,7 @@ abstract class AbstractItemStoragePlugin: IPeripheralPlugin {
             ?: throw LuaException("Target '$toName' is not an targetable storage")
 
         val predicate: Predicate<ItemStack> = PeripheralPluginUtils.itemQueryToPredicate(itemQuery)
-        val realLimit = min(PeripheraliumConfig.itemStorageTransferLimit, limit.orElse(Int.MAX_VALUE))
+        val realLimit = min(itemStorageTransferLimit, limit.orElse(Int.MAX_VALUE))
         return storage.moveTo(toStorage, realLimit, takePredicate = predicate)
     }
 
@@ -58,7 +58,7 @@ abstract class AbstractItemStoragePlugin: IPeripheralPlugin {
             ?: throw LuaException("Target '$fromName' is not an storage")
 
         val predicate: Predicate<ItemStack> = PeripheralPluginUtils.itemQueryToPredicate(itemQuery)
-        val realLimit = min(PeripheraliumConfig.itemStorageTransferLimit, limit.orElse(Int.MAX_VALUE))
+        val realLimit = min(itemStorageTransferLimit, limit.orElse(Int.MAX_VALUE))
         return storage.moveFrom(fromStorage, realLimit, takePredicate = predicate)
     }
 }

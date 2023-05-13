@@ -9,7 +9,6 @@ import dan200.computercraft.shared.util.ArgumentHelpers.getRegistryEntry
 import net.minecraftforge.fluids.FluidStack
 import net.minecraftforge.fluids.capability.IFluidHandler
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
-import site.siredvin.peripheralium.common.configuration.PeripheraliumConfig
 import site.siredvin.peripheralium.storage.ForgeStorageUtils
 import java.util.*
 import kotlin.collections.HashMap
@@ -17,7 +16,7 @@ import kotlin.collections.HashMap
 /**
  * Copy of https://github.com/cc-tweaked/CC-Tweaked/blob/mc-1.19.x/projects/forge/src/main/java/dan200/computercraft/shared/peripheral/generic/methods/FluidMethods.java
  */
-class ForgeFluidStoragePlugin(private val handler: IFluidHandler): IPeripheralPlugin {
+class ForgeFluidStoragePlugin(private val handler: IFluidHandler, private val fluidStorageTransferLimit: Int): IPeripheralPlugin {
 
     override val additionalType: String
         get() = PeripheralPluginUtils.TYPES.FLUID_STORAGE
@@ -47,7 +46,7 @@ class ForgeFluidStoragePlugin(private val handler: IFluidHandler): IPeripheralPl
             ?: throw LuaException("Target '$toName' does not exist")
         val to = ForgeStorageUtils.extractFluidHandler(location.target)
             ?: throw LuaException("Target '$toName' is not an tank")
-        val actualLimit: Int = minOf(PeripheraliumConfig.fluidStorageTransferLimit, limit.orElse(Int.MAX_VALUE))
+        val actualLimit: Int = minOf(fluidStorageTransferLimit, limit.orElse(Int.MAX_VALUE))
         if (actualLimit <= 0) throw LuaException("Limit must be > 0")
         return if (fluid == null) moveFluid(from, actualLimit, to) else moveFluid(
             from,
@@ -70,7 +69,7 @@ class ForgeFluidStoragePlugin(private val handler: IFluidHandler): IPeripheralPl
             ?: throw LuaException("Target '$fromName' does not exist")
         val from = ForgeStorageUtils.extractFluidHandler(location.target)
             ?: throw LuaException("Target '$fromName' is not an tank")
-        val actualLimit: Int = minOf(PeripheraliumConfig.fluidStorageTransferLimit, limit.orElse(Int.MAX_VALUE))
+        val actualLimit: Int = minOf(fluidStorageTransferLimit, limit.orElse(Int.MAX_VALUE))
         if (actualLimit <= 0) throw LuaException("Limit must be > 0")
         return if (fluid == null) moveFluid(from, actualLimit, to) else moveFluid(
             from,
@@ -94,7 +93,7 @@ class ForgeFluidStoragePlugin(private val handler: IFluidHandler): IPeripheralPl
 
         // Limit the amount to extract.
         trackableExtractor = trackableExtractor.copy()
-        trackableExtractor.amount = Math.min(trackableExtractor.amount, limit)
+        trackableExtractor.amount = minOf(trackableExtractor.amount, limit)
         val inserted = to.fill(trackableExtractor.copy(), IFluidHandler.FluidAction.EXECUTE)
         if (inserted <= 0) return 0
 

@@ -1,5 +1,6 @@
 package site.siredvin.peripheralium.computercraft.peripheral.owner
 
+import site.siredvin.peripheralium.api.config.IOperationAbilityConfig
 import site.siredvin.peripheralium.api.peripheral.IOwnerAbility
 import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
 import site.siredvin.peripheralium.api.peripheral.IPeripheralOwner
@@ -26,8 +27,8 @@ abstract class BasePeripheralOwner : IPeripheralOwner {
         return _abilities[ability] as T?
     }
 
-    fun attachOperations(reduceRate: Double = 1.0) {
-        val operationAbility = OperationAbility(this, reduceRate = reduceRate)
+    fun attachOperations(reduceRate: Double = 1.0, config: IOperationAbilityConfig) {
+        val operationAbility = OperationAbility(this, reduceRate = reduceRate, config = config)
         attachAbility(PeripheralOwnerAbility.OPERATION, operationAbility)
     }
 }

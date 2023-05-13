@@ -10,23 +10,21 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.AABB
 import site.siredvin.peripheralium.api.peripheral.*
-import site.siredvin.peripheralium.common.configuration.PeripheraliumConfig
-import site.siredvin.peripheralium.computercraft.peripheral.operation.UnconditionalOperation
 import site.siredvin.peripheralium.util.radiusCorrect
 import site.siredvin.peripheralium.util.representation.LuaInterpretation
 import kotlin.math.min
 
-class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadius: Int): IOwnerAbility,
+class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadius: Int, private val xpToFuelRate: Int, private val xpTransferOperation: IPeripheralOperation<Any?>): IOwnerAbility,
     IPeripheralPlugin {
     companion object {
         private const val COLLECTED_XP_AMOUNT = "CollectedXPAmount"
     }
 
     override val operations: Array<IPeripheralOperation<*>>
-        get() = arrayOf(UnconditionalOperation.XP_TRANSFER)
+        get() = arrayOf(xpTransferOperation)
 
     override fun collectConfiguration(data: MutableMap<String, Any>) {
-        data["xpToFuelRate"] = PeripheraliumConfig.xpToFuelRate
+        data["xpToFuelRate"] = xpToFuelRate
     }
 
     fun getStoredXP(): Double {
@@ -43,7 +41,7 @@ class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadi
         function: IPeripheralFunction<Any?, MethodResult>
     ): MethodResult {
         val ability: OperationAbility = owner.getAbility(PeripheralOwnerAbility.OPERATION)!!
-        return ability.performOperation(UnconditionalOperation.XP_TRANSFER, null, null, function, null, null)
+        return ability.performOperation(xpTransferOperation, null, null, function, null, null)
     }
 
     @LuaFunction(mainThread = true)
@@ -83,7 +81,7 @@ class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadi
             ?: throw LuaException("Unsupported operation")
         val burnAmount = min(limit, getStoredXP())
         adjustStoredXP(-burnAmount)
-        fuelAbility.addFuel((burnAmount / PeripheraliumConfig.xpToFuelRate).toInt())
+        fuelAbility.addFuel((burnAmount / xpToFuelRate).toInt())
         return burnAmount
     }
 

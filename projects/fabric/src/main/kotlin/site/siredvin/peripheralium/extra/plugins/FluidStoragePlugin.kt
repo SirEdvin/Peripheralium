@@ -13,12 +13,11 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.material.Fluids
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 import site.siredvin.peripheralium.common.FabricExtractorProxy
-import site.siredvin.peripheralium.common.configuration.PeripheraliumConfig
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.*
 import java.util.function.Predicate
 
-class FluidStoragePlugin(private val level: Level, private val storage: Storage<FluidVariant>): IPeripheralPlugin {
+class FluidStoragePlugin(private val level: Level, private val storage: Storage<FluidVariant>, private val fluidStorageTransferLimit: Int): IPeripheralPlugin {
 
 
     override val additionalType: String
@@ -53,7 +52,7 @@ class FluidStoragePlugin(private val level: Level, private val storage: Storage<
                 throw LuaException("There is no fluid ${fluidName.get()}")
             Predicate { it.fluid.isSame(fluid) }
         }
-        val realLimit = minOf(PeripheraliumConfig.fluidStorageTransferLimit.toLong(), limit.map { it * PeripheraliumPlatform.fluidCompactDivider.toLong() }.orElse(Long.MAX_VALUE))
+        val realLimit = minOf(fluidStorageTransferLimit.toLong(), limit.map { it * PeripheraliumPlatform.fluidCompactDivider.toLong() }.orElse(Long.MAX_VALUE))
         return StorageUtil.move(storage, toStorage, predicate, realLimit, null) / PeripheraliumPlatform.fluidCompactDivider
     }
 
@@ -73,7 +72,7 @@ class FluidStoragePlugin(private val level: Level, private val storage: Storage<
                 throw LuaException("There is no fluid ${fluidName.get()}")
             Predicate { it.fluid.isSame(fluid) }
         }
-        val realLimit = minOf(PeripheraliumConfig.fluidStorageTransferLimit.toLong(), limit.map { it * PeripheraliumPlatform.fluidCompactDivider.toLong() }.orElse(Long.MAX_VALUE))
+        val realLimit = minOf(fluidStorageTransferLimit.toLong(), limit.map { it * PeripheraliumPlatform.fluidCompactDivider.toLong() }.orElse(Long.MAX_VALUE))
         return StorageUtil.move(fromStorage, storage, predicate, realLimit, null) / PeripheraliumPlatform.fluidCompactDivider
     }
 }

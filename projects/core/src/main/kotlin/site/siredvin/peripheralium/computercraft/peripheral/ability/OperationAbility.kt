@@ -4,8 +4,8 @@ import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
 import dan200.computercraft.api.lua.MethodResult
 import net.minecraft.nbt.CompoundTag
+import site.siredvin.peripheralium.api.config.IOperationAbilityConfig
 import site.siredvin.peripheralium.api.peripheral.*
-import site.siredvin.peripheralium.common.configuration.PeripheraliumConfig
 import java.sql.Timestamp
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -13,7 +13,7 @@ import java.util.function.BiConsumer
 import java.util.function.Consumer
 import kotlin.math.max
 
-class OperationAbility(private val owner: IPeripheralOwner, private val reduceRate: Double = 1.0) : IOwnerAbility, IPeripheralPlugin {
+class OperationAbility(private val owner: IPeripheralOwner, private val reduceRate: Double = 1.0, private val config: IOperationAbilityConfig) : IOwnerAbility, IPeripheralPlugin {
     private val allowedOperations: MutableMap<String, IPeripheralOperation<*>> = HashMap()
 
     protected fun setCooldown(operation: IPeripheralOperation<*>, cooldown: Int) {
@@ -39,9 +39,9 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
 
     fun registerOperation(operation: IPeripheralOperation<*>) {
         allowedOperations[operation.settingsName()] = operation
-        if (PeripheraliumConfig.isInitialCooldownEnabled) {
+        if (config.isInitialCooldownEnabled) {
             val initialCooldown = operation.initialCooldown
-            if (initialCooldown >= PeripheraliumConfig.initialCooldownSensetiveLevel) setCooldown(operation, initialCooldown)
+            if (initialCooldown >= config.initialCooldownSensetiveLevel) setCooldown(operation, initialCooldown)
         }
     }
 
@@ -85,7 +85,7 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
         }
         val result = method.apply(context)
         successCallback?.accept(context)
-        if (cooldown > PeripheraliumConfig.cooldownTrasholdLevel)
+        if (cooldown > config.cooldownTrasholdLevel)
             setCooldown(operation, cooldown)
         return result
     }

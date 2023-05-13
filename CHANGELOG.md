@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CreativeTab for peripheralium
 - Fuel logic for pocket computers
 
+### Removed
+
+- All basic configuration
+
 ## [0.5.1] - 2023-05-08
 
 ### Added

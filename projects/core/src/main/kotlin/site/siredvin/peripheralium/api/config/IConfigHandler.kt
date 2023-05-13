@@ -1,4 +1,4 @@
-package site.siredvin.peripheralium.api
+package site.siredvin.peripheralium.api.config
 
 import net.minecraftforge.common.ForgeConfigSpec
 import java.util.*
