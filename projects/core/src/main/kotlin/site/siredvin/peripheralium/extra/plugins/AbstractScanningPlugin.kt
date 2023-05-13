@@ -14,7 +14,6 @@ import site.siredvin.peripheralium.api.datatypes.AreaInteractionMode
 import site.siredvin.peripheralium.api.peripheral.IPeripheralOperation
 import site.siredvin.peripheralium.api.peripheral.IPeripheralOwner
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
-import site.siredvin.peripheralium.computercraft.operations.SphereOperation
 import site.siredvin.peripheralium.computercraft.operations.SphereOperationContext
 import site.siredvin.peripheralium.util.assertBetween
 import site.siredvin.peripheralium.util.representation.LuaRepresentation
@@ -24,19 +23,20 @@ import java.util.function.Predicate
 import java.util.stream.Collectors
 import kotlin.math.min
 
-abstract class ScanPlugin(
-    private val owner: IPeripheralOwner,
-    private val entityEnriches: List<BiConsumer<Entity, MutableMap<String, Any>>> = emptyList(),
-    private val blockStateEnriches: List<BiConsumer<BlockState, MutableMap<String, Any>>> = emptyList(),
-    private val itemEnriches: List<BiConsumer<ItemEntity, MutableMap<String, Any>>> = emptyList(),
-    private val suitableEntity: Predicate<Entity> = Predicate { false },
-    private val allowedMods: Set<AreaInteractionMode> = setOf(AreaInteractionMode.ITEM)
-): IPeripheralPlugin {
+abstract class AbstractScanningPlugin(protected val owner: IPeripheralOwner): IPeripheralPlugin {
 
     abstract val scanRadius: Int
+    abstract val allowedMods: Set<AreaInteractionMode>
 
-    override val operations: Array<IPeripheralOperation<*>>
-        get() = arrayOf(SphereOperation.SCAN_ENTITIES, SphereOperation.SCAN_BLOCKS, SphereOperation.SCAN_ITEMS)
+    abstract val blockStateEnriches: List<BiConsumer<BlockState, MutableMap<String, Any>>>
+    abstract val itemEnriches: List<BiConsumer<ItemEntity, MutableMap<String, Any>>>
+    abstract val entityEnriches: List<BiConsumer<Entity, MutableMap<String, Any>>>
+
+    abstract val scanEntitiesOperation: IPeripheralOperation<SphereOperationContext>?
+    abstract val scanItemsOperation: IPeripheralOperation<SphereOperationContext>?
+    abstract val scanBlocksOperation: IPeripheralOperation<SphereOperationContext>?
+
+    abstract val suitableEntity: Predicate<Entity>
 
     private fun entityConverter(entity: Entity, facing: Direction, center: BlockPos): MutableMap<String, Any> {
         val base = LuaRepresentation.withPos(entity, facing, center, LuaRepresentation::forEntity)
@@ -94,17 +94,17 @@ abstract class ScanPlugin(
         val radius = arguments.optInt(1, scanRadius)
         assertBetween(radius, 1, scanRadius, "radius")
         return when (mode) {
-            AreaInteractionMode.ITEM -> owner.withOperation(SphereOperation.SCAN_ITEMS, SphereOperationContext.of(radius),  {
+            AreaInteractionMode.ITEM -> owner.withOperation(scanItemsOperation!!, SphereOperationContext.of(radius),  {
                 MethodResult.of(scanItems(radius).stream().map { itemConverter(it, owner.facing, owner.pos) }
                     .collect(Collectors.toList()))
             })
-            AreaInteractionMode.ENTITY -> owner.withOperation(SphereOperation.SCAN_ENTITIES, SphereOperationContext.of(radius),  {
+            AreaInteractionMode.ENTITY -> owner.withOperation(scanBlocksOperation!!, SphereOperationContext.of(radius),  {
                 MethodResult.of(
                     scanLivingEntities(radius).stream()
                         .filter { suitableEntity.test(it) }.map { entityConverter(it, owner.facing, owner.pos) }.collect(Collectors.toList())
                 )
             })
-            AreaInteractionMode.BLOCK -> owner.withOperation(SphereOperation.SCAN_BLOCKS, SphereOperationContext.of(radius),  {
+            AreaInteractionMode.BLOCK -> owner.withOperation(scanEntitiesOperation!!, SphereOperationContext.of(radius),  {
                 MethodResult.of(
                     scanBlocks(radius).stream().map { blockStateConverter(it.first, it.second, owner.facing, owner.pos) }.collect(Collectors.toList())
                 )

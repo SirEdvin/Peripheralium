@@ -1,0 +1,8 @@
+package site.siredvin.peripheralium.api
+
+import dan200.computercraft.api.pocket.IPocketAccess
+import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
+
+fun interface PocketPeripheralBuildFunction<T : IOwnedPeripheral<*>> {
+    fun build(access: IPocketAccess): T
+}

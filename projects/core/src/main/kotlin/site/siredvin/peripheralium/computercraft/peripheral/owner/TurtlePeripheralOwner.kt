@@ -74,7 +74,7 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
         return turtle.teleportTo(level, pos)
     }
 
-    fun attachFuel(maxFuelConsumptionLevel: Int): TurtlePeripheralOwner {
+    fun attachFuel(maxFuelConsumptionLevel: Int = 1): TurtlePeripheralOwner {
         attachAbility(PeripheralOwnerAbility.FUEL, TurtleFuelAbility(this, maxFuelConsumptionLevel))
         return this
     }

@@ -11,6 +11,9 @@ import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.storage.ContainerUtils
 import site.siredvin.peripheralium.api.storage.SlottedStorage
 import site.siredvin.peripheralium.api.storage.TargetableContainer
+import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
+import site.siredvin.peripheralium.computercraft.peripheral.ability.PocketFuelAbility
+import site.siredvin.peripheralium.computercraft.peripheral.ability.TurtleFuelAbility
 import site.siredvin.peripheralium.util.DataStorageUtil
 import site.siredvin.peripheralium.util.world.FakePlayerProviderPocket
 
@@ -65,5 +68,10 @@ class PocketPeripheralOwner(val pocket: IPocketAccess) : BasePeripheralOwner() {
 
     override fun move(level: Level, pos: BlockPos): Boolean {
         return false
+    }
+
+    fun attachFuel(foodFuelPrice: Int = 1000, maxFuelConsumptionLevel: Int = 1): PocketPeripheralOwner {
+        attachAbility(PeripheralOwnerAbility.FUEL, PocketFuelAbility(this, foodFuelPrice, maxFuelConsumptionLevel))
+        return this
     }
 }

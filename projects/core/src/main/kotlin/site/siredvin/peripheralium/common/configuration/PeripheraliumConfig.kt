@@ -2,7 +2,6 @@ package site.siredvin.peripheralium.common.configuration
 
 import net.minecraftforge.common.ForgeConfigSpec
 import site.siredvin.peripheralium.api.IConfigHandler
-import site.siredvin.peripheralium.computercraft.operations.SphereOperation
 import site.siredvin.peripheralium.computercraft.peripheral.operation.UnconditionalOperation
 
 object PeripheraliumConfig {
@@ -50,7 +49,6 @@ object PeripheraliumConfig {
             builder.pop()
             builder.push("operations")
             register(UnconditionalOperation.values(), builder)
-            register(SphereOperation.values(), builder)
             builder.pop()
         }
 

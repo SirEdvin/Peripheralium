@@ -1,18 +1,14 @@
 package site.siredvin.peripheralium.computercraft.peripheral
 
 import dan200.computercraft.api.lua.*
-import dan200.computercraft.api.peripheral.IComputerAccess
 import dan200.computercraft.api.peripheral.IDynamicPeripheral
-import dan200.computercraft.api.peripheral.IPeripheral
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.peripheral.*
-import site.siredvin.peripheralium.computercraft.peripheral.ability.OperationAbility
 import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
 import site.siredvin.peripheralium.util.OrientationUtil
 import java.util.*
-import java.util.function.BiConsumer
 import java.util.function.Consumer
 
 abstract class OwnedPeripheral<O : IPeripheralOwner>(peripheralType: String, final override val peripheralOwner: O) :

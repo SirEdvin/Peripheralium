@@ -41,17 +41,6 @@ interface IPeripheralOwner {
     fun <T : IOwnerAbility> attachAbility(ability: PeripheralOwnerAbility<T>, abilityImplementation: T)
     fun <T : IOwnerAbility> getAbility(ability: PeripheralOwnerAbility<T>): T?
     val abilities: Collection<IOwnerAbility>
-    fun attachOperation(vararg operations: IPeripheralOperation<*>, reduceRate: Double = 1.0) {
-        val operationAbility = OperationAbility(this, reduceRate = reduceRate)
-        attachAbility(PeripheralOwnerAbility.OPERATION, operationAbility)
-        for (operation in operations) operationAbility.registerOperation(operation)
-    }
-
-    fun attachOperation(operations: Collection<IPeripheralOperation<*>>, reduceRate: Double = 1.0) {
-        val operationAbility = OperationAbility(this, reduceRate = reduceRate)
-        attachAbility(PeripheralOwnerAbility.OPERATION, operationAbility)
-        for (operation in operations) operationAbility.registerOperation(operation)
-    }
 
     @Throws(LuaException::class)
     fun <T> withOperation(
