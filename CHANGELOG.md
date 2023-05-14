@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Breaking
+
+- Operations now list instead of array
+
 ### Added
 
 - PeripheralOwner now provides access to inventory, if possible
@@ -15,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Plugin for scanning
 - CreativeTab for peripheralium
 - Fuel logic for pocket computers
+
+### Changed
+
+- Xplat registries are now lazy
 
 ### Removed
 

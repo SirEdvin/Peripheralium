@@ -31,7 +31,6 @@ import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraftforge.common.ForgeHooks
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.event.level.BlockEvent
 import net.minecraftforge.event.level.BlockEvent.BreakEvent
 import net.minecraftforge.eventbus.api.Event
 import net.minecraftforge.registries.ForgeRegistry

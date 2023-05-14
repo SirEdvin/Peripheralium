@@ -20,8 +20,8 @@ class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadi
         private const val COLLECTED_XP_AMOUNT = "CollectedXPAmount"
     }
 
-    override val operations: Array<IPeripheralOperation<*>>
-        get() = arrayOf(xpTransferOperation)
+    override val operations: List<IPeripheralOperation<*>>
+        get() = listOf(xpTransferOperation)
 
     override fun collectConfiguration(data: MutableMap<String, Any>) {
         data["xpToFuelRate"] = xpToFuelRate

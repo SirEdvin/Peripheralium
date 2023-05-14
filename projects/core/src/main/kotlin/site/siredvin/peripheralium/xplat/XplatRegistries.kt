@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.Block
 
 
 object XplatRegistries {
-        val ITEMS: RegistryWrapper<Item> = PeripheraliumPlatform.wrap(Registries.ITEM)
-        val BLOCKS: RegistryWrapper<Block> = PeripheraliumPlatform.wrap(Registries.BLOCK)
-        val ENTITY_TYPES: RegistryWrapper<EntityType<*>> = PeripheraliumPlatform.wrap(Registries.ENTITY_TYPE)
+        val ITEMS by lazy {  PeripheraliumPlatform.wrap(Registries.ITEM) }
+        val BLOCKS by lazy { PeripheraliumPlatform.wrap(Registries.BLOCK) }
+        val ENTITY_TYPES by lazy { PeripheraliumPlatform.wrap(Registries.ENTITY_TYPE) }
 }

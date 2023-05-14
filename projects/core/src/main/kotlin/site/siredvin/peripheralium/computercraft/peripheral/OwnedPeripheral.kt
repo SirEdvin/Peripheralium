@@ -29,7 +29,7 @@ abstract class OwnedPeripheral<O : IPeripheralOwner>(peripheralType: String, fin
     protected val level: Level?
         get() = peripheralOwner.level
 
-    override fun addOperations(operations: Array<IPeripheralOperation<*>>) {
+    override fun addOperations(operations: List<IPeripheralOperation<*>>) {
         if (operations.isNotEmpty()) {
             val operationAbility = peripheralOwner.getAbility(PeripheralOwnerAbility.OPERATION)
                 ?: throw IllegalArgumentException("This is not possible to attach plugin with operations to not operationable owner")

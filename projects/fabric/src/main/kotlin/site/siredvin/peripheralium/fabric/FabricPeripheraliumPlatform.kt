@@ -1,7 +1,6 @@
 package site.siredvin.peripheralium.fabric
 
 import com.mojang.authlib.GameProfile
-import dan200.computercraft.api.ComputerCraftAPI
 import dan200.computercraft.api.pocket.IPocketUpgrade
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.ITurtleUpgrade

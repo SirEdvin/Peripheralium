@@ -15,8 +15,8 @@ interface IPeripheralPlugin {
             .map { named: NamedMethod<PeripheralMethod> -> BoundMethod(this, named) }
             .collect(Collectors.toList())
 
-    val operations: Array<IPeripheralOperation<*>>
-        get() = emptyArray()
+    val operations: List<IPeripheralOperation<*>>
+        get() = emptyList()
 
     val additionalType: String?
         get() = null

@@ -66,7 +66,7 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
         }
     }
 
-    protected open fun addOperations(operations: Array<IPeripheralOperation<*>>) {
+    protected open fun addOperations(operations: List<IPeripheralOperation<*>>) {
         require(operations.isEmpty()) { "This is not possible to attach plugin with operations to not operationable owner" }
     }
 

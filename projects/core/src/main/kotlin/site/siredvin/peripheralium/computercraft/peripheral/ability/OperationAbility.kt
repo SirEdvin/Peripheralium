@@ -110,8 +110,8 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
         return MethodResult.of(getCurrentCooldown(op))
     }
 
-    @LuaFunction
-    fun getOperations(): List<String> {
+    @LuaFunction(value=["getOperations"])
+    fun getOperationsLua(): List<String> {
         return allowedOperations.keys.toList()
     }
 
