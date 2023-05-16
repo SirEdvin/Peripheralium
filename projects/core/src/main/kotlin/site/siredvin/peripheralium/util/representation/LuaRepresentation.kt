@@ -86,7 +86,7 @@ object LuaRepresentation {
                 val base = VanillaDetailRegistries.ITEM_STACK.getDetails(stack)
                 val tagData = stack.tag?.let { PeripheraliumPlatform.nbtToLua(it) }
                 if (tagData != null)
-                    base["decodedNbt"] = tagData
+                    base["rawNBT"] = tagData
                 base
             }
         }
