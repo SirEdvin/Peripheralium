@@ -12,7 +12,7 @@ import site.siredvin.peripheralium.util.text
 import java.util.function.Function
 import java.util.function.Supplier
 
-open class PeripheralItem(properties: Properties, private var enableSup: Supplier<Boolean>, private vararg val tooltipHook: Function<PeripheralItem, Component?>) : DescriptiveItem(properties) {
+open class PeripheralItem(properties: Properties, private var enableSup: Supplier<Boolean>, private var alwaysShow: Boolean = false, private vararg val tooltipHook: Function<PeripheralItem, Component?>) : DescriptiveItem(properties) {
     private var _tooltips: List<Component>? = null
 
     private val tooltips: List<Component>
@@ -29,7 +29,7 @@ open class PeripheralItem(properties: Properties, private var enableSup: Supplie
         tooltipFlag: TooltipFlag
     ) {
         super.appendHoverText(itemStack, level, list, tooltipFlag)
-        if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, InputConstants.KEY_LSHIFT)) {
+        if (alwaysShow || InputConstants.isKeyDown(Minecraft.getInstance().window.window, InputConstants.KEY_LSHIFT)) {
             list.addAll(tooltips)
         } else {
             list.add(text(PeripheraliumCore.MOD_ID, "press_for_description"))

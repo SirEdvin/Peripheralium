@@ -10,13 +10,14 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.DirectionProperty
 import net.minecraft.world.level.material.Material
+import site.siredvin.peripheralium.util.BlockUtil
 import java.util.function.Supplier
 
 class GenericBlockEntityBlock<T : BlockEntity>(
     private val blockEntityTypeSup: Supplier<BlockEntityType<T>>,
     private val isRotatable: Boolean,
     belongToTickingEntity: Boolean = false,
-    properties: Properties = Properties.of(Material.METAL).strength(1f, 5f).sound(SoundType.METAL).noOcclusion()
+    properties: Properties = BlockUtil.defaultProperties()
 ): BaseTileEntityBlock<T>(belongToTickingEntity, properties) {
 
     companion object {

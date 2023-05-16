@@ -7,6 +7,7 @@ import dan200.computercraft.api.turtle.ITurtleUpgrade
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.Tag
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
@@ -104,6 +105,10 @@ interface PeripheraliumPlatform {
         fun getPocketUpgrade(key: String): IPocketUpgrade? {
             return get().getPocketUpgrade(key)
         }
+
+        fun nbtToLua(tag: Tag): Any? {
+            return get().nbtToLua(tag)
+        }
     }
 
     val fluidCompactDivider: Double
@@ -133,5 +138,7 @@ interface PeripheraliumPlatform {
     fun getTurtleUpgrade(key: String): ITurtleUpgrade?
 
     fun getPocketUpgrade(key: String): IPocketUpgrade?
+
+    fun nbtToLua(tag: Tag): Any?
 
 }

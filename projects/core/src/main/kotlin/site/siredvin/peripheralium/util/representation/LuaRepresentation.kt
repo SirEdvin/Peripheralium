@@ -16,6 +16,7 @@ import net.minecraft.world.item.trading.Merchant
 import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.level.block.state.BlockState
 import site.siredvin.peripheralium.ext.toRelative
+import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.stream.Collectors
 import java.util.stream.Stream
 
@@ -77,8 +78,18 @@ object LuaRepresentation {
         return list
     }
 
-    fun forItemStack(stack: ItemStack): MutableMap<String, Any> {
-        return VanillaDetailRegistries.ITEM_STACK.getDetails(stack)
+    fun forItemStack(stack: ItemStack, mode: RepresentationMode = RepresentationMode.DETAILED): MutableMap<String, Any> {
+        return when (mode) {
+            RepresentationMode.BASE -> VanillaDetailRegistries.ITEM_STACK.getBasicDetails(stack)
+            RepresentationMode.DETAILED -> VanillaDetailRegistries.ITEM_STACK.getDetails(stack)
+            RepresentationMode.FULL -> {
+                val base = VanillaDetailRegistries.ITEM_STACK.getDetails(stack)
+                val tagData = stack.tag?.let { PeripheraliumPlatform.nbtToLua(it) }
+                if (tagData != null)
+                    base["decodedNbt"] = tagData
+                base
+            }
+        }
     }
 
     fun forItem(item: Item): MutableMap<String, Any> {

@@ -13,6 +13,8 @@ import site.siredvin.peripheralium.api.storage.ExtractorProxy
 import site.siredvin.peripheralium.api.storage.StorageUtils
 import site.siredvin.peripheralium.api.storage.TargetableSlottedStorage
 import site.siredvin.peripheralium.util.assertBetween
+import site.siredvin.peripheralium.util.representation.LuaRepresentation
+import site.siredvin.peripheralium.util.representation.RepresentationMode
 import java.util.*
 
 abstract class AbstractInventoryPlugin: IPeripheralPlugin {
@@ -31,14 +33,14 @@ abstract class AbstractInventoryPlugin: IPeripheralPlugin {
         val size = storage.size
         for (i in 0 until size) {
             val stack = storage.getItem(i)
-            if (!stack.isEmpty) result[i + 1] = VanillaDetailRegistries.ITEM_STACK.getBasicDetails(stack)
+            if (!stack.isEmpty) result[i + 1] = LuaRepresentation.forItemStack(stack, RepresentationMode.BASE)
         }
         return result
     }
 
     open fun getItemDetailImpl(slot: Int): Map<String, *>? {
         val stack = storage.getItem(slot)
-        return if (stack.isEmpty) null else VanillaDetailRegistries.ITEM_STACK.getDetails(stack)
+        return if (stack.isEmpty) null else LuaRepresentation.forItemStack(stack)
     }
 
     open fun getItemLimitImpl(slot: Int): Int {

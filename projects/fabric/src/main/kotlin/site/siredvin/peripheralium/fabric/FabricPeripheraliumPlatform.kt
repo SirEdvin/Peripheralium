@@ -17,6 +17,7 @@ import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.Tag
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
@@ -156,5 +157,9 @@ class FabricPeripheraliumPlatform: PeripheraliumPlatform {
 
     override fun getPocketUpgrade(key: String): IPocketUpgrade? {
         return PocketUpgrades.instance().get(key)
+    }
+
+    override fun nbtToLua(tag: Tag): Any? {
+        return NBTUtil.toLua(tag)
     }
 }

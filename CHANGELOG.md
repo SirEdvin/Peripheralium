@@ -19,10 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Plugin for scanning
 - CreativeTab for peripheralium
 - Fuel logic for pocket computers
+- Extra BlockEntity tools, like storing ownership
 
 ### Changed
 
 - Xplat registries are now lazy
+- Representation `forItemStack` now supports detail mods
 
 ### Removed
 

@@ -1,7 +1,6 @@
 package site.siredvin.peripheralium.common.blocks
 
 import net.minecraft.core.BlockPos
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtUtils
 import net.minecraft.world.entity.LivingEntity
@@ -15,14 +14,12 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.Property
 import net.minecraft.world.level.material.Material
 import site.siredvin.peripheralium.api.blockentities.ISyncingBlockEntity
-import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.XplatRegistries
 
 abstract class BaseNBTBlock<T>(
     belongToTickingEntity: Boolean,
     properties: Properties = Properties.of(Material.METAL).strength(1f, 5f).sound(SoundType.METAL).noOcclusion()
-) :
-    BaseTileEntityBlock<T>(belongToTickingEntity, properties) where T : BlockEntity, T : ISyncingBlockEntity {
+) : BaseTileEntityBlock<T>(belongToTickingEntity, properties) where T : BlockEntity, T : ISyncingBlockEntity {
     abstract fun createItemStack(): ItemStack
 
     open val savableProperties: List<Property<*>>
@@ -55,8 +52,8 @@ abstract class BaseNBTBlock<T>(
         super.playerWillDestroy(level, pos, state, player)
     }
 
-    override fun setPlacedBy(level: Level, pos: BlockPos, state: BlockState, entity: LivingEntity?, stack: ItemStack) {
-        var state = state
+    override fun setPlacedBy(level: Level, pos: BlockPos, initialState: BlockState, entity: LivingEntity?, stack: ItemStack) {
+        var state = initialState
         super.setPlacedBy(level, pos, state, entity, stack)
         val blockEntity = level.getBlockEntity(pos)
         if (blockEntity is ISyncingBlockEntity) {

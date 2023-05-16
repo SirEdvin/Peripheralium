@@ -54,13 +54,9 @@ object FakePlayerProviderPocket {
             // Copy primary items into player inventory and empty the rest
             val realPlayerInventory = realPlayer.inventory
             val size = realPlayerInventory.containerSize
-            val largerSize = playerInventory.containerSize
             playerInventory.selected = realPlayer.inventory.selected
             for (i in 0 until size) {
                 playerInventory.setItem(i, realPlayerInventory.getItem(i))
-            }
-            for (i in size until largerSize) {
-                playerInventory.setItem(i, ItemStack.EMPTY)
             }
 
             // Add properties
@@ -89,19 +85,6 @@ object FakePlayerProviderPocket {
             playerInventory.selected = realPlayer.score
             for (i in 0 until size) {
                 realPlayerInventory.setItem(i, playerInventory.getItem(i))
-                playerInventory.setItem(i, ItemStack.EMPTY)
-            }
-            for (i in size until largerSize) {
-                val remaining = playerInventory.getItem(i)
-                if (!remaining.isEmpty) {
-                    ContainerUtils.toInventoryOrToWorld(
-                        remaining,
-                        realPlayerInventory,
-                        0,
-                        realPlayer.blockPosition(),
-                        realPlayer.level
-                    )
-                }
                 playerInventory.setItem(i, ItemStack.EMPTY)
             }
         }

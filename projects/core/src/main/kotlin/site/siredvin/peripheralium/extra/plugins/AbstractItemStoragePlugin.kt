@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 import site.siredvin.peripheralium.api.storage.ExtractorProxy
 import site.siredvin.peripheralium.api.storage.Storage
+import site.siredvin.peripheralium.util.representation.LuaRepresentation
 import java.util.*
 import java.util.function.Predicate
 import kotlin.math.min
@@ -26,7 +27,7 @@ abstract class AbstractItemStoragePlugin: IPeripheralPlugin {
         val result: MutableList<MutableMap<String, *>> = mutableListOf()
         storage.getItems().forEach {
             if (!it.isEmpty)
-                result.add(VanillaDetailRegistries.ITEM_STACK.getDetails(it))
+                result.add(LuaRepresentation.forItemStack(it))
         }
         return result
     }
