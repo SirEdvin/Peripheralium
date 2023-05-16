@@ -2,16 +2,23 @@ package site.siredvin.peripheralium.forge
 
 import com.mojang.authlib.GameProfile
 import dan200.computercraft.api.pocket.IPocketUpgrade
+import dan200.computercraft.api.pocket.PocketUpgradeDataProvider
+import dan200.computercraft.api.pocket.PocketUpgradeSerialiser
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.ITurtleUpgrade
+import dan200.computercraft.api.turtle.TurtleUpgradeDataProvider
+import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
+import dan200.computercraft.api.upgrades.UpgradeDataProvider
 import dan200.computercraft.impl.PocketUpgrades
 import dan200.computercraft.impl.TurtleUpgrades
+import dan200.computercraft.shared.ModRegistry
 import dan200.computercraft.shared.turtle.blocks.TurtleBlockEntity
 import dan200.computercraft.shared.util.NBTUtil
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
+import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.resources.ResourceKey
@@ -27,11 +34,13 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraftforge.common.ForgeHooks
 import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.common.Tags
 import net.minecraftforge.event.level.BlockEvent.BreakEvent
 import net.minecraftforge.eventbus.api.Event
 import net.minecraftforge.registries.ForgeRegistry
@@ -41,6 +50,8 @@ import site.siredvin.peripheralium.PeripheraliumCore
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.RegistryWrapper
 import java.util.*
+import java.util.function.BiFunction
+import java.util.function.Consumer
 import java.util.function.Predicate
 import java.util.function.Supplier
 
@@ -182,5 +193,35 @@ class ForgePeripheraliumPlatform: PeripheraliumPlatform {
 
     override fun nbtToLua(tag: Tag): Any? {
         return NBTUtil.toLua(tag)
+    }
+
+
+    override fun <T : BlockEntity> createBlockEntityType(
+        factory: BiFunction<BlockPos, BlockState, T>,
+        block: Block
+    ): BlockEntityType<T> {
+        return BlockEntityType.Builder.of({ t: BlockPos?, u: BlockState? ->
+            factory.apply(
+                t!!, u!!
+            )
+        }, block).build(null)
+    }
+
+    override fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack> {
+        return listOf(
+            ModRegistry.Items.TURTLE_NORMAL.get().create(-1, null, -1, null, upgrade, 0, null),
+            ModRegistry.Items.TURTLE_ADVANCED.get().create(-1, null, -1, null, upgrade, 0, null),
+        )
+    }
+
+    override fun createPocketsWithUpgrade(upgrade: IPocketUpgrade): List<ItemStack> {
+        return listOf(
+            ModRegistry.Items.POCKET_COMPUTER_NORMAL.get().create(-1, null, -1, upgrade),
+            ModRegistry.Items.POCKET_COMPUTER_ADVANCED.get().create(-1, null, -1, upgrade),
+        )
+    }
+
+    override fun isOre(block: BlockState): Boolean {
+        return block.`is`(Tags.Blocks.ORES)
     }
 }

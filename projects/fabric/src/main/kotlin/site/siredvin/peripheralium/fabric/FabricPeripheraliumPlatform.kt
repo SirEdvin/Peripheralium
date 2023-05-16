@@ -6,11 +6,14 @@ import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.ITurtleUpgrade
 import dan200.computercraft.impl.PocketUpgrades
 import dan200.computercraft.impl.TurtleUpgrades
+import dan200.computercraft.shared.ModRegistry
 import dan200.computercraft.shared.turtle.blocks.TurtleBlockEntity
 import dan200.computercraft.shared.util.NBTUtil
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.fabricmc.fabric.api.event.player.UseBlockCallback
 import net.fabricmc.fabric.api.event.player.UseEntityCallback
+import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
@@ -31,12 +34,14 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.RegistryWrapper
 import java.util.*
+import java.util.function.BiFunction
 import java.util.function.Predicate
 import java.util.function.Supplier
 
@@ -161,5 +166,32 @@ class FabricPeripheraliumPlatform: PeripheraliumPlatform {
 
     override fun nbtToLua(tag: Tag): Any? {
         return NBTUtil.toLua(tag)
+    }
+
+    override fun <T : BlockEntity> createBlockEntityType(
+        factory: BiFunction<BlockPos, BlockState, T>,
+        block: Block
+    ): BlockEntityType<T> {
+        return FabricBlockEntityTypeBuilder.create({ t: BlockPos, u: BlockState ->
+            factory.apply(t, u)
+        }).addBlock(block).build()
+    }
+
+    override fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack> {
+        return listOf(
+            ModRegistry.Items.TURTLE_NORMAL.get().create(-1, null, -1, null, upgrade, 0, null),
+            ModRegistry.Items.TURTLE_ADVANCED.get().create(-1, null, -1, null, upgrade, 0, null),
+        )
+    }
+
+    override fun createPocketsWithUpgrade(upgrade: IPocketUpgrade): List<ItemStack> {
+        return listOf(
+            ModRegistry.Items.POCKET_COMPUTER_NORMAL.get().create(-1, null, -1, upgrade),
+            ModRegistry.Items.POCKET_COMPUTER_ADVANCED.get().create(-1, null, -1, upgrade),
+        )
+    }
+
+    override fun isOre(block: BlockState): Boolean {
+        return block.`is`(ConventionalBlockTags.ORES)
     }
 }

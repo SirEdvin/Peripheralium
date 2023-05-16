@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CreativeTab for peripheralium
 - Fuel logic for pocket computers
 - Extra BlockEntity tools, like storing ownership
+- New platform methods: isOre, createTurtle, createPocket, createBlockEntity
 
 ### Changed
 

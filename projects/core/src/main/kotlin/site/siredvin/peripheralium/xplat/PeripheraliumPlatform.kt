@@ -2,8 +2,13 @@ package site.siredvin.peripheralium.xplat
 
 import com.mojang.authlib.GameProfile
 import dan200.computercraft.api.pocket.IPocketUpgrade
+import dan200.computercraft.api.pocket.PocketUpgradeDataProvider
+import dan200.computercraft.api.pocket.PocketUpgradeSerialiser
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.ITurtleUpgrade
+import dan200.computercraft.api.turtle.TurtleUpgradeDataProvider
+import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
+import dan200.computercraft.api.upgrades.UpgradeDataProvider
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
 import net.minecraft.nbt.CompoundTag
@@ -19,11 +24,14 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import site.siredvin.peripheralium.PeripheraliumCore
 import site.siredvin.peripheralium.common.items.DescriptiveBlockItem
+import java.util.function.BiFunction
+import java.util.function.Consumer
 import java.util.function.Predicate
 import java.util.function.Supplier
 
@@ -109,6 +117,24 @@ interface PeripheraliumPlatform {
         fun nbtToLua(tag: Tag): Any? {
             return get().nbtToLua(tag)
         }
+
+        fun <T : BlockEntity> createBlockEntityType(
+            factory: BiFunction<BlockPos, BlockState, T>,
+            block: Block
+        ): BlockEntityType<T> {
+            return get().createBlockEntityType(factory, block)
+        }
+
+        fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack> {
+            return get().createTurtlesWithUpgrade(upgrade)
+        }
+        fun createPocketsWithUpgrade(upgrade: IPocketUpgrade): List<ItemStack> {
+            return get().createPocketsWithUpgrade(upgrade)
+        }
+
+        fun isOre(block: BlockState): Boolean {
+            return get().isOre(block)
+        }
     }
 
     val fluidCompactDivider: Double
@@ -140,5 +166,14 @@ interface PeripheraliumPlatform {
     fun getPocketUpgrade(key: String): IPocketUpgrade?
 
     fun nbtToLua(tag: Tag): Any?
+
+    fun <T : BlockEntity> createBlockEntityType(
+        factory: BiFunction<BlockPos, BlockState, T>,
+        block: Block
+    ): BlockEntityType<T>
+
+    fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack>
+    fun createPocketsWithUpgrade(upgrade: IPocketUpgrade): List<ItemStack>
+    fun isOre(block: BlockState): Boolean
 
 }
