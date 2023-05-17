@@ -16,14 +16,15 @@ plugins {
     kotlin("jvm").version(kotlinVersion)
 }
 
-val archivesBaseName: String by project
+val artifactName: String by project
+val modVersion: String by project
 
 base {
-    archivesName.set(archivesBaseName)
+    archivesName.set(artifactName)
+    version = modVersion
 }
 
 val isSnapshotVersion = System.getProperty("snapshot").toBoolean()
-val modVersion: String by project
 val minecraftVersion: String by project
 val modVersionWithMC = "$modVersion-$minecraftVersion"
 version = if (!isSnapshotVersion) modVersionWithMC else "$modVersionWithMC-SNAPSHOT"
@@ -200,12 +201,8 @@ modrinth {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            artifact(tasks.remapJar) {
-                builtBy(tasks.remapJar)
-            }
-            artifact(tasks.remapSourcesJar) {
-                builtBy(tasks.remapSourcesJar)
-            }
+            artifactId = base.archivesName.get()
+            from(components["java"])
         }
     }
 

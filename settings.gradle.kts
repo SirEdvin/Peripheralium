@@ -12,4 +12,5 @@ pluginManagement {
     }
 }
 
-rootProject.name = "Peripheralium"
+val minecraftVersion: String by settings
+rootProject.name = "Peripheralium $minecraftVersion"
