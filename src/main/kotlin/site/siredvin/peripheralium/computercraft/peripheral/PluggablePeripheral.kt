@@ -76,7 +76,7 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
     override fun attach(computer: IComputerAccess) {
         connectedComputersLock.withLock {
             _connectedComputers.add(computer)
-            if (_connectedComputers.size == 1)
+            if (_connectedComputers.size == 1 && plugins != null)
                 plugins!!.forEach {
                     if (it is IObservingPeripheralPlugin)
                         it.onFirstAttach()
@@ -87,7 +87,7 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
     override fun detach(computer: IComputerAccess) {
         connectedComputersLock.withLock {
             _connectedComputers.remove(computer)
-            if (_connectedComputers.isEmpty())
+            if (_connectedComputers.isEmpty() && plugins != null)
                 plugins!!.forEach {
                     if (it is IObservingPeripheralPlugin)
                         it.onLastDetach()
