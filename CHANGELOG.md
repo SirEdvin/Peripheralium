@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.21] - 2023-05-18
+
+### Fixed
+
+- PluggablePeripheral without plugins
+
 ## [0.4.20] - 2023-04-27
 
 ### Added
