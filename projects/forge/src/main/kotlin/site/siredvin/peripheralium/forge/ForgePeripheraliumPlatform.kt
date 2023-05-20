@@ -29,9 +29,13 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
+import net.minecraft.world.level.ChunkPos
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -41,6 +45,7 @@ import net.minecraft.world.phys.EntityHitResult
 import net.minecraftforge.common.ForgeHooks
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.Tags
+import net.minecraftforge.common.world.ForgeChunkManager
 import net.minecraftforge.event.level.BlockEvent.BreakEvent
 import net.minecraftforge.eventbus.api.Event
 import net.minecraftforge.registries.ForgeRegistry
@@ -52,6 +57,7 @@ import site.siredvin.peripheralium.xplat.RegistryWrapper
 import java.util.*
 import java.util.function.BiFunction
 import java.util.function.Consumer
+import java.util.function.Function
 import java.util.function.Predicate
 import java.util.function.Supplier
 
@@ -120,6 +126,8 @@ class ForgePeripheraliumPlatform: PeripheraliumPlatform {
     }
 
     override fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean {
+        if (player.level.server?.isUnderSpawnProtection(player.level as ServerLevel, pos, player) == true)
+            return true
         val event = BreakEvent(player.level, pos, state, player)
         MinecraftForge.EVENT_BUS.post(event)
         return event.isCanceled
@@ -171,6 +179,10 @@ class ForgePeripheraliumPlatform: PeripheraliumPlatform {
         return if (event.useItem == Event.Result.DENY) InteractionResult.PASS else stack.useOn(context)
     }
 
+    override fun setChunkForceLoad(level: ServerLevel, modID: String, owner: UUID, chunkPos: ChunkPos, add: Boolean, ticking: Boolean): Boolean {
+        return ForgeChunkManager.forceChunk(level, modID, owner, chunkPos.x, chunkPos.z, add, ticking)
+    }
+
     override fun nbtHash(tag: CompoundTag?): String? {
         return NBTUtil.getNBTHash(tag)
     }
@@ -205,6 +217,13 @@ class ForgePeripheraliumPlatform: PeripheraliumPlatform {
                 t!!, u!!
             )
         }, block).build(null)
+    }
+
+    override fun <T : Entity> createEntityType(
+        name: ResourceLocation,
+        factory: Function<Level, T>
+    ): EntityType<T> {
+        return EntityType.Builder.of({_, level -> factory.apply(level)}, MobCategory.MISC).build(name.toString())
     }
 
     override fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack> {

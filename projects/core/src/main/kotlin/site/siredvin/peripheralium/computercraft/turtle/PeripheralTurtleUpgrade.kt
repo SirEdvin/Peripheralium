@@ -9,7 +9,6 @@ import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.TurtleIDBuildFunction
 import site.siredvin.peripheralium.api.TurtlePeripheralBuildFunction
 import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
-import site.siredvin.peripheralium.common.items.TurtleItem
 import site.siredvin.peripheralium.util.turtleAdjective
 
 abstract class PeripheralTurtleUpgrade<T : IOwnedPeripheral<*>> : BaseTurtleUpgrade<T> {
@@ -28,10 +27,6 @@ abstract class PeripheralTurtleUpgrade<T : IOwnedPeripheral<*>> : BaseTurtleUpgr
     )
 
     companion object {
-        fun <T : IOwnedPeripheral<*>> dynamic(item: TurtleItem, constructor: TurtlePeripheralBuildFunction<T>): PeripheralTurtleUpgrade<T> {
-            return Dynamic(item.turtleID, item.defaultInstance, constructor)
-        }
-
         fun <T : IOwnedPeripheral<*>> dynamic(item: Item, constructor: TurtlePeripheralBuildFunction<T>, idBuilder: TurtleIDBuildFunction): PeripheralTurtleUpgrade<T> {
             return Dynamic(idBuilder.get(item), item.defaultInstance, constructor)
         }

@@ -20,8 +20,11 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.ChunkPos
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -30,8 +33,10 @@ import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import site.siredvin.peripheralium.PeripheraliumCore
 import site.siredvin.peripheralium.common.items.DescriptiveBlockItem
+import java.util.*
 import java.util.function.BiFunction
 import java.util.function.Consumer
+import java.util.function.Function
 import java.util.function.Predicate
 import java.util.function.Supplier
 
@@ -94,6 +99,10 @@ interface PeripheraliumPlatform {
             return get().useOn(player, stack, hit, canUseBlock)
         }
 
+        fun setChunkForceLoad(level: ServerLevel, modID: String, owner: UUID, chunkPos: ChunkPos, add: Boolean, ticking: Boolean = true): Boolean {
+            return get().setChunkForceLoad(level, modID, owner, chunkPos, add, ticking)
+        }
+
         fun nbtHash(tag: CompoundTag?): String? {
             return get().nbtHash(tag)
         }
@@ -123,6 +132,13 @@ interface PeripheraliumPlatform {
             block: Block
         ): BlockEntityType<T> {
             return get().createBlockEntityType(factory, block)
+        }
+
+        fun <T : Entity> createEntityType(
+            name: ResourceLocation,
+            factory: Function<Level, T>
+        ): EntityType<T> {
+            return get().createEntityType(name, factory)
         }
 
         fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack> {
@@ -155,6 +171,8 @@ interface PeripheraliumPlatform {
 
     fun useOn(player: ServerPlayer, stack: ItemStack, hit: BlockHitResult, canUseBlock: Predicate<BlockState>): InteractionResult
 
+    fun setChunkForceLoad(level: ServerLevel, modID: String, owner: UUID, chunkPos: ChunkPos, add: Boolean, ticking: Boolean = true): Boolean
+
     fun nbtHash(tag: CompoundTag?): String?
 
     fun getTurtleUpgrade(stack: ItemStack): ITurtleUpgrade?
@@ -171,6 +189,11 @@ interface PeripheraliumPlatform {
         factory: BiFunction<BlockPos, BlockState, T>,
         block: Block
     ): BlockEntityType<T>
+
+    fun <T : Entity> createEntityType(
+        name: ResourceLocation,
+        factory: Function<Level, T>
+    ): EntityType<T>
 
     fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack>
     fun createPocketsWithUpgrade(upgrade: IPocketUpgrade): List<ItemStack>

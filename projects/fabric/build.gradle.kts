@@ -96,6 +96,7 @@ dependencies {
 }
 
 loom {
+    accessWidenerPath.set(project(":core").file("src/main/resources/peripheralium.accesswidener"))
     runs {
         named("client") {
             configName = "Fabric Client"

@@ -56,6 +56,8 @@ minecraft {
     val extractedLibs = project.extensions.getByType<VersionCatalogsExtension>().named("libs")
     mappings("parchment", "${extractedLibs.findVersion("parchmentMc").get()}-${extractedLibs.findVersion("parchment").get()}-$minecraftVersion")
 
+    accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
+
     runs {
         all {
             property("forge.logging.markers", "REGISTRIES")

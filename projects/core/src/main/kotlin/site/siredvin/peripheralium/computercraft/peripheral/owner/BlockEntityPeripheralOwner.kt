@@ -38,7 +38,7 @@ class BlockEntityPeripheralOwner<T>(private val tileEntity: T, private val facin
         get() = DataStorageUtil.getDataStorage(tileEntity)
 
     override val storage: SlottedStorage? by lazy {
-        ExtractorProxy.extractStorage(tileEntity.level!!, tileEntity.blockPos) as? SlottedStorage
+        ExtractorProxy.extractStorage(tileEntity.level!!, tileEntity.blockPos, tileEntity) as? SlottedStorage
     }
 
     override fun markDataStorageDirty() {

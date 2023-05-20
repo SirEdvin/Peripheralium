@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.fabricmc.fabric.api.event.player.UseBlockCallback
 import net.fabricmc.fabric.api.event.player.UseEntityCallback
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
+import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricEntityTypeBuilder
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
@@ -29,9 +30,13 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
+import net.minecraft.world.level.ChunkPos
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -42,6 +47,7 @@ import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.RegistryWrapper
 import java.util.*
 import java.util.function.BiFunction
+import java.util.function.Function
 import java.util.function.Predicate
 import java.util.function.Supplier
 
@@ -115,6 +121,8 @@ class FabricPeripheraliumPlatform: PeripheraliumPlatform {
     }
 
     override fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean {
+        if (player.level.server?.isUnderSpawnProtection(player.level as ServerLevel, pos, player) == true)
+            return true
         return !PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(player.level, player, pos, state, null)
     }
 
@@ -144,6 +152,10 @@ class FabricPeripheraliumPlatform: PeripheraliumPlatform {
         return stack.useOn(UseOnContext(player, InteractionHand.MAIN_HAND, hit))
     }
 
+    override fun setChunkForceLoad(level: ServerLevel, modID: String, owner: UUID, chunkPos: ChunkPos, add: Boolean, ticking: Boolean): Boolean {
+        return level.setChunkForced(chunkPos.x, chunkPos.z, add)
+    }
+
     override fun nbtHash(tag: CompoundTag?): String? {
         return NBTUtil.getNBTHash(tag)
     }
@@ -166,6 +178,13 @@ class FabricPeripheraliumPlatform: PeripheraliumPlatform {
 
     override fun nbtToLua(tag: Tag): Any? {
         return NBTUtil.toLua(tag)
+    }
+
+    override fun <T : Entity> createEntityType(
+        name: ResourceLocation,
+        factory: Function<Level, T>
+    ): EntityType<T> {
+        return FabricEntityTypeBuilder.create(MobCategory.MISC) { _, level -> factory.apply(level) }.build()
     }
 
     override fun <T : BlockEntity> createBlockEntityType(

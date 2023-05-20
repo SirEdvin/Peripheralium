@@ -77,7 +77,7 @@ abstract class AbstractInventoryPlugin: IPeripheralPlugin {
         val location: IPeripheral = computer.getAvailablePeripheral(toName)
             ?: throw LuaException("Target '$toName' does not exist")
 
-        val toStorage = ExtractorProxy.extractTargetableStorage(level, location.target)
+        val toStorage = ExtractorProxy.extractTargetableStorageFromUnknown(level, location.target)
             ?: throw LuaException("Target '$toName' is not an inventory")
 
         // Validate slots
@@ -100,7 +100,7 @@ abstract class AbstractInventoryPlugin: IPeripheralPlugin {
         // Find location to transfer to
         val location =
             computer.getAvailablePeripheral(fromName) ?: throw LuaException("Source '$fromName' does not exist")
-        val fromStorage = ExtractorProxy.extractTargetableStorage(level, location.target)
+        val fromStorage = ExtractorProxy.extractTargetableStorageFromUnknown(level, location.target)
             ?: throw LuaException("Source '$fromName' is not an inventory")
 
         if (fromStorage !is SlottedStorage)

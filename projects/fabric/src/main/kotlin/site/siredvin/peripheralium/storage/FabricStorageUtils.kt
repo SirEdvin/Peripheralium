@@ -91,24 +91,8 @@ object FabricStorageUtils {
         }
     }
 
-    fun extractStorage(level: Level, obj: Any?): Storage? {
-        val itemStorage = when (obj) {
-            is BlockPos -> {
-                ItemStorage.SIDED.find(level, obj, null)
-            }
-
-            is BlockEntity -> {
-                ItemStorage.SIDED.find(level, obj.blockPos, null)
-            }
-
-            else -> {
-                null
-            }
-        } ?: return null
-
-        val size = Iterators.size(itemStorage.iterator())
-        if (size == 0)
-            return null
+    fun extractStorage(level: Level, pos: BlockPos, blockEntity: BlockEntity?): Storage? {
+        val itemStorage = ItemStorage.SIDED.find(level, pos, null) ?: return null
 
         return if (itemStorage is net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage) {
             FabricSlottedStorageWrapper(itemStorage)

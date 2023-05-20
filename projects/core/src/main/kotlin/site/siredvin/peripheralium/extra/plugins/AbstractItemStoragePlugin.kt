@@ -42,7 +42,7 @@ abstract class AbstractItemStoragePlugin: IPeripheralPlugin {
         val location: IPeripheral = computer.getAvailablePeripheral(toName)
             ?: throw LuaException("Target '$toName' does not exist")
 
-        val toStorage = ExtractorProxy.extractTargetableStorage(level, location.target)
+        val toStorage = ExtractorProxy.extractTargetableStorageFromUnknown(level, location.target)
             ?: throw LuaException("Target '$toName' is not an targetable storage")
 
         val predicate: Predicate<ItemStack> = PeripheralPluginUtils.itemQueryToPredicate(itemQuery)
@@ -55,7 +55,7 @@ abstract class AbstractItemStoragePlugin: IPeripheralPlugin {
         val location: IPeripheral = computer.getAvailablePeripheral(fromName)
             ?: throw LuaException("Target '$fromName' does not exist")
 
-        val fromStorage = ExtractorProxy.extractStorage(level, location.target)
+        val fromStorage = ExtractorProxy.extractStorageFromUnknown(level, location.target)
             ?: throw LuaException("Target '$fromName' is not an storage")
 
         val predicate: Predicate<ItemStack> = PeripheralPluginUtils.itemQueryToPredicate(itemQuery)

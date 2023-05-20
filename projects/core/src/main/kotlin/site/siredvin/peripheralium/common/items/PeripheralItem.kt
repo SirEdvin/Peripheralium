@@ -12,13 +12,13 @@ import site.siredvin.peripheralium.util.text
 import java.util.function.Function
 import java.util.function.Supplier
 
-open class PeripheralItem(properties: Properties, private var enableSup: Supplier<Boolean>, private var alwaysShow: Boolean = false, private vararg val tooltipHook: Function<PeripheralItem, Component?>) : DescriptiveItem(properties) {
+open class PeripheralItem(properties: Properties, private var enableSup: Supplier<Boolean>, private var alwaysShow: Boolean = false, private vararg val tooltipHook: Function<PeripheralItem, List<Component>>) : DescriptiveItem(properties) {
     private var _tooltips: List<Component>? = null
 
     private val tooltips: List<Component>
         get() {
             if (_tooltips == null)
-                _tooltips = tooltipHook.mapNotNull { it.apply(this) }
+                _tooltips = tooltipHook.flatMap { it.apply(this) }
             return _tooltips!!
         }
 

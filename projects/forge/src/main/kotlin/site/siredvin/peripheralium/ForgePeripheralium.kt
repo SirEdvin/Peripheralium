@@ -29,7 +29,8 @@ object ForgePeripheralium {
     init {
         PeripheraliumCore.configure(ForgePeripheraliumPlatform(), ForgeIngredients)
         // Register extract storages
-        ExtractorProxy.addStorageExtractor(ForgeStorageUtils::extractStorage)
+        ExtractorProxy.addStorageExtractor(ForgeStorageUtils::extractStorageFromBlock)
+        ExtractorProxy.addStorageExtractor(ForgeStorageUtils::extractStorageFromEntity)
         val eventBus = MOD_CONTEXT.getKEventBus()
         LibCommonHooks.onRegister()
         blocksRegistry.register(eventBus)

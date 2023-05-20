@@ -14,9 +14,10 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.IntegerProperty
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.XplatRegistries
+import java.util.function.BiConsumer
 
 
-fun animalData(entity: Entity, data: MutableMap<String, Any>) {
+val animalData = BiConsumer<Entity, MutableMap<String, Any>> { entity, data ->
     if (entity is Animal) {
         data["baby"] = entity.isBaby
         data["inLove"] = entity.isInLove
@@ -26,18 +27,18 @@ fun animalData(entity: Entity, data: MutableMap<String, Any>) {
         }
     }
 }
-fun merchantData(entity: Entity, data: MutableMap<String, Any>) {
+val merchantData = BiConsumer<Entity, MutableMap<String, Any>> { entity, data ->
     if (entity is Merchant) data["offers"] = LuaRepresentation.forMerchantOffers(entity)
 }
 
-fun villagerData(entity: Entity, data: MutableMap<String, Any>) {
+val villagerData = BiConsumer<Entity, MutableMap<String, Any>> { entity, data ->
     if (entity is Villager)
         LuaRepresentation.forVillager(entity).forEach {
             data[it.key] = it.value
         }
 }
 
-fun effectsData(entity: Entity, data: MutableMap<String, Any>) {
+val effectsData = BiConsumer<Entity, MutableMap<String, Any>> { entity, data ->
     if (entity is LivingEntity) {
         val effects: MutableList<MutableMap<String, Any>> = mutableListOf()
         entity.activeEffectsMap.forEach {
@@ -47,7 +48,7 @@ fun effectsData(entity: Entity, data: MutableMap<String, Any>) {
     }
 }
 
-fun stateProperties(state: BlockState, data: MutableMap<String, Any>) {
+val stateProperties = BiConsumer<BlockState, MutableMap<String, Any>> { state, data ->
     val properties: MutableMap<String, Any> = mutableMapOf()
     state.properties.forEach {
         properties[it.name] = state.getValue(it).toString()
@@ -55,7 +56,7 @@ fun stateProperties(state: BlockState, data: MutableMap<String, Any>) {
     data["properties"] = properties
 }
 
-fun cropAge(state: BlockState, data: MutableMap<String, Any>) {
+val cropAge = BiConsumer<BlockState, MutableMap<String, Any>> { state, data ->
     val ageProperty = state.properties.find { it.name == "age" } as IntegerProperty?
     if (ageProperty != null) {
         data["age"] = state.getValue(ageProperty)
@@ -64,14 +65,14 @@ fun cropAge(state: BlockState, data: MutableMap<String, Any>) {
 }
 
 
-fun honeyLevel(state: BlockState, data: MutableMap<String, Any>) {
+val honeyLevel = BiConsumer<BlockState, MutableMap<String, Any>> { state, data ->
     val ageProperty = state.properties.find { it.name == "honey_level" } as IntegerProperty?
     if (ageProperty != null) {
         data["honeyLevel"] = state.getValue(ageProperty)
     }
 }
 
-fun beeNestAnalyze(entity: BlockEntity, data: MutableMap<String, Any>) {
+val beeNestAnalyze = BiConsumer<BlockEntity, MutableMap<String, Any>> { entity, data ->
     if (entity is BeehiveBlockEntity) {
         data["isSmoked"] = entity.isSedated
         data["isFull"] = entity.isFull

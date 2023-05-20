@@ -2,6 +2,7 @@ package site.siredvin.peripheralium.storage
 
 import net.minecraft.core.BlockPos
 import net.minecraft.world.Container
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraftforge.common.capabilities.ForgeCapabilities
@@ -32,13 +33,15 @@ object ForgeStorageUtils {
         return something as? IItemHandler ?: (something as? Container)?.let { InvWrapper(it) }
     }
 
-    fun extractStorage(level: Level, obj: Any?): SlottedStorage? {
-        val targetObj = if (obj is BlockPos) {
-            level.getBlockEntity(obj)
-        } else {
-            obj
-        }
-        val itemHandler = extractItemHandler(targetObj) ?: return null
+    fun extractStorageFromBlock(level: Level, pos: BlockPos, blockEntity: BlockEntity?): SlottedStorage? {
+        if (blockEntity == null)
+            return null
+        val itemHandler = extractItemHandler(blockEntity) ?: return null
+        return ItemHandlerWrapper(itemHandler)
+    }
+
+    fun extractStorageFromEntity(level: Level, entity: Entity): SlottedStorage? {
+        val itemHandler = extractItemHandler(entity) ?: return null
         return ItemHandlerWrapper(itemHandler)
     }
 }
