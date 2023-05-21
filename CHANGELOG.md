@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Breaking
+
+- Refactoring of storage extraction logic, allows to extract from entities and make extract target types more determinated
+
+### Added
+
+- Tags generation from blocks, items and entities
+
 ## [0.5.2] - 2023-05-16
 
 ### Breaking

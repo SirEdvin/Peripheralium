@@ -2,11 +2,10 @@ package site.siredvin.peripheralium.data.blocks
 
 import net.minecraft.data.DataProvider
 import net.minecraft.data.loot.LootTableProvider
-import net.minecraft.data.models.BlockModelGenerators
-import net.minecraft.data.models.ItemModelGenerators
 import net.minecraft.data.tags.TagsProvider
 import net.minecraft.tags.TagBuilder
 import net.minecraft.tags.TagKey
+import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import site.siredvin.peripheralium.xplat.RegistryWrapper
@@ -16,34 +15,37 @@ import java.util.function.Consumer
 interface GeneratorSink {
     fun <T : DataProvider> add(factory: DataProvider.Factory<T>): T
     fun lootTable(tables: List<LootTableProvider.SubProviderEntry>)
-    fun blockTags(tags: Consumer<TagConsumer<Block>>): TagsProvider<Block>
-    fun itemTags(tags: Consumer<ItemTagConsumer>, blocks: TagsProvider<Block>): TagsProvider<Item>
+    fun blockTags(modID: String, tags: Consumer<TagConsumer<Block>>): TagsProvider<Block>
+
+    fun entityTags(modID: String, tags: Consumer<TagConsumer<EntityType<*>>>): TagsProvider<EntityType<*>>
+    fun itemTags(modID: String, tags: Consumer<ItemTagConsumer>, blocks: TagsProvider<Block>): TagsProvider<Item>
 }
 
 
-interface TagConsumer<T> {
-    fun tag(tag: TagKey<T>?): TagAppender<T>?
+fun interface TagConsumer<T> {
+    fun tag(tag: TagKey<T>): LibTagAppender<T>
 }
 
 
-class TagAppender<T>(private val registry: RegistryWrapper<T>, private val builder: TagBuilder) {
-    fun add(`object`: T): TagAppender<T> {
+class LibTagAppender<T>(private val registry: RegistryWrapper<T>, private val builder: TagBuilder) {
+    fun add(`object`: T): LibTagAppender<T> {
         builder.addElement(registry.getKey(`object`))
         return this
     }
 
     @SafeVarargs
-    fun add(vararg objects: T): TagAppender<T> {
+    fun add(vararg objects: T): LibTagAppender<T> {
         for (`object` in objects) add(`object`)
         return this
     }
 
-    fun addTag(tag: TagKey<T>): TagAppender<T> {
+    fun addTag(tag: TagKey<T>): LibTagAppender<T> {
         builder.addTag(tag.location())
         return this
     }
 }
 
-interface ItemTagConsumer : TagConsumer<Item?> {
-    fun copy(block: TagKey<Block?>?, item: TagKey<Item?>?)
+interface ItemTagConsumer : TagConsumer<Item> {
+    // TODO: copy function doesn't work quite well for fabric, so I should address or remove it
+    fun copy(block: TagKey<Block>, item: TagKey<Item>)
 }

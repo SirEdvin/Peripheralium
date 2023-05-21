@@ -3,17 +3,26 @@ package site.siredvin.peripheralium.data
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.BlockTagProvider
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.EntityTypeTagProvider
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.ItemTagProvider
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider
+import net.minecraft.core.HolderLookup
 import net.minecraft.data.DataProvider
 import net.minecraft.data.loot.LootTableProvider
 import net.minecraft.data.tags.TagsProvider
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.tags.TagKey
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.storage.loot.LootTable
 import site.siredvin.peripheralium.data.blocks.GeneratorSink
 import site.siredvin.peripheralium.data.blocks.ItemTagConsumer
+import site.siredvin.peripheralium.data.blocks.LibTagAppender
 import site.siredvin.peripheralium.data.blocks.TagConsumer
+import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.util.function.BiConsumer
 import java.util.function.Consumer
 
@@ -42,12 +51,47 @@ class FabricDataGenerators: DataGeneratorEntrypoint {
             }
         }
 
-        override fun blockTags(tags: Consumer<TagConsumer<Block>>): TagsProvider<Block> {
-            TODO("Not yet implemented")
+        override fun blockTags(modID: String, tags: Consumer<TagConsumer<Block>>): TagsProvider<Block> {
+            return pack.addProvider { out, registries ->
+                object : BlockTagProvider(out, registries) {
+                    override fun addTags(registries: HolderLookup.Provider) {
+                        tags.accept { x -> LibTagAppender(XplatRegistries.BLOCKS, getOrCreateRawBuilder(x)) }
+                    }
+                }
+            }
         }
 
-        override fun itemTags(tags: Consumer<ItemTagConsumer>, blocks: TagsProvider<Block>): TagsProvider<Item> {
-            TODO("Not yet implemented")
+        override fun entityTags(modID: String, tags: Consumer<TagConsumer<EntityType<*>>>): TagsProvider<EntityType<*>> {
+            return pack.addProvider { out, registries ->
+                object: EntityTypeTagProvider(out, registries) {
+                    override fun addTags(arg: HolderLookup.Provider) {
+                        tags.accept {  x -> LibTagAppender(XplatRegistries.ENTITY_TYPES, getOrCreateRawBuilder(x)) }
+                    }
+
+                }
+            }
+        }
+
+        override fun itemTags(modID: String, tags: Consumer<ItemTagConsumer>, blocks: TagsProvider<Block>): TagsProvider<Item> {
+            return pack.addProvider { out, registries ->
+                object : ItemTagProvider(out, registries, blocks as BlockTagProvider) {
+                    override fun addTags(registries: HolderLookup.Provider) {
+                        val self: ItemTagProvider = this
+                        tags.accept(object : ItemTagConsumer {
+                            override fun tag(tag: TagKey<Item>): LibTagAppender<Item> {
+                                return LibTagAppender(XplatRegistries.ITEMS, getOrCreateRawBuilder(tag))
+                            }
+
+                            override fun copy(
+                                block: TagKey<Block>,
+                                item: TagKey<Item>
+                            ) {
+                                self.copy(block, item)
+                            }
+                        })
+                    }
+                }
+            }
         }
 
     }
