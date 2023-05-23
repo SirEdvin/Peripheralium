@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.3] - 2023-05-23
+
 ### Breaking
 
 - Refactoring of storage extraction logic, allows to extract from entities and make extract target types more determinated
