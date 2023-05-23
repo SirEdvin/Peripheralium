@@ -14,6 +14,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Tags generation from blocks, items and entities
 
+### Changed
+
+- Make fluid information for forge and fabric tweaked in child classes
+
+### Fixed
+
+- ForgeFluidStorage plugins methods for pull/push fluids
+
 ## [0.5.2] - 2023-05-16
 
 ### Breaking

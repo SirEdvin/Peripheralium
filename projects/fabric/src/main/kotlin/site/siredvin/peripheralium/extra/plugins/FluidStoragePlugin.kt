@@ -7,6 +7,7 @@ import dan200.computercraft.api.peripheral.IPeripheral
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.Level
@@ -17,21 +18,25 @@ import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.*
 import java.util.function.Predicate
 
-class FluidStoragePlugin(private val level: Level, private val storage: Storage<FluidVariant>, private val fluidStorageTransferLimit: Int): IPeripheralPlugin {
+open class FluidStoragePlugin(private val level: Level, private val storage: Storage<FluidVariant>, private val fluidStorageTransferLimit: Int): IPeripheralPlugin {
 
 
     override val additionalType: String
         get() = PeripheralPluginUtils.TYPES.FLUID_STORAGE
 
+    protected open fun fluidInformation(fluid: StorageView<FluidVariant>): MutableMap<String, Any> {
+        return mutableMapOf(
+            "name" to BuiltInRegistries.FLUID.getKey(fluid.resource.fluid).toString(),
+            "amount" to fluid.amount / PeripheraliumPlatform.fluidCompactDivider,
+            "capacity" to fluid.capacity / PeripheraliumPlatform.fluidCompactDivider
+        )
+    }
+
     @LuaFunction(mainThread = true)
     fun tanks(): List<Map<String, *>> {
         val data: MutableList<Map<String, *>> = mutableListOf()
         storage.iterator().forEach {
-            data.add(hashMapOf(
-                "name" to BuiltInRegistries.FLUID.getKey(it.resource.fluid).toString(),
-                "amount" to it.amount / PeripheraliumPlatform.fluidCompactDivider,
-                "capacity" to it.capacity / PeripheraliumPlatform.fluidCompactDivider
-            ))
+            data.add(fluidInformation(it))
         }
         return data
     }

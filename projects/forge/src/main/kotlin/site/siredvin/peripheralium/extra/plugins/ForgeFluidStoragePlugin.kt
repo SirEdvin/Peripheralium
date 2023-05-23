@@ -16,10 +16,14 @@ import kotlin.collections.HashMap
 /**
  * Copy of https://github.com/cc-tweaked/CC-Tweaked/blob/mc-1.19.x/projects/forge/src/main/java/dan200/computercraft/shared/peripheral/generic/methods/FluidMethods.java
  */
-class ForgeFluidStoragePlugin(private val handler: IFluidHandler, private val fluidStorageTransferLimit: Int): IPeripheralPlugin {
+open class ForgeFluidStoragePlugin(private val handler: IFluidHandler, private val fluidStorageTransferLimit: Int): IPeripheralPlugin {
 
     override val additionalType: String
         get() = PeripheralPluginUtils.TYPES.FLUID_STORAGE
+
+    protected open fun fluidInformation(stack: FluidStack): MutableMap<String, Any> {
+        return ForgeDetailRegistries.FLUID_STACK.getBasicDetails(stack)
+    }
 
     @LuaFunction(mainThread = true)
     fun tanks(): Map<Int, Map<String, *>> {
@@ -27,17 +31,14 @@ class ForgeFluidStoragePlugin(private val handler: IFluidHandler, private val fl
         val size = handler.tanks
         for (i in 0 until size) {
             val stack = handler.getFluidInTank(i)
-            if (!stack.isEmpty) result[i + 1] = ForgeDetailRegistries.FLUID_STACK.getBasicDetails(stack)
+            if (!stack.isEmpty) result[i + 1] = fluidInformation(stack)
         }
         return result
     }
 
     @LuaFunction(mainThread = true)
     @Throws(LuaException::class)
-    fun pushFluid(
-        from: IFluidHandler, computer: IComputerAccess,
-        toName: String, limit: Optional<Int>, fluidName: Optional<String>
-    ): Int {
+    fun pushFluid(computer: IComputerAccess, toName: String, limit: Optional<Int>, fluidName: Optional<String>): Int {
         val fluid =
             if (fluidName.isPresent) getRegistryEntry(fluidName.get(), "fluid", RegistryWrappers.FLUIDS) else null
 
@@ -48,8 +49,8 @@ class ForgeFluidStoragePlugin(private val handler: IFluidHandler, private val fl
             ?: throw LuaException("Target '$toName' is not an tank")
         val actualLimit: Int = minOf(fluidStorageTransferLimit, limit.orElse(Int.MAX_VALUE))
         if (actualLimit <= 0) throw LuaException("Limit must be > 0")
-        return if (fluid == null) moveFluid(from, actualLimit, to) else moveFluid(
-            from,
+        return if (fluid == null) moveFluid(handler, actualLimit, to) else moveFluid(
+            handler,
             FluidStack(fluid, actualLimit),
             to
         )
@@ -57,10 +58,7 @@ class ForgeFluidStoragePlugin(private val handler: IFluidHandler, private val fl
 
     @LuaFunction(mainThread = true)
     @Throws(LuaException::class)
-    fun pullFluid(
-        to: IFluidHandler, computer: IComputerAccess,
-        fromName: String, limit: Optional<Int>, fluidName: Optional<String?>
-    ): Int {
+    fun pullFluid(computer: IComputerAccess, fromName: String, limit: Optional<Int>, fluidName: Optional<String?>): Int {
         val fluid =
             if (fluidName.isPresent) getRegistryEntry(fluidName.get(), "fluid", RegistryWrappers.FLUIDS) else null
 
@@ -71,10 +69,10 @@ class ForgeFluidStoragePlugin(private val handler: IFluidHandler, private val fl
             ?: throw LuaException("Target '$fromName' is not an tank")
         val actualLimit: Int = minOf(fluidStorageTransferLimit, limit.orElse(Int.MAX_VALUE))
         if (actualLimit <= 0) throw LuaException("Limit must be > 0")
-        return if (fluid == null) moveFluid(from, actualLimit, to) else moveFluid(
+        return if (fluid == null) moveFluid(from, actualLimit, handler) else moveFluid(
             from,
             FluidStack(fluid, actualLimit),
-            to
+            handler
         )
     }
 
