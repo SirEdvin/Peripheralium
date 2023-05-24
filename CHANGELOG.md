@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.4] - 2023-05-24
+
+### Removed
+
+- Forge entity inventory extractor, because it leads to incorrect behaviors. Entity inventory is a mess of slots, so direct exposition of this inventory is not correct approach
+
 ## [0.5.3] - 2023-05-23
 
 ### Breaking

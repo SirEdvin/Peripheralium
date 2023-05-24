@@ -39,9 +39,4 @@ object ForgeStorageUtils {
         val itemHandler = extractItemHandler(blockEntity) ?: return null
         return ItemHandlerWrapper(itemHandler)
     }
-
-    fun extractStorageFromEntity(level: Level, entity: Entity): SlottedStorage? {
-        val itemHandler = extractItemHandler(entity) ?: return null
-        return ItemHandlerWrapper(itemHandler)
-    }
 }
