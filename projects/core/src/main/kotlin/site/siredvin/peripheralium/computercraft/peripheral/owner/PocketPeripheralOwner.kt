@@ -13,7 +13,6 @@ import site.siredvin.peripheralium.api.storage.SlottedStorage
 import site.siredvin.peripheralium.api.storage.TargetableContainer
 import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
 import site.siredvin.peripheralium.computercraft.peripheral.ability.PocketFuelAbility
-import site.siredvin.peripheralium.computercraft.peripheral.ability.TurtleFuelAbility
 import site.siredvin.peripheralium.util.DataStorageUtil
 import site.siredvin.peripheralium.util.world.FakePlayerProviderPocket
 

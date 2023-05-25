@@ -21,8 +21,9 @@ class PocketFuelAbility(owner: PocketPeripheralOwner, private val foodFuelPrice:
 
     override fun _consumeFuel(count: Int): Boolean {
         val foodData = owner.owner?.foodData ?: return false
-        if (fuelCount < count)
+        if (fuelCount < count) {
             return false
+        }
         fuelConsumptionBuffer += count
         correctBuffer(foodData)
         return true
@@ -46,7 +47,8 @@ class PocketFuelAbility(owner: PocketPeripheralOwner, private val foodFuelPrice:
             foodData.foodLevel = minOf(MAX_FOOD_LEVEL, foodData.foodLevel + foodToAdd)
         }
         val leftFuel = count % foodFuelPrice
-        if (leftFuel > 0)
+        if (leftFuel > 0) {
             fuelConsumptionBuffer -= leftFuel
+        }
     }
 }

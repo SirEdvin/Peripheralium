@@ -18,21 +18,24 @@ object StorageUtils {
         val stack = if (fromSlot < 0) {
             from.takeItems(takePredicate, limit)
         } else {
-            if (from !is SlottedStorage)
+            if (from !is SlottedStorage) {
                 throw LuaException("From storage doesn't support slotting")
+            }
             from.takeItems(limit, fromSlot, fromSlot, takePredicate)
         }
-        if (stack.isEmpty)
+        if (stack.isEmpty) {
             return 0
-        
+        }
+
         val stackCount = stack.count
 
         // Move item to
         val remainder = if (toSlot < 0) {
             to.storeItem(stack)
         } else {
-            if (to !is SlottedStorage)
+            if (to !is SlottedStorage) {
                 throw LuaException("To storage doesn't support slotting")
+            }
             to.storeItem(stack, toSlot, toSlot)
         }
 
@@ -43,8 +46,9 @@ object StorageUtils {
             if (fromSlot < 0) {
                 from.storeItem(remainder)
             } else {
-                if (from !is SlottedStorage)
+                if (from !is SlottedStorage) {
                     throw LuaException("From storage doesn't support slotting")
+                }
                 from.storeItem(remainder, fromSlot, fromSlot)
             }
         }
@@ -52,14 +56,16 @@ object StorageUtils {
     }
 
     fun canStack(first: ItemStack, second: ItemStack): Boolean {
-        if (!first.sameItem(second))
+        if (!first.sameItem(second)) {
             return false
+        }
         return first.damageValue == second.damageValue && ItemStack.tagMatches(first, second)
     }
 
     fun canMerge(first: ItemStack, second: ItemStack, stackLimit: Int = -1): Boolean {
-        if (!canStack(first, second))
+        if (!canStack(first, second)) {
             return false
+        }
         val realStackLimit = if (stackLimit == -1) first.maxStackSize else minOf(stackLimit, first.maxStackSize)
         return first.count < realStackLimit
     }
@@ -68,13 +74,15 @@ object StorageUtils {
      * Merge second item stack into first one and returns remains
      */
     fun inplaceMerge(first: ItemStack, second: ItemStack, mergeLimit: Int = Int.MAX_VALUE): ItemStack {
-        if (!canMerge(first, second))
+        if (!canMerge(first, second)) {
             return second
+        }
         val mergeSize = minOf(second.count, first.maxStackSize - first.count, mergeLimit)
         first.grow(mergeSize)
         second.shrink(mergeSize)
-        if (second.isEmpty)
+        if (second.isEmpty) {
             return ItemStack.EMPTY
+        }
         return second
     }
 

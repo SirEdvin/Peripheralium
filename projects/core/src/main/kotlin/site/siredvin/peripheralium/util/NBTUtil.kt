@@ -1,11 +1,11 @@
 package site.siredvin.peripheralium.util
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException
-import java.io.ByteArrayInputStream
-import java.io.IOException
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.*
 import net.minecraft.world.level.ChunkPos
+import java.io.ByteArrayInputStream
+import java.io.IOException
 import java.util.*
 
 object NBTUtil {

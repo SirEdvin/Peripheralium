@@ -24,8 +24,9 @@ object FakePlayerProviderBlockEntity {
         WeakHashMap<BlockEntity, ServerPlayer>()
 
     private fun getPlayer(blockEntity: BlockEntity, profile: GameProfile): ServerPlayer {
-        if (blockEntity !is IOwnedBlockEntity || blockEntity.player == null)
+        if (blockEntity !is IOwnedBlockEntity || blockEntity.player == null) {
             throw IllegalArgumentException("Cannot use fake player logic without owned block entity")
+        }
         var fake: ServerPlayer? = registeredPlayers[blockEntity]
         if (fake == null) {
             fake = PeripheraliumPlatform.createFakePlayer(blockEntity.player!!.level as ServerLevel, profile)
@@ -51,7 +52,6 @@ object FakePlayerProviderBlockEntity {
         player.moveTo(position.x + x, position.y + y, position.z + z, yaw, pitch)
 
         if (!skipInventory && storage != null) {
-
             // Player inventory
             val playerInventory: Inventory = player.inventory
             playerInventory.selected = 0
@@ -62,10 +62,11 @@ object FakePlayerProviderBlockEntity {
             for (i in 0 until size) {
                 playerInventory.setItem(i, storage.getItem(i))
             }
-            if (fakeInventorySize > size)
+            if (fakeInventorySize > size) {
                 for (i in size until fakeInventorySize) {
                     playerInventory.setItem(i, ItemStack.EMPTY)
                 }
+            }
 
             // Add properties
             val activeStack: ItemStack = player.getItemInHand(InteractionHand.MAIN_HAND)
@@ -94,7 +95,7 @@ object FakePlayerProviderBlockEntity {
                 storage.storeItem(playerInventory.getItem(i), i, i)
                 playerInventory.setItem(i, ItemStack.EMPTY)
             }
-            if (fakeInventorySize > size)
+            if (fakeInventorySize > size) {
                 for (i in size until fakeInventorySize) {
                     val remaining = playerInventory.getItem(i)
                     if (!remaining.isEmpty) {
@@ -103,24 +104,27 @@ object FakePlayerProviderBlockEntity {
                             storage,
                             0,
                             realPlayer.blockPosition(),
-                            realPlayer.level
+                            realPlayer.level,
                         )
                     }
                     playerInventory.setItem(i, ItemStack.EMPTY)
                 }
+            }
         }
     }
 
     fun <T> withPlayer(blockEntity: BlockEntity, function: Function<ServerPlayer, T>, overwrittenDirection: Direction? = null, skipInventory: Boolean = false): T {
-        if (blockEntity !is IOwnedBlockEntity || blockEntity.player == null)
+        if (blockEntity !is IOwnedBlockEntity || blockEntity.player == null) {
             throw IllegalArgumentException("Cannot use fake player logic without owned block entity")
+        }
         val realPlayer = blockEntity.player
             ?: throw LuaException("Cannot init player for this block entity computer for some reason")
         val player: ServerPlayer =
             getPlayer(blockEntity, realPlayer.gameProfile)
         val storage = ExtractorProxy.extractStorage(blockEntity.level!!, blockEntity.blockPos, blockEntity = null) as? SlottedStorage
-        if (!skipInventory && storage == null)
+        if (!skipInventory && storage == null) {
             throw IllegalArgumentException("Cannot init fake player with storage and with block entity without storage")
+        }
         load(player, realPlayer, storage, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
         val result = function.apply(player)
         unload(player, realPlayer, storage, skipInventory = skipInventory)

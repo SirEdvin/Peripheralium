@@ -16,7 +16,6 @@ import site.siredvin.peripheralium.storage.ForgeStorageUtils
 import site.siredvin.peripheralium.xplat.LibCommonHooks
 import thedarkcolour.kotlinforforge.forge.MOD_CONTEXT
 
-
 @Mod(PeripheraliumCore.MOD_ID)
 @EventBusSubscriber(modid = PeripheraliumCore.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 object ForgePeripheralium {
@@ -37,12 +36,10 @@ object ForgePeripheralium {
     }
 
     fun sayHi() {
-
     }
 
     @SubscribeEvent
     fun registerCreativeTab(event: CreativeModeTabEvent.Register) {
         event.registerCreativeModeTab(ResourceLocation(PeripheraliumCore.MOD_ID, "tab"), PeripheraliumCore::configureCreativeTab)
     }
-
 }

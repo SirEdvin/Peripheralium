@@ -6,16 +6,18 @@ import site.siredvin.peripheralium.api.storage.SlottedStorage
 import site.siredvin.peripheralium.api.storage.StorageUtils
 import java.util.function.Predicate
 
-class ItemHandlerWrapper(private val handler: IItemHandler): SlottedStorage {
+class ItemHandlerWrapper(private val handler: IItemHandler) : SlottedStorage {
     override fun takeItems(limit: Int, startSlot: Int, endSlot: Int, predicate: Predicate<ItemStack>): ItemStack {
         var slidingLimit = limit
         var slidingItemStack = ItemStack.EMPTY
         for (currentSlot in startSlot..endSlot) {
             val tryExtractedStack = handler.extractItem(currentSlot, limit, true)
-            if (tryExtractedStack.isEmpty)
+            if (tryExtractedStack.isEmpty) {
                 continue
-            if (!predicate.test(tryExtractedStack))
+            }
+            if (!predicate.test(tryExtractedStack)) {
                 continue
+            }
             val extractedStack = handler.extractItem(currentSlot, limit, false)
             if (slidingItemStack.isEmpty) {
                 slidingItemStack = extractedStack
@@ -26,15 +28,17 @@ class ItemHandlerWrapper(private val handler: IItemHandler): SlottedStorage {
                 if (StorageUtils.canMerge(slidingItemStack, extractedStack)) {
                     val extractedCount = extractedStack.count
                     val remainExtracted = StorageUtils.inplaceMerge(slidingItemStack, extractedStack)
-                    if (!remainExtracted.isEmpty)
+                    if (!remainExtracted.isEmpty) {
                         handler.insertItem(currentSlot, remainExtracted, false)
+                    }
                     slidingLimit -= extractedCount - remainExtracted.count
                 } else {
                     handler.insertItem(currentSlot, extractedStack, false)
                 }
             }
-            if (slidingLimit <= 0)
+            if (slidingLimit <= 0) {
                 break
+            }
         }
         return slidingItemStack
     }
@@ -51,8 +55,9 @@ class ItemHandlerWrapper(private val handler: IItemHandler): SlottedStorage {
         var slidingItemStack = stack
         for (currentSlot in startSlot..endSlot) {
             slidingItemStack = handler.insertItem(currentSlot, slidingItemStack, false)
-            if (slidingItemStack.isEmpty)
+            if (slidingItemStack.isEmpty) {
                 break
+            }
         }
         return slidingItemStack
     }

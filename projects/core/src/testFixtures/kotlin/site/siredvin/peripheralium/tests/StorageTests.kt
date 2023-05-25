@@ -12,24 +12,29 @@ import java.util.*
 import java.util.function.Predicate
 import kotlin.test.assertEquals
 
-
 abstract class StorageTests {
 
     abstract fun createStorage(items: List<ItemStack>, secondary: Boolean): AccessibleStorage
 
     fun createStorage(sizes: List<Int>, stack: ItemStack, secondary: Boolean): AccessibleStorage {
-        return createStorage(sizes.map {
-            if (it == 0)
-                ItemStack.EMPTY
-            else
-                stack.copyWithCount(it)
-        }, secondary)
+        return createStorage(
+            sizes.map {
+                if (it == 0) {
+                    ItemStack.EMPTY
+                } else
+                    stack.copyWithCount(it)
+            },
+            secondary,
+        )
     }
 
     data class MoveArguments(
-        val initialFrom: List<Int>, val initialTo: List<Int>,
-        val moveLimit: Int, val expectedMoveAmount: Int,
-        val expectedFrom: List<Int>, val expectedTo: List<Int>,
+        val initialFrom: List<Int>,
+        val initialTo: List<Int>,
+        val moveLimit: Int,
+        val expectedMoveAmount: Int,
+        val expectedFrom: List<Int>,
+        val expectedTo: List<Int>,
     )
 
     companion object {
@@ -42,25 +47,38 @@ abstract class StorageTests {
              *  - Partial limit move (two stacks with two stacks)
              */
             return listOf(
-                Arguments.of(MoveArguments(
-                    listOf(64, 64, 64), listOf(64, 64, 0),
-                    64, 64,
-                    listOf(64, 64), listOf(64, 64, 64)
-                )),
-                Arguments.of(MoveArguments(
-                    listOf(64, 64, 64),  listOf(64, 64, 64),
-                    128, 0,
-                    listOf(64, 64, 64), listOf(64, 64, 64)
-                )),
-                Arguments.of(MoveArguments(
-                    listOf(64, 64, 64),  listOf(64, 64, 32),
-                    128, 32,
-                    listOf(32, 64, 64), listOf(64, 64, 64)
-                )),
+                Arguments.of(
+                    MoveArguments(
+                        listOf(64, 64, 64),
+                        listOf(64, 64, 0),
+                        64,
+                        64,
+                        listOf(64, 64),
+                        listOf(64, 64, 64),
+                    ),
+                ),
+                Arguments.of(
+                    MoveArguments(
+                        listOf(64, 64, 64),
+                        listOf(64, 64, 64),
+                        128,
+                        0,
+                        listOf(64, 64, 64),
+                        listOf(64, 64, 64),
+                    ),
+                ),
+                Arguments.of(
+                    MoveArguments(
+                        listOf(64, 64, 64),
+                        listOf(64, 64, 32),
+                        128,
+                        32,
+                        listOf(32, 64, 64),
+                        listOf(64, 64, 64),
+                    ),
+                ),
             )
         }
-
-
     }
 
     @ParameterizedTest

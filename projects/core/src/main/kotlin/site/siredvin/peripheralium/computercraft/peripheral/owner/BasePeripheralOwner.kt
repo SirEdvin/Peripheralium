@@ -2,9 +2,9 @@ package site.siredvin.peripheralium.computercraft.peripheral.owner
 
 import site.siredvin.peripheralium.api.config.IOperationAbilityConfig
 import site.siredvin.peripheralium.api.peripheral.IOwnerAbility
-import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
 import site.siredvin.peripheralium.api.peripheral.IPeripheralOwner
 import site.siredvin.peripheralium.computercraft.peripheral.ability.OperationAbility
+import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
 
 abstract class BasePeripheralOwner : IPeripheralOwner {
     private val _abilities: MutableMap<PeripheralOwnerAbility<*>, IOwnerAbility>
@@ -17,8 +17,9 @@ abstract class BasePeripheralOwner : IPeripheralOwner {
         get() = _abilities.values
 
     override fun <T : IOwnerAbility> attachAbility(ability: PeripheralOwnerAbility<T>, abilityImplementation: T) {
-        if (_abilities.containsKey(ability))
+        if (_abilities.containsKey(ability)) {
             throw IllegalArgumentException("Ability $ability already registered")
+        }
         _abilities[ability] = abilityImplementation
     }
 

@@ -12,10 +12,8 @@ import net.minecraft.world.level.block.entity.BeehiveBlockEntity
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.IntegerProperty
-import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.util.function.BiConsumer
-
 
 val animalData = BiConsumer<Entity, MutableMap<String, Any>> { entity, data ->
     if (entity is Animal) {
@@ -23,7 +21,7 @@ val animalData = BiConsumer<Entity, MutableMap<String, Any>> { entity, data ->
         data["inLove"] = entity.isInLove
         data["aggressive"] = entity.isAggressive
         if (entity is Shearable) {
-            data["shareable"] = entity.readyForShearing();
+            data["shareable"] = entity.readyForShearing()
         }
     }
 }
@@ -32,10 +30,11 @@ val merchantData = BiConsumer<Entity, MutableMap<String, Any>> { entity, data ->
 }
 
 val villagerData = BiConsumer<Entity, MutableMap<String, Any>> { entity, data ->
-    if (entity is Villager)
+    if (entity is Villager) {
         LuaRepresentation.forVillager(entity).forEach {
             data[it.key] = it.value
         }
+    }
 }
 
 val effectsData = BiConsumer<Entity, MutableMap<String, Any>> { entity, data ->
@@ -63,7 +62,6 @@ val cropAge = BiConsumer<BlockState, MutableMap<String, Any>> { state, data ->
         data["maxAge"] = ageProperty.possibleValues.maxOf { it }
     }
 }
-
 
 val honeyLevel = BiConsumer<BlockState, MutableMap<String, Any>> { state, data ->
     val ageProperty = state.properties.find { it.name == "honey_level" } as IntegerProperty?

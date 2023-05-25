@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.Block
 import site.siredvin.peripheralium.xplat.RegistryWrapper
 import java.util.function.Consumer
 
-
 interface GeneratorSink {
     fun <T : DataProvider> add(factory: DataProvider.Factory<T>): T
     fun lootTable(tables: List<LootTableProvider.SubProviderEntry>)
@@ -21,11 +20,9 @@ interface GeneratorSink {
     fun itemTags(modID: String, tags: Consumer<ItemTagConsumer>, blocks: TagsProvider<Block>): TagsProvider<Item>
 }
 
-
 fun interface TagConsumer<T> {
     fun tag(tag: TagKey<T>): LibTagAppender<T>
 }
-
 
 class LibTagAppender<T>(private val registry: RegistryWrapper<T>, private val builder: TagBuilder) {
     fun add(`object`: T): LibTagAppender<T> {

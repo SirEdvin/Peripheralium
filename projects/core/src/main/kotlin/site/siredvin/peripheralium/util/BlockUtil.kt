@@ -11,32 +11,42 @@ object BlockUtil {
         explosionResistance: Float,
         soundType: SoundType?,
         isOcclusion: Boolean = true,
-        requiresCorrectToolForDrops: Boolean = false
+        requiresCorrectToolForDrops: Boolean = false,
     ): BlockBehaviour.Properties {
         var properties: BlockBehaviour.Properties = BlockBehaviour.Properties.of(material)
             .strength(destroyTime, explosionResistance)
         if (soundType != null) properties = properties.sound(soundType)
         if (!isOcclusion) properties = properties.noOcclusion()
-        if (requiresCorrectToolForDrops)
+        if (requiresCorrectToolForDrops) {
             properties.requiresCorrectToolForDrops()
+        }
         return properties
     }
 
     fun defaultProperties(): BlockBehaviour.Properties {
         return createProperties(
-            Material.STONE, 1f, 5f, SoundType.STONE,
+            Material.STONE,
+            1f,
+            5f,
+            SoundType.STONE,
         )
     }
 
     fun decoration(): BlockBehaviour.Properties {
         return createProperties(
-            Material.DECORATION, 1f, 5f, SoundType.WOOD,
+            Material.DECORATION,
+            1f,
+            5f,
+            SoundType.WOOD,
         )
     }
 
     fun unbreakable(): BlockBehaviour.Properties {
         return createProperties(
-            Material.DECORATION, -1.0f, 3600000.0f, null,
+            Material.DECORATION,
+            -1.0f,
+            3600000.0f,
+            null,
         )
     }
 }

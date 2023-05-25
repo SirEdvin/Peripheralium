@@ -4,7 +4,7 @@ import net.minecraft.world.Container
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 
-class MergedContainer(private val containers: List<Container>): Container {
+class MergedContainer(private val containers: List<Container>) : Container {
 
     private fun fromIndex(index: Int): Pair<Container, Int>? {
         var passedCounter = 0

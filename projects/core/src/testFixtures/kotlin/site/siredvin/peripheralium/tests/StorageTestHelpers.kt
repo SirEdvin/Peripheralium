@@ -12,9 +12,11 @@ object StorageTestHelpers {
         val stacks = Collections.newSetFromMap(IdentityHashMap<ItemStack, Boolean>())
         for (storage in storages) {
             storage.getItems().forEach {
-                if (it != ItemStack.EMPTY)
-                    if (!stacks.add(it))
+                if (it != ItemStack.EMPTY) {
+                    if (!stacks.add(it)) {
                         throw AssertionError("Duplicate item in inventories")
+                    }
+                }
             }
         }
     }
@@ -32,8 +34,9 @@ object StorageTestHelpers {
     fun assertSlottedStorage(storage: SlottedStorage, expected: List<Int>, name: String) {
         expected.forEachIndexed { index, amount ->
             assertEquals(
-                amount, storage.getItem(index).count,
-                "Item in slot $index for $name storage, has incorrect amount"
+                amount,
+                storage.getItem(index).count,
+                "Item in slot $index for $name storage, has incorrect amount",
             )
         }
     }

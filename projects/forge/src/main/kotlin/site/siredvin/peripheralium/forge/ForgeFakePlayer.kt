@@ -10,8 +10,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraftforge.common.util.FakePlayer
 import java.util.*
 
-
-class ForgeFakePlayer(level: ServerLevel, profile: GameProfile): FakePlayer(level, profile) {
+class ForgeFakePlayer(level: ServerLevel, profile: GameProfile) : FakePlayer(level, profile) {
 
     override fun canHarmPlayer(other: Player): Boolean {
         return true

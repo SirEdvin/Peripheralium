@@ -2,13 +2,8 @@ package site.siredvin.peripheralium.forge
 
 import com.mojang.authlib.GameProfile
 import dan200.computercraft.api.pocket.IPocketUpgrade
-import dan200.computercraft.api.pocket.PocketUpgradeDataProvider
-import dan200.computercraft.api.pocket.PocketUpgradeSerialiser
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.ITurtleUpgrade
-import dan200.computercraft.api.turtle.TurtleUpgradeDataProvider
-import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
-import dan200.computercraft.api.upgrades.UpgradeDataProvider
 import dan200.computercraft.impl.PocketUpgrades
 import dan200.computercraft.impl.TurtleUpgrades
 import dan200.computercraft.shared.ModRegistry
@@ -18,7 +13,6 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderSet
 import net.minecraft.core.Registry
-import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.resources.ResourceKey
@@ -56,18 +50,16 @@ import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.RegistryWrapper
 import java.util.*
 import java.util.function.BiFunction
-import java.util.function.Consumer
 import java.util.function.Function
 import java.util.function.Predicate
 import java.util.function.Supplier
 
-
-class ForgePeripheraliumPlatform: PeripheraliumPlatform {
-    private class ForgeRegistryWrapper<T>(private val name: ResourceLocation, private val registry: ForgeRegistry<T>): RegistryWrapper<T> {
+class ForgePeripheraliumPlatform : PeripheraliumPlatform {
+    private class ForgeRegistryWrapper<T>(private val name: ResourceLocation, private val registry: ForgeRegistry<T>) : RegistryWrapper<T> {
         override fun getId(something: T): Int {
             val id = registry.getID(something)
             if (id == -1) throw IllegalArgumentException()
-            return id;
+            return id
         }
 
         override fun getKey(something: T): ResourceLocation {
@@ -94,14 +86,13 @@ class ForgePeripheraliumPlatform: PeripheraliumPlatform {
         override fun tryGet(location: ResourceLocation): T? {
             return registry.getValue(location)
         }
-
     }
 
     override val fluidCompactDivider: Double
         get() = 1.0
 
     override fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T> {
-        return ForgeRegistryWrapper(registry.location(), RegistryManager.ACTIVE.getRegistry(registry));
+        return ForgeRegistryWrapper(registry.location(), RegistryManager.ACTIVE.getRegistry(registry))
     }
 
     override fun createFakePlayer(level: ServerLevel, profile: GameProfile): ServerPlayer {
@@ -113,21 +104,23 @@ class ForgePeripheraliumPlatform: PeripheraliumPlatform {
     }
 
     override fun <T : Block> registerBlock(key: ResourceLocation, block: Supplier<T>, itemFactory: (T) -> Item): Supplier<T> {
-        PeripheraliumCore.LOGGER.warn("Register block", )
+        PeripheraliumCore.LOGGER.warn("Register block")
         val blockRegister = ForgePeripheralium.blocksRegistry.register(key.path, block)
         ForgePeripheralium.itemsRegistry.register(key.path) { itemFactory(blockRegister.get()) }
         return blockRegister
     }
 
     override fun getTurtleAccess(entity: BlockEntity): ITurtleAccess? {
-        if (entity is TurtleBlockEntity)
+        if (entity is TurtleBlockEntity) {
             return entity.access
+        }
         return null
     }
 
     override fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean {
-        if (player.level.server?.isUnderSpawnProtection(player.level as ServerLevel, pos, player) == true)
+        if (player.level.server?.isUnderSpawnProtection(player.level as ServerLevel, pos, player) == true) {
             return true
+        }
         val event = BreakEvent(player.level, pos, state, player)
         MinecraftForge.EVENT_BUS.post(event)
         return event.isCanceled
@@ -137,18 +130,19 @@ class ForgePeripheraliumPlatform: PeripheraliumPlatform {
         player: ServerPlayer,
         hand: InteractionHand,
         entity: Entity,
-        hit: EntityHitResult
+        hit: EntityHitResult,
     ): InteractionResult {
         // Copied from CC:T to have nearly same logic here :)
         // Our behaviour is slightly different here - we call onInteractEntityAt before the interact methods, while
         // Forge does the call afterward (on the server, not on the client).
-        var interactAt = ForgeHooks.onInteractEntityAt(player, entity, hit.location, hand);
+        var interactAt = ForgeHooks.onInteractEntityAt(player, entity, hit.location, hand)
         if (interactAt == null) {
-            interactAt = entity.interactAt(player, hit.location.subtract(entity.position()), InteractionHand.MAIN_HAND);
+            interactAt = entity.interactAt(player, hit.location.subtract(entity.position()), InteractionHand.MAIN_HAND)
         }
 
-        if (interactAt.consumesAction())
+        if (interactAt.consumesAction()) {
             return interactAt
+        }
 
         return player.interactOn(entity, hand)
     }
@@ -157,7 +151,7 @@ class ForgePeripheraliumPlatform: PeripheraliumPlatform {
         player: ServerPlayer,
         stack: ItemStack,
         hit: BlockHitResult,
-        canUseBlock: Predicate<BlockState>
+        canUseBlock: Predicate<BlockState>,
     ): InteractionResult {
         val level = player.level
         val pos = hit.blockPos
@@ -207,23 +201,23 @@ class ForgePeripheraliumPlatform: PeripheraliumPlatform {
         return NBTUtil.toLua(tag)
     }
 
-
     override fun <T : BlockEntity> createBlockEntityType(
         factory: BiFunction<BlockPos, BlockState, T>,
-        block: Block
+        block: Block,
     ): BlockEntityType<T> {
         return BlockEntityType.Builder.of({ t: BlockPos?, u: BlockState? ->
             factory.apply(
-                t!!, u!!
+                t!!,
+                u!!,
             )
         }, block).build(null)
     }
 
     override fun <T : Entity> createEntityType(
         name: ResourceLocation,
-        factory: Function<Level, T>
+        factory: Function<Level, T>,
     ): EntityType<T> {
-        return EntityType.Builder.of({_, level -> factory.apply(level)}, MobCategory.MISC).build(name.toString())
+        return EntityType.Builder.of({ _, level -> factory.apply(level) }, MobCategory.MISC).build(name.toString())
     }
 
     override fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack> {

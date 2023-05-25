@@ -7,7 +7,6 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.PeripheraliumCore
-import site.siredvin.peripheralium.util.itemTooltip
 import site.siredvin.peripheralium.util.text
 import java.util.function.Function
 import java.util.function.Supplier
@@ -17,8 +16,9 @@ open class PeripheralItem(properties: Properties, private var enableSup: Supplie
 
     private val tooltips: List<Component>
         get() {
-            if (_tooltips == null)
+            if (_tooltips == null) {
                 _tooltips = tooltipHook.flatMap { it.apply(this) }
+            }
             return _tooltips!!
         }
 
@@ -26,7 +26,7 @@ open class PeripheralItem(properties: Properties, private var enableSup: Supplie
         itemStack: ItemStack,
         level: Level?,
         list: MutableList<Component>,
-        tooltipFlag: TooltipFlag
+        tooltipFlag: TooltipFlag,
     ) {
         super.appendHoverText(itemStack, level, list, tooltipFlag)
         if (alwaysShow || InputConstants.isKeyDown(Minecraft.getInstance().window.window, InputConstants.KEY_LSHIFT)) {

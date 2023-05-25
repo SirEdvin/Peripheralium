@@ -9,7 +9,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.DirectionProperty
-import net.minecraft.world.level.material.Material
 import site.siredvin.peripheralium.util.BlockUtil
 import java.util.function.Supplier
 
@@ -17,8 +16,8 @@ class GenericBlockEntityBlock<T : BlockEntity>(
     private val blockEntityTypeSup: Supplier<BlockEntityType<T>>,
     private val isRotatable: Boolean,
     belongToTickingEntity: Boolean = false,
-    properties: Properties = BlockUtil.defaultProperties()
-): BaseTileEntityBlock<T>(belongToTickingEntity, properties) {
+    properties: Properties = BlockUtil.defaultProperties(),
+) : BaseTileEntityBlock<T>(belongToTickingEntity, properties) {
 
     companion object {
         val FACING: DirectionProperty = HorizontalDirectionalBlock.FACING
@@ -33,10 +32,14 @@ class GenericBlockEntityBlock<T : BlockEntity>(
     }
 
     override fun rotate(state: BlockState, rot: Rotation): BlockState {
-        return if (isRotatable) state.setValue(
-            FACING,
-            rot.rotate(state.getValue(FACING))
-        ) else state
+        return if (isRotatable) {
+            state.setValue(
+                FACING,
+                rot.rotate(state.getValue(FACING)),
+            )
+        } else {
+            state
+        }
     }
 
     override fun mirror(state: BlockState, mirrorIn: Mirror): BlockState {
@@ -48,9 +51,13 @@ class GenericBlockEntityBlock<T : BlockEntity>(
     }
 
     override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
-        return if (isRotatable) defaultBlockState().setValue(
-            FACING,
-            context.horizontalDirection.opposite
-        ) else defaultBlockState()
+        return if (isRotatable) {
+            defaultBlockState().setValue(
+                FACING,
+                context.horizontalDirection.opposite,
+            )
+        } else {
+            defaultBlockState()
+        }
     }
 }

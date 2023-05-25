@@ -11,8 +11,9 @@ interface RecipeIngredients {
         }
 
         fun get(): RecipeIngredients {
-            if (_IMPL == null)
+            if (_IMPL == null) {
                 throw IllegalStateException("You should init recipe ingredients first")
+            }
             return _IMPL!!
         }
     }

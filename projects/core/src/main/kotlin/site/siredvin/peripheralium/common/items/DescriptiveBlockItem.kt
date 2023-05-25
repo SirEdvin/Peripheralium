@@ -15,8 +15,9 @@ open class DescriptiveBlockItem(block: Block, properties: Properties) : BlockIte
 
     private val extraDescription: MutableComponent
         get() {
-            if (_description == null)
+            if (_description == null) {
                 _description = itemTooltip(this.descriptionId)
+            }
             return _description!!
         }
 
@@ -24,11 +25,12 @@ open class DescriptiveBlockItem(block: Block, properties: Properties) : BlockIte
         itemStack: ItemStack,
         level: Level?,
         list: MutableList<Component>,
-        tooltipFlag: TooltipFlag
+        tooltipFlag: TooltipFlag,
     ) {
         super.appendHoverText(itemStack, level, list, tooltipFlag)
         val keyContents = extraDescription.contents as TranslatableContents
-        if (keyContents.key != extraDescription.string)
+        if (keyContents.key != extraDescription.string) {
             list.add(extraDescription)
+        }
     }
 }

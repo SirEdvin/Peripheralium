@@ -5,7 +5,7 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.item.crafting.Ingredient
 import site.siredvin.peripheralium.xplat.RecipeIngredients
 
-object FabricIngredients: RecipeIngredients {
+object FabricIngredients : RecipeIngredients {
     override val redstone: Ingredient
         get() = Ingredient.of(ConventionalItemTags.REDSTONE_DUSTS)
     override val glowstoneDust: Ingredient

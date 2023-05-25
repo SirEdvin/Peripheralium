@@ -18,17 +18,16 @@ import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.*
 import java.util.function.Predicate
 
-open class FluidStoragePlugin(private val level: Level, private val storage: Storage<FluidVariant>, private val fluidStorageTransferLimit: Int): IPeripheralPlugin {
-
+open class FluidStoragePlugin(private val level: Level, private val storage: Storage<FluidVariant>, private val fluidStorageTransferLimit: Int) : IPeripheralPlugin {
 
     override val additionalType: String
-        get() = PeripheralPluginUtils.TYPES.FLUID_STORAGE
+        get() = PeripheralPluginUtils.Type.FLUID_STORAGE
 
     protected open fun fluidInformation(fluid: StorageView<FluidVariant>): MutableMap<String, Any> {
         return mutableMapOf(
             "name" to BuiltInRegistries.FLUID.getKey(fluid.resource.fluid).toString(),
             "amount" to fluid.amount / PeripheraliumPlatform.fluidCompactDivider,
-            "capacity" to fluid.capacity / PeripheraliumPlatform.fluidCompactDivider
+            "capacity" to fluid.capacity / PeripheraliumPlatform.fluidCompactDivider,
         )
     }
 
@@ -53,8 +52,9 @@ open class FluidStoragePlugin(private val level: Level, private val storage: Sto
             Predicate { true }
         } else {
             val fluid = BuiltInRegistries.FLUID.get(ResourceLocation(fluidName.get()))
-            if (fluid.isSame(Fluids.EMPTY))
+            if (fluid.isSame(Fluids.EMPTY)) {
                 throw LuaException("There is no fluid ${fluidName.get()}")
+            }
             Predicate { it.fluid.isSame(fluid) }
         }
         val realLimit = minOf(fluidStorageTransferLimit.toLong(), limit.map { it * PeripheraliumPlatform.fluidCompactDivider.toLong() }.orElse(Long.MAX_VALUE))
@@ -73,8 +73,9 @@ open class FluidStoragePlugin(private val level: Level, private val storage: Sto
             Predicate { true }
         } else {
             val fluid = BuiltInRegistries.FLUID.get(ResourceLocation(fluidName.get()))
-            if (fluid.isSame(Fluids.EMPTY))
+            if (fluid.isSame(Fluids.EMPTY)) {
                 throw LuaException("There is no fluid ${fluidName.get()}")
+            }
             Predicate { it.fluid.isSame(fluid) }
         }
         val realLimit = minOf(fluidStorageTransferLimit.toLong(), limit.map { it * PeripheraliumPlatform.fluidCompactDivider.toLong() }.orElse(Long.MAX_VALUE))

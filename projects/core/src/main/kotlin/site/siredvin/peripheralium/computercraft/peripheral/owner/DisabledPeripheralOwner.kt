@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.storage.SlottedStorage
 
-class DisabledPeripheralOwner: BasePeripheralOwner() {
+class DisabledPeripheralOwner : BasePeripheralOwner() {
     override val level: Level?
         get() = null
     override val pos: BlockPos
@@ -30,7 +30,7 @@ class DisabledPeripheralOwner: BasePeripheralOwner() {
     override fun <T> withPlayer(
         function: (ServerPlayer) -> T,
         overwrittenDirection: Direction?,
-        skipInventory: Boolean
+        skipInventory: Boolean,
     ): T {
         throw RuntimeException("Really no code should use this, this is disabled owner")
     }
@@ -53,5 +53,4 @@ class DisabledPeripheralOwner: BasePeripheralOwner() {
     override fun move(level: Level, pos: BlockPos): Boolean {
         throw RuntimeException("Really no code should use this, this is disabled owner")
     }
-
 }

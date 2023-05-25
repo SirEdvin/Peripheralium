@@ -2,7 +2,6 @@ package site.siredvin.peripheralium.api
 
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
-import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.XplatRegistries
 
 fun interface TurtleIDBuildFunction {

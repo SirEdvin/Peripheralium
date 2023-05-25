@@ -13,7 +13,6 @@ import net.minecraft.data.loot.LootTableProvider
 import net.minecraft.data.tags.TagsProvider
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
@@ -26,28 +25,28 @@ import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.util.function.BiConsumer
 import java.util.function.Consumer
 
+class FabricDataGenerators : DataGeneratorEntrypoint {
 
-class FabricDataGenerators: DataGeneratorEntrypoint {
-
-    class TabledFabricLootTableProvider(private val out: FabricDataOutput, private val table: LootTableProvider.SubProviderEntry): SimpleFabricLootTableProvider(out, table.paramSet) {
+    class TabledFabricLootTableProvider(private val out: FabricDataOutput, private val table: LootTableProvider.SubProviderEntry) : SimpleFabricLootTableProvider(out, table.paramSet) {
         override fun accept(consumer: BiConsumer<ResourceLocation, LootTable.Builder>) {
             table.provider().get().generate(consumer)
         }
-
     }
-    
-    class DataGeneratorWrapper(private val pack: FabricDataGenerator.Pack): GeneratorSink {
+
+    class DataGeneratorWrapper(private val pack: FabricDataGenerator.Pack) : GeneratorSink {
         override fun <T : DataProvider> add(factory: DataProvider.Factory<T>): T {
             return pack.addProvider(factory)
         }
 
         override fun lootTable(tables: List<LootTableProvider.SubProviderEntry>) {
             tables.forEach {
-                pack.addProvider { out: FabricDataOutput -> object: SimpleFabricLootTableProvider(out, it.paramSet) {
-                    override fun accept(consumer: BiConsumer<ResourceLocation, LootTable.Builder>) {
-                        it.provider.get().generate(consumer)
+                pack.addProvider { out: FabricDataOutput ->
+                    object : SimpleFabricLootTableProvider(out, it.paramSet) {
+                        override fun accept(consumer: BiConsumer<ResourceLocation, LootTable.Builder>) {
+                            it.provider.get().generate(consumer)
+                        }
                     }
-                } }
+                }
             }
         }
 
@@ -63,11 +62,10 @@ class FabricDataGenerators: DataGeneratorEntrypoint {
 
         override fun entityTags(modID: String, tags: Consumer<TagConsumer<EntityType<*>>>): TagsProvider<EntityType<*>> {
             return pack.addProvider { out, registries ->
-                object: EntityTypeTagProvider(out, registries) {
+                object : EntityTypeTagProvider(out, registries) {
                     override fun addTags(arg: HolderLookup.Provider) {
-                        tags.accept {  x -> LibTagAppender(XplatRegistries.ENTITY_TYPES, getOrCreateRawBuilder(x)) }
+                        tags.accept { x -> LibTagAppender(XplatRegistries.ENTITY_TYPES, getOrCreateRawBuilder(x)) }
                     }
-
                 }
             }
         }
@@ -84,7 +82,7 @@ class FabricDataGenerators: DataGeneratorEntrypoint {
 
                             override fun copy(
                                 block: TagKey<Block>,
-                                item: TagKey<Item>
+                                item: TagKey<Item>,
                             ) {
                                 self.copy(block, item)
                             }
@@ -93,9 +91,8 @@ class FabricDataGenerators: DataGeneratorEntrypoint {
                 }
             }
         }
-
     }
-    
+
     override fun onInitializeDataGenerator(fabricDataGenerator: FabricDataGenerator) {
         LibDataProviders.add(DataGeneratorWrapper(fabricDataGenerator.createPack()))
     }

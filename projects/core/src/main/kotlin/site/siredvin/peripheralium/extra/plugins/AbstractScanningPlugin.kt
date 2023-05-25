@@ -23,7 +23,7 @@ import java.util.function.Predicate
 import java.util.stream.Collectors
 import kotlin.math.min
 
-abstract class AbstractScanningPlugin(protected val owner: IPeripheralOwner): IPeripheralPlugin {
+abstract class AbstractScanningPlugin(protected val owner: IPeripheralOwner) : IPeripheralPlugin {
 
     abstract val scanRadius: Int
     abstract val allowedMods: Set<AreaInteractionMode>
@@ -62,21 +62,28 @@ abstract class AbstractScanningPlugin(protected val owner: IPeripheralOwner): IP
         val z: Int = pos.z
         val interactionRadius = min(radius, scanRadius)
         return AABB(
-            (x - interactionRadius).toDouble(), (y - interactionRadius).toDouble(), (z - interactionRadius).toDouble(),
-            (x + interactionRadius).toDouble(), (y + interactionRadius).toDouble(), (z + interactionRadius).toDouble()
+            (x - interactionRadius).toDouble(),
+            (y - interactionRadius).toDouble(),
+            (z - interactionRadius).toDouble(),
+            (x + interactionRadius).toDouble(),
+            (y + interactionRadius).toDouble(),
+            (z + interactionRadius).toDouble(),
         ).inflate(0.99)
     }
 
     private fun scanBlocks(radius: Int): List<Pair<BlockState, BlockPos>> {
         val result = mutableListOf<Pair<BlockState, BlockPos>>()
         ScanUtils.traverseBlocks(
-            owner.level!!, owner.pos, min(radius, scanRadius),
-            { state, pos -> result.add(Pair(state, pos))}, relativePosition = false
+            owner.level!!,
+            owner.pos,
+            min(radius, scanRadius),
+            { state, pos -> result.add(Pair(state, pos)) },
+            relativePosition = false,
         )
         return result
     }
 
-    private fun <T: Entity> scanEntities(entityClass: Class<T>, radius: Int): List<T> {
+    private fun <T : Entity> scanEntities(entityClass: Class<T>, radius: Int): List<T> {
         return owner.level!!.getEntitiesOfClass(entityClass, getBox(owner.pos, radius))
     }
 
@@ -94,19 +101,21 @@ abstract class AbstractScanningPlugin(protected val owner: IPeripheralOwner): IP
         val radius = arguments.optInt(1, scanRadius)
         assertBetween(radius, 1, scanRadius, "radius")
         return when (mode) {
-            AreaInteractionMode.ITEM -> owner.withOperation(scanItemsOperation!!, SphereOperationContext.of(radius),  {
-                MethodResult.of(scanItems(radius).stream().map { itemConverter(it, owner.facing, owner.pos) }
-                    .collect(Collectors.toList()))
-            })
-            AreaInteractionMode.ENTITY -> owner.withOperation(scanBlocksOperation!!, SphereOperationContext.of(radius),  {
+            AreaInteractionMode.ITEM -> owner.withOperation(scanItemsOperation!!, SphereOperationContext.of(radius), {
                 MethodResult.of(
-                    scanLivingEntities(radius).stream()
-                        .filter { suitableEntity.test(it) }.map { entityConverter(it, owner.facing, owner.pos) }.collect(Collectors.toList())
+                    scanItems(radius).stream().map { itemConverter(it, owner.facing, owner.pos) }
+                        .collect(Collectors.toList()),
                 )
             })
-            AreaInteractionMode.BLOCK -> owner.withOperation(scanEntitiesOperation!!, SphereOperationContext.of(radius),  {
+            AreaInteractionMode.ENTITY -> owner.withOperation(scanBlocksOperation!!, SphereOperationContext.of(radius), {
                 MethodResult.of(
-                    scanBlocks(radius).stream().map { blockStateConverter(it.first, it.second, owner.facing, owner.pos) }.collect(Collectors.toList())
+                    scanLivingEntities(radius).stream()
+                        .filter { suitableEntity.test(it) }.map { entityConverter(it, owner.facing, owner.pos) }.collect(Collectors.toList()),
+                )
+            })
+            AreaInteractionMode.BLOCK -> owner.withOperation(scanEntitiesOperation!!, SphereOperationContext.of(radius), {
+                MethodResult.of(
+                    scanBlocks(radius).stream().map { blockStateConverter(it.first, it.second, owner.facing, owner.pos) }.collect(Collectors.toList()),
                 )
             })
         }

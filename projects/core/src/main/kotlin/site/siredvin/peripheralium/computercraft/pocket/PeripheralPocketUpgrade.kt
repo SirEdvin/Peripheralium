@@ -7,14 +7,14 @@ import site.siredvin.peripheralium.api.PocketPeripheralBuildFunction
 import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
 import site.siredvin.peripheralium.util.pocketAdjective
 
-class PeripheralPocketUpgrade<T : IOwnedPeripheral<*>>: BasePocketUpgrade<T>{
+class PeripheralPocketUpgrade<T : IOwnedPeripheral<*>> : BasePocketUpgrade<T> {
 
     private val constructor: PocketPeripheralBuildFunction<T>
 
     constructor(id: ResourceLocation, adjective: String, stack: ItemStack, constructor: PocketPeripheralBuildFunction<T>) : super(
         id,
         adjective,
-        stack
+        stack,
     ) {
         this.constructor = constructor
     }
@@ -22,7 +22,7 @@ class PeripheralPocketUpgrade<T : IOwnedPeripheral<*>>: BasePocketUpgrade<T>{
     constructor(id: ResourceLocation, stack: ItemStack, constructor: PocketPeripheralBuildFunction<T>) : super(
         id,
         pocketAdjective(id),
-        stack
+        stack,
     ) {
         this.constructor = constructor
     }
@@ -30,6 +30,4 @@ class PeripheralPocketUpgrade<T : IOwnedPeripheral<*>>: BasePocketUpgrade<T>{
     override fun getPeripheral(access: IPocketAccess): T {
         return constructor.build(access)
     }
-
-
 }

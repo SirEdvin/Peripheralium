@@ -18,7 +18,7 @@ import site.siredvin.peripheralium.xplat.XplatRegistries
 
 abstract class BaseNBTBlock<T>(
     belongToTickingEntity: Boolean,
-    properties: Properties = Properties.of(Material.METAL).strength(1f, 5f).sound(SoundType.METAL).noOcclusion()
+    properties: Properties = Properties.of(Material.METAL).strength(1f, 5f).sound(SoundType.METAL).noOcclusion(),
 ) : BaseTileEntityBlock<T>(belongToTickingEntity, properties) where T : BlockEntity, T : ISyncingBlockEntity {
     abstract fun createItemStack(): ItemStack
 
@@ -43,7 +43,7 @@ abstract class BaseNBTBlock<T>(
                     pos.x.toDouble() + 0.5,
                     pos.y.toDouble() + 0.5,
                     pos.z.toDouble() + 0.5,
-                    itemstack
+                    itemstack,
                 )
                 itemDrop.setDefaultPickUpDelay()
                 level.addFreshEntity(itemDrop)

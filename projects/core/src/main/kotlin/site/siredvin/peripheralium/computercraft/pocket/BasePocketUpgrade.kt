@@ -15,14 +15,14 @@ abstract class BasePocketUpgrade<T : IOwnedPeripheral<*>> : AbstractPocketUpgrad
     constructor(id: ResourceLocation, adjective: String, stack: ItemStack) : super(
         id,
         adjective,
-        stack
+        stack,
     ) {
     }
 
     constructor(id: ResourceLocation, stack: ItemStack) : super(
         id,
         pocketAdjective(id),
-        stack
+        stack,
     ) {
     }
 

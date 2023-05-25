@@ -11,10 +11,9 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.storage.ContainerUtils
 import site.siredvin.peripheralium.api.storage.SlottedStorage
+import site.siredvin.peripheralium.api.storage.TargetableContainer
 import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
 import site.siredvin.peripheralium.computercraft.peripheral.ability.TurtleFuelAbility
-import site.siredvin.peripheralium.api.storage.StorageUtils
-import site.siredvin.peripheralium.api.storage.TargetableContainer
 import site.siredvin.peripheralium.util.DataStorageUtil
 import site.siredvin.peripheralium.util.world.FakePlayerProviderTurtle
 
@@ -60,14 +59,17 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
 
     override fun isMovementPossible(level: Level, pos: BlockPos): Boolean {
         return FakePlayerProviderTurtle.withPlayer(turtle, { _ ->
-            if (level.isOutsideBuildHeight(pos))
-                return@withPlayer false;
-            if (!level.isInWorldBounds(pos))
-                return@withPlayer false;
-            if (!level.isLoaded(pos))
-                return@withPlayer false;
-            return@withPlayer level.worldBorder.isWithinBounds(pos);
-        });
+            if (level.isOutsideBuildHeight(pos)) {
+                return@withPlayer false
+            }
+            if (!level.isInWorldBounds(pos)) {
+                return@withPlayer false
+            }
+            if (!level.isLoaded(pos)) {
+                return@withPlayer false
+            }
+            return@withPlayer level.worldBorder.isWithinBounds(pos)
+        })
     }
 
     override fun move(level: Level, pos: BlockPos): Boolean {

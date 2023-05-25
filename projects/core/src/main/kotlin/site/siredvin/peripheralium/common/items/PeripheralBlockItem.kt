@@ -17,8 +17,9 @@ open class PeripheralBlockItem(block: Block, properties: Properties, private var
 
     private val tooltips: List<Component>
         get() {
-            if (_tooltips == null)
+            if (_tooltips == null) {
                 _tooltips = tooltipHook.flatMap { it.apply(this) }
+            }
             return _tooltips!!
         }
 
@@ -26,7 +27,7 @@ open class PeripheralBlockItem(block: Block, properties: Properties, private var
         itemStack: ItemStack,
         level: Level?,
         list: MutableList<Component>,
-        tooltipFlag: TooltipFlag
+        tooltipFlag: TooltipFlag,
     ) {
         super.appendHoverText(itemStack, level, list, tooltipFlag)
         if (alwaysShow || InputConstants.isKeyDown(Minecraft.getInstance().window.window, InputConstants.KEY_LSHIFT)) {

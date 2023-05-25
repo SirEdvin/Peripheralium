@@ -11,7 +11,6 @@ import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
-import site.siredvin.peripheralium.api.storage.ContainerUtils
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.*
 import java.util.function.Function
@@ -46,7 +45,6 @@ object FakePlayerProviderPocket {
         player.moveTo(position.x + x, position.y + y, position.z + z, yaw, pitch)
 
         if (!skipInventory) {
-
             // Player inventory
             val playerInventory: Inventory = player.inventory
             playerInventory.selected = 0

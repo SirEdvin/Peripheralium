@@ -12,9 +12,10 @@ object TextBookUtils {
     private fun resolvePage(string: String): String {
         var component: Component?
         try {
-            component  = Component.Serializer.fromJsonLenient(string)
-            if (component == null)
+            component = Component.Serializer.fromJsonLenient(string)
+            if (component == null) {
                 throw IllegalArgumentException("Cannot parse it, fallback")
+            }
             component = ComponentUtils.updateForEntity(null, component, null, 0)
         } catch (var5: Exception) {
             component = Component.translatable(string)
@@ -43,7 +44,7 @@ object TextBookUtils {
     }
 
     fun getCharacterWidth(c: Char): Int {
-        return when(c) {
+        return when (c) {
             ' ', '!', '\'', ',', '.', ':', ';', 'i', '|' -> 1
             '`', 'l' -> 2
             '"', '(', ')', '*', 'I', '[', ']', 't', '{', '}' -> 3
@@ -67,8 +68,9 @@ object TextBookUtils {
                 '\n' -> {
                     currentWidth = 0
                     lineCounter++
-                    if (lineCounter > BOOK_MAX_LINES)
+                    if (lineCounter > BOOK_MAX_LINES) {
                         return buffer.toString()
+                    }
                 }
                 '§' -> skipNext = true
                 else -> {
@@ -76,8 +78,9 @@ object TextBookUtils {
                     if (currentWidth + nextWidth > MAX_WIDTH_PER_LINE) {
                         lineCounter++
                         currentWidth = nextWidth
-                        if (lineCounter > BOOK_MAX_LINES)
+                        if (lineCounter > BOOK_MAX_LINES) {
                             return buffer.toString()
+                        }
                     } else {
                         currentWidth += nextWidth
                     }

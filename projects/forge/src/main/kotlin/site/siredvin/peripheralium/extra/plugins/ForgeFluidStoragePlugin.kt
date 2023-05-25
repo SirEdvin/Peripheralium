@@ -16,10 +16,10 @@ import kotlin.collections.HashMap
 /**
  * Copy of https://github.com/cc-tweaked/CC-Tweaked/blob/mc-1.19.x/projects/forge/src/main/java/dan200/computercraft/shared/peripheral/generic/methods/FluidMethods.java
  */
-open class ForgeFluidStoragePlugin(private val handler: IFluidHandler, private val fluidStorageTransferLimit: Int): IPeripheralPlugin {
+open class ForgeFluidStoragePlugin(private val handler: IFluidHandler, private val fluidStorageTransferLimit: Int) : IPeripheralPlugin {
 
     override val additionalType: String
-        get() = PeripheralPluginUtils.TYPES.FLUID_STORAGE
+        get() = PeripheralPluginUtils.Type.FLUID_STORAGE
 
     protected open fun fluidInformation(stack: FluidStack): MutableMap<String, Any> {
         return ForgeDetailRegistries.FLUID_STACK.getBasicDetails(stack)
@@ -49,11 +49,15 @@ open class ForgeFluidStoragePlugin(private val handler: IFluidHandler, private v
             ?: throw LuaException("Target '$toName' is not an tank")
         val actualLimit: Int = minOf(fluidStorageTransferLimit, limit.orElse(Int.MAX_VALUE))
         if (actualLimit <= 0) throw LuaException("Limit must be > 0")
-        return if (fluid == null) moveFluid(handler, actualLimit, to) else moveFluid(
-            handler,
-            FluidStack(fluid, actualLimit),
-            to
-        )
+        return if (fluid == null) {
+            moveFluid(handler, actualLimit, to)
+        } else {
+            moveFluid(
+                handler,
+                FluidStack(fluid, actualLimit),
+                to,
+            )
+        }
     }
 
     @LuaFunction(mainThread = true)
@@ -69,13 +73,16 @@ open class ForgeFluidStoragePlugin(private val handler: IFluidHandler, private v
             ?: throw LuaException("Target '$fromName' is not an tank")
         val actualLimit: Int = minOf(fluidStorageTransferLimit, limit.orElse(Int.MAX_VALUE))
         if (actualLimit <= 0) throw LuaException("Limit must be > 0")
-        return if (fluid == null) moveFluid(from, actualLimit, handler) else moveFluid(
-            from,
-            FluidStack(fluid, actualLimit),
-            handler
-        )
+        return if (fluid == null) {
+            moveFluid(from, actualLimit, handler)
+        } else {
+            moveFluid(
+                from,
+                FluidStack(fluid, actualLimit),
+                handler,
+            )
+        }
     }
-
 
     private fun moveFluid(from: IFluidHandler, limit: Int, to: IFluidHandler): Int {
         return moveFluid(from, from.drain(limit, IFluidHandler.FluidAction.SIMULATE), limit, to)

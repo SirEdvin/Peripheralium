@@ -1,6 +1,5 @@
 package site.siredvin.peripheralium.storage
 
-import com.google.common.collect.Iterators
 import dan200.computercraft.api.lua.LuaException
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
@@ -18,11 +17,10 @@ object FabricStorageUtils {
 
     const val MOVABLE_TYPE = "fabricTransaction"
 
-    private class PredicateWrapper(private val predicate: Predicate<ItemStack>): Predicate<ItemVariant> {
+    private class PredicateWrapper(private val predicate: Predicate<ItemStack>) : Predicate<ItemVariant> {
         override fun test(p0: ItemVariant): Boolean {
             return predicate.test(p0.toStack())
         }
-
     }
 
     fun wrap(predicate: Predicate<ItemStack>): Predicate<ItemVariant> {
@@ -41,8 +39,9 @@ object FabricStorageUtils {
                 StorageUtil.findExtractableResource(storage, wrap(takePredicate), it)
                     ?: return 0
             val extractedAmount = storage.extract(resource, limit.toLong(), it).toInt()
-            if (extractedAmount == 0)
+            if (extractedAmount == 0) {
                 return 0
+            }
             val insertionStack = resource.toStack(extractedAmount)
             val remainder = if (toSlot < 0) {
                 to.storeItem(insertionStack)
@@ -67,12 +66,14 @@ object FabricStorageUtils {
         val insertionStack = if (fromSlot < 0) {
             from.takeItems(takePredicate, limit)
         } else {
-            if (from !is SlottedStorage)
+            if (from !is SlottedStorage) {
                 throw LuaException("From doesn't support slotting")
+            }
             from.takeItems(limit, fromSlot, fromSlot, takePredicate)
         }
-        if (insertionStack.isEmpty)
+        if (insertionStack.isEmpty) {
             return 0
+        }
 
         val transaction = Transaction.openOuter()
         transaction.use {

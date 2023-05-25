@@ -1,10 +1,10 @@
-import site.siredvin.peripheralium.gradle.mavenDependencies
-import org.jetbrains.changelog.date
 import com.matthewprenger.cursegradle.CurseArtifact
 import com.matthewprenger.cursegradle.CurseProject
-import com.matthewprenger.cursegradle.CurseUploadTask
 import com.matthewprenger.cursegradle.CurseRelation
+import com.matthewprenger.cursegradle.CurseUploadTask
 import com.matthewprenger.cursegradle.Options
+import org.jetbrains.changelog.date
+import site.siredvin.peripheralium.gradle.mavenDependencies
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
@@ -21,7 +21,7 @@ val minecraftVersion: String by extra
 val modBaseName: String by extra
 
 base {
-    archivesName.set("${modBaseName}-fabric-${minecraftVersion}")
+    archivesName.set("$modBaseName-fabric-$minecraftVersion")
     version = modVersion
 }
 
@@ -61,7 +61,7 @@ sourceSets {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:${minecraftVersion}")
+    minecraft("com.mojang:minecraft:$minecraftVersion")
     mappings(loom.officialMojangMappings())
 
     implementation(libs.bundles.kotlin)
@@ -147,7 +147,7 @@ val rootProjectDir: File by extra
 
 changelog {
     version.set(modVersion)
-    path.set("${rootProjectDir}/CHANGELOG.md")
+    path.set("$rootProjectDir/CHANGELOG.md")
     header.set(provider { "[${version.get()}] - ${date()}" })
     itemPrefix.set("-")
     keepUnreleasedSection.set(true)
@@ -155,44 +155,51 @@ changelog {
     groups.set(listOf())
 }
 
-
 val CURSEFORGE_RELEASE_TYPE: String by extra
 val CURSEFORGE_ID: String by extra
 val curseforgeKey: String by extra
 
 curseforge {
-    options(closureOf<Options> {
-        forgeGradleIntegration = false
-    })
+    options(
+        closureOf<Options> {
+            forgeGradleIntegration = false
+        },
+    )
     apiKey = curseforgeKey
-    project(closureOf<CurseProject> {
-        id = CURSEFORGE_ID
-        releaseType = CURSEFORGE_RELEASE_TYPE
-        addGameVersion("Fabric")
-        addGameVersion(minecraftVersion)
-        try {
-            changelog = "${project.changelog.get(project.version as String).withHeader(false).toText()}"
-            changelogType = "markdown"
-        } catch (ignored: Exception) {
-            changelog = "Seems not real release"
-            changelogType = "markdown"
-        }
-        mainArtifact(tasks.remapJar.get().archivePath, closureOf<CurseArtifact> {
-            displayName = "Peripheralium $version for $minecraftVersion"
-            relations(closureOf<CurseRelation> {
-                requiredDependency("cc-tweaked")
-                requiredDependency("forge-config-api-port-fabric")
-                requiredDependency("fabric-language-kotlin")
-            })
-        })
-    })
+    project(
+        closureOf<CurseProject> {
+            id = CURSEFORGE_ID
+            releaseType = CURSEFORGE_RELEASE_TYPE
+            addGameVersion("Fabric")
+            addGameVersion(minecraftVersion)
+            try {
+                changelog = "${project.changelog.get(project.version as String).withHeader(false).toText()}"
+                changelogType = "markdown"
+            } catch (ignored: Exception) {
+                changelog = "Seems not real release"
+                changelogType = "markdown"
+            }
+            mainArtifact(
+                tasks.remapJar.get().archivePath,
+                closureOf<CurseArtifact> {
+                    displayName = "Peripheralium $version for $minecraftVersion"
+                    relations(
+                        closureOf<CurseRelation> {
+                            requiredDependency("cc-tweaked")
+                            requiredDependency("forge-config-api-port-fabric")
+                            requiredDependency("fabric-language-kotlin")
+                        },
+                    )
+                },
+            )
+        },
+    )
 }
 project.afterEvaluate {
-    tasks.getByName<CurseUploadTask>("curseforge${CURSEFORGE_ID}") {
+    tasks.getByName<CurseUploadTask>("curseforge$CURSEFORGE_ID") {
         dependsOn(tasks.remapJar)
     }
 }
-
 
 val MODRINTH_ID: String by extra
 val MODRINTH_RELEASE_TYPE: String by extra
@@ -201,8 +208,8 @@ val modrinthKey: String by extra
 modrinth {
     token.set(modrinthKey)
     projectId.set(MODRINTH_ID)
-    versionNumber.set("${minecraftVersion}-${project.version}")
-    versionName.set("Peripheralium ${version} for ${minecraftVersion}")
+    versionNumber.set("$minecraftVersion-${project.version}")
+    versionName.set("Peripheralium $version for $minecraftVersion")
     versionType.set(MODRINTH_RELEASE_TYPE)
     uploadFile.set(tasks.remapJar.get())
     gameVersions.set(listOf(minecraftVersion))
@@ -232,7 +239,6 @@ publishing {
             mavenDependencies {
                 exclude(dependencies.create("site.siredvin:"))
                 exclude(libs.jei.fabric.get())
-
             }
         }
     }

@@ -9,7 +9,7 @@ import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.ITurtleUpgrade
 import dan200.computercraft.api.turtle.TurtleSide
 
-class FacingBlockTurtleModeller<T: ITurtleUpgrade>: TurtleUpgradeModeller<T> {
+class FacingBlockTurtleModeller<T : ITurtleUpgrade> : TurtleUpgradeModeller<T> {
     override fun getModel(upgrade: T, turtle: ITurtleAccess?, side: TurtleSide): TransformedModel {
         val stack = PoseStack()
         stack.pushPose()

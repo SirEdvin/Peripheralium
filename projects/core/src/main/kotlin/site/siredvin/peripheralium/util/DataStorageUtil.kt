@@ -1,9 +1,9 @@
 package site.siredvin.peripheralium.util
 
+import dan200.computercraft.api.pocket.IPocketAccess
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.TurtleSide
 import net.minecraft.nbt.CompoundTag
-import dan200.computercraft.api.pocket.IPocketAccess
 import site.siredvin.peripheralium.api.peripheral.IPeripheralTileEntity
 
 object DataStorageUtil {

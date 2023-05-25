@@ -12,7 +12,7 @@ object ScanUtils {
         center: BlockPos,
         radius: Int,
         consumer: BiConsumer<BlockState, BlockPos>,
-        relativePosition: Boolean = false
+        relativePosition: Boolean = false,
     ) {
         val x = center.x
         val y = center.y

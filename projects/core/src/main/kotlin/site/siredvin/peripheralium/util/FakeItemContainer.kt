@@ -4,7 +4,7 @@ import net.minecraft.world.Container
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 
-class FakeItemContainer(private var stack: ItemStack): Container {
+class FakeItemContainer(private var stack: ItemStack) : Container {
     override fun clearContent() {
         stack = ItemStack.EMPTY
     }

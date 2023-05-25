@@ -12,7 +12,6 @@ import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.player.Player
 import java.util.*
 
-
 class FabricFakePlayer(serverLevel: ServerLevel, gameProfile: GameProfile) :
     ServerPlayer(serverLevel.server, serverLevel, gameProfile) {
     init {

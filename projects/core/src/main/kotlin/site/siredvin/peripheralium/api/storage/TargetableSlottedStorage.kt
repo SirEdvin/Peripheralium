@@ -4,7 +4,7 @@ import dan200.computercraft.api.lua.LuaException
 import net.minecraft.world.item.ItemStack
 import java.util.function.Predicate
 
-interface TargetableSlottedStorage: TargetableStorage {
+interface TargetableSlottedStorage : TargetableStorage {
     /**
      * Targetable storage with slots, mostly used for inventory plugin logic
      */
@@ -20,14 +20,18 @@ interface TargetableSlottedStorage: TargetableStorage {
     }
 
     fun moveFrom(from: Storage, limit: Int, toSlot: Int = -1, fromSlot: Int = -1, takePredicate: Predicate<ItemStack>): Int {
-        if (movableType != null)
+        if (movableType != null) {
             throw IllegalStateException("With movable type you should redefine this function")
-        if (from.movableType == null)
+        }
+        if (from.movableType == null) {
             return StorageUtils.naiveMove(from, this, limit, fromSlot, toSlot, takePredicate)
-        if (fromSlot < 0)
+        }
+        if (fromSlot < 0) {
             return from.moveTo(this, limit, toSlot, takePredicate)
-        if (from !is SlottedStorage)
+        }
+        if (from !is SlottedStorage) {
             throw LuaException("From storage doesn't support slotting")
+        }
         return from.moveTo(this, limit, fromSlot, toSlot, takePredicate)
     }
 
@@ -35,7 +39,7 @@ interface TargetableSlottedStorage: TargetableStorage {
         from: Storage,
         limit: Int,
         fromSlot: Int,
-        takePredicate: Predicate<ItemStack>
+        takePredicate: Predicate<ItemStack>,
     ): Int {
         return moveFrom(from, limit, -1, fromSlot, takePredicate)
     }

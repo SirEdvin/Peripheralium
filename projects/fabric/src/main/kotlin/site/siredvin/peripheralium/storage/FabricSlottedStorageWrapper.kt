@@ -9,20 +9,22 @@ import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.storage.*
 import java.util.function.Predicate
 
-class FabricSlottedStorageWrapper(internal val storage: net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage<ItemVariant>): SlottedStorage {
+class FabricSlottedStorageWrapper(internal val storage: net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage<ItemVariant>) : SlottedStorage {
 
     override fun moveTo(
         to: TargetableStorage,
         limit: Int,
         fromSlot: Int,
         toSlot: Int,
-        takePredicate: Predicate<ItemStack>
+        takePredicate: Predicate<ItemStack>,
     ): Int {
-        if (to is FabricSlottedStorageWrapper)
+        if (to is FabricSlottedStorageWrapper) {
             return to.moveFrom(this, limit, toSlot, fromSlot, takePredicate)
+        }
         if (to is FabricStorageWrapper) {
-            if (toSlot > -1)
+            if (toSlot > -1) {
                 throw LuaException("To storage doesn't support slotting")
+            }
             return to.moveFrom(this, limit, fromSlot, takePredicate)
         }
         return if (fromSlot < 0) {
@@ -37,7 +39,7 @@ class FabricSlottedStorageWrapper(internal val storage: net.fabricmc.fabric.api.
         limit: Int,
         toSlot: Int,
         fromSlot: Int,
-        takePredicate: Predicate<ItemStack>
+        takePredicate: Predicate<ItemStack>,
     ): Int {
         val operableStorage = if (toSlot < 0) {
             storage
@@ -52,20 +54,23 @@ class FabricSlottedStorageWrapper(internal val storage: net.fabricmc.fabric.api.
                     operableStorage,
                     FabricStorageUtils.wrap(takePredicate),
                     limit.toLong(),
-                    null
+                    null,
                 ).toInt()
             } else {
                 return StorageUtil.move(
-                    from.storage, operableStorage, FabricStorageUtils.wrap(takePredicate),
+                    from.storage,
+                    operableStorage,
+                    FabricStorageUtils.wrap(takePredicate),
                     limit.toLong(),
-                    null
+                    null,
                 ).toInt()
             }
         }
         if (from is FabricStorageWrapper) {
-            if (fromSlot > -1)
+            if (fromSlot > -1) {
                 throw LuaException("From storage doesn't support slotting")
-            return StorageUtil.move(from.storage, operableStorage,  FabricStorageUtils.wrap(takePredicate), limit.toLong(), null).toInt()
+            }
+            return StorageUtil.move(from.storage, operableStorage, FabricStorageUtils.wrap(takePredicate), limit.toLong(), null).toInt()
         }
         return FabricStorageUtils.moveFromTargetable(from, operableStorage, limit, fromSlot, takePredicate)
     }
@@ -78,13 +83,15 @@ class FabricSlottedStorageWrapper(internal val storage: net.fabricmc.fabric.api.
                 val slotStorage = getSingleSlot(currentSlot)
                 val extractionTarget = StorageUtil.findExtractableContent(slotStorage, FabricStorageUtils.wrap(predicate), it)
                     ?: continue
-                if (extractionTarget.amount == 0L)
+                if (extractionTarget.amount == 0L) {
                     continue
+                }
                 val potentialStack = extractionTarget.resource.toStack(extractionTarget.amount.toInt())
                 if (slidingStack.isEmpty || StorageUtils.canMerge(slidingStack, potentialStack, slidingLimit)) {
                     val extractedAmount = slotStorage.extract(extractionTarget.resource, limit.toLong(), it).toInt()
-                    if (extractedAmount < 1)
+                    if (extractedAmount < 1) {
                         continue
+                    }
                     val extractedStack = extractionTarget.resource.toStack(extractedAmount)
                     if (slidingStack.isEmpty) {
                         slidingStack = extractedStack
@@ -92,13 +99,15 @@ class FabricSlottedStorageWrapper(internal val storage: net.fabricmc.fabric.api.
                     } else {
                         val extractedCount = extractedStack.count
                         val remainder = StorageUtils.inplaceMerge(slidingStack, extractedStack)
-                        if (!remainder.isEmpty)
+                        if (!remainder.isEmpty) {
                             slotStorage.insert(ItemVariant.of(remainder), remainder.count.toLong(), it)
+                        }
                         slidingLimit -= extractedCount - remainder.count
                     }
                 }
-                if (slidingLimit <= 0)
+                if (slidingLimit <= 0) {
                     break
+                }
             }
             it.commit()
             return slidingStack

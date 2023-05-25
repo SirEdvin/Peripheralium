@@ -17,9 +17,9 @@ import java.util.function.Consumer
 
 interface IPeripheralOwner {
     val name: String?
-@dan200.computercraft.api.lua.LuaFunction get() {
-        return owner?.customName.toString()
-    }
+        @dan200.computercraft.api.lua.LuaFunction get() {
+            return owner?.customName.toString()
+        }
     val targetRepresentation: Any?
         get() = null
 
@@ -32,7 +32,7 @@ interface IPeripheralOwner {
 
     fun markDataStorageDirty()
 
-    fun <T> withPlayer(function: (ServerPlayer) ->  T, overwrittenDirection: Direction? = null, skipInventory: Boolean = false): T
+    fun <T> withPlayer(function: (ServerPlayer) -> T, overwrittenDirection: Direction? = null, skipInventory: Boolean = false): T
     val toolInMainHand: ItemStack
     fun storeItem(stored: ItemStack): ItemStack
     fun destroyUpgrade()
@@ -49,7 +49,7 @@ interface IPeripheralOwner {
         method: IPeripheralFunction<T, MethodResult>,
         check: IPeripheralCheck<T>? = null,
         successCallback: Consumer<T>? = null,
-        failCallback: BiConsumer<MethodResult, OperationAbility.FailReason>? = null
+        failCallback: BiConsumer<MethodResult, OperationAbility.FailReason>? = null,
     ): MethodResult {
         val operationAbility = getAbility(PeripheralOwnerAbility.OPERATION)
             ?: throw IllegalArgumentException("Owner doesn't have ability to store operations logic, which is very strange!")

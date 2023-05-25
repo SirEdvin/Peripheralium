@@ -1,6 +1,5 @@
 package site.siredvin.peripheralium.extra.plugins
 
-import dan200.computercraft.api.detail.VanillaDetailRegistries
 import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
 import dan200.computercraft.api.peripheral.IComputerAccess
@@ -15,19 +14,20 @@ import java.util.*
 import java.util.function.Predicate
 import kotlin.math.min
 
-abstract class AbstractItemStoragePlugin: IPeripheralPlugin {
+abstract class AbstractItemStoragePlugin : IPeripheralPlugin {
     abstract val storage: Storage
     abstract val level: Level
     abstract val itemStorageTransferLimit: Int
 
     override val additionalType: String
-        get() = PeripheralPluginUtils.TYPES.ITEM_STORAGE
+        get() = PeripheralPluginUtils.Type.ITEM_STORAGE
 
     open fun itemsImpl(): List<MutableMap<String, *>> {
         val result: MutableList<MutableMap<String, *>> = mutableListOf()
         storage.getItems().forEach {
-            if (!it.isEmpty)
+            if (!it.isEmpty) {
                 result.add(LuaRepresentation.forItemStack(it))
+            }
         }
         return result
     }

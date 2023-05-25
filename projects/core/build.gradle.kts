@@ -10,7 +10,7 @@ val minecraftVersion: String by extra
 val modBaseName: String by extra
 
 base {
-    archivesName.set("${modBaseName}-common-${minecraftVersion}")
+    archivesName.set("$modBaseName-common-$minecraftVersion")
     version = modVersion
 }
 
@@ -58,12 +58,10 @@ sourceSets {
     }
 }
 
-
 dependencies {
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.cccommon)
     api(libs.bundles.apicommon)
-
 
     add(sourceSets["testFixtures"].compileOnlyConfigurationName, kotlin("test"))
     add(sourceSets["testFixtures"].compileOnlyConfigurationName, libs.bundles.test)

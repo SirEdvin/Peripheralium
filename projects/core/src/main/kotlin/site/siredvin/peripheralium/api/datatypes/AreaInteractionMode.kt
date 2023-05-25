@@ -12,7 +12,7 @@ enum class AreaInteractionMode {
                 return valueOf(name.uppercase())
             } catch (exc: IllegalArgumentException) {
                 val allValues = allowedMods.stream().map { mode -> mode.name.lowercase() }.collect(
-                    Collectors.toList()
+                    Collectors.toList(),
                 ).joinToString(", ")
                 throw LuaException("Area interaction mode should be one of: $allValues")
             }

@@ -47,11 +47,9 @@ class FakePlayerProxy(private val fakePlayer: ServerPlayer, private val range: I
 
     private val gameMode: ServerPlayerGameMode
         get() = fakePlayer.gameMode
-    
+
     private val inventory: Container
         get() = fakePlayer.inventory
-
-
 
     private fun setState(block: Block?, pos: BlockPos?) {
         if (digPosition != null) {
@@ -60,7 +58,7 @@ class FakePlayerProxy(private val fakePlayer: ServerPlayer, private val range: I
                 ServerboundPlayerActionPacket.Action.ABORT_DESTROY_BLOCK,
                 Direction.EAST,
                 1,
-                1
+                1,
             )
         }
         digPosition = pos
@@ -69,7 +67,7 @@ class FakePlayerProxy(private val fakePlayer: ServerPlayer, private val range: I
     }
 
     fun <T> withConsumer(entity: Entity, func: () -> (T)): T {
-        DropConsumer.configure(entity,  { stack: ItemStack -> ContainerUtils.storeItem(inventory, stack) })
+        DropConsumer.configure(entity, { stack: ItemStack -> ContainerUtils.storeItem(inventory, stack) })
         val result = func()
         DropConsumer.resetAndDrop(level, fakePlayer.blockPosition().above())
         return result
@@ -96,7 +94,10 @@ class FakePlayerProxy(private val fakePlayer: ServerPlayer, private val range: I
         val blockHit: HitResult = if (skipBlock) {
             BlockHitResult.miss(traceContext.to, traceDirection, traceContext.to.toBlockPos())
         } else {
-            BlockGetter.traverseBlocks(traceContext.from, traceContext.to, traceContext,
+            BlockGetter.traverseBlocks(
+                traceContext.from,
+                traceContext.to,
+                traceContext,
                 { _: ClipContext?, blockPos: BlockPos ->
                     if (level.isEmptyBlock(blockPos)) {
                         return@traverseBlocks null
@@ -105,14 +106,14 @@ class FakePlayerProxy(private val fakePlayer: ServerPlayer, private val range: I
                         Vec3(blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble()),
                         traceDirection,
                         blockPos,
-                        false
+                        false,
                     )
-                }
+                },
             ) { rayTraceContext: ClipContext ->
                 BlockHitResult.miss(
                     rayTraceContext.to,
                     traceDirection,
-                    rayTraceContext.to.toBlockPos()
+                    rayTraceContext.to.toBlockPos(),
                 )
             }!!
         }
@@ -120,8 +121,9 @@ class FakePlayerProxy(private val fakePlayer: ServerPlayer, private val range: I
             return blockHit
         }
         val entities = level.getEntities(
-            fakePlayer, fakePlayer.boundingBox.expandTowards(look.x * range, look.y * range, look.z * range).inflate(1.0, 1.0, 1.0),
-            collidablePredicate
+            fakePlayer,
+            fakePlayer.boundingBox.expandTowards(look.x * range, look.y * range, look.z * range).inflate(1.0, 1.0, 1.0),
+            collidablePredicate,
         )
         var closestEntity: LivingEntity? = null
         var closestVec: Vec3? = null
@@ -155,9 +157,11 @@ class FakePlayerProxy(private val fakePlayer: ServerPlayer, private val range: I
                 }
             }
         }
-        return if (closestEntity != null && closestDistance <= range && (blockHit.type == HitResult.Type.MISS || fakePlayer.distanceToSqr(
-                blockHit.location
-            ) > closestDistance * closestDistance)
+        return if (closestEntity != null && closestDistance <= range && (
+                blockHit.type == HitResult.Type.MISS || fakePlayer.distanceToSqr(
+                    blockHit.location,
+                ) > closestDistance * closestDistance
+                )
         ) {
             EntityHitResult(closestEntity, closestVec!!)
         } else {
@@ -170,23 +174,25 @@ class FakePlayerProxy(private val fakePlayer: ServerPlayer, private val range: I
     }
 
     fun use(skipEntity: Boolean, skipBlock: Boolean, entityFilter: Predicate<Entity>?): InteractionResult {
-        val hit = findHit(skipEntity, skipBlock, entityFilter);
+        val hit = findHit(skipEntity, skipBlock, entityFilter)
         if (hit is BlockHitResult) {
             return withConsumer(level, hit.blockPos) {
                 val useOnResult = PeripheraliumPlatform.useOn(fakePlayer, fakePlayer.mainHandItem, hit, { true })
-                if (useOnResult.consumesAction())
+                if (useOnResult.consumesAction()) {
                     return@withConsumer useOnResult
+                }
                 level.destroyBlockProgress(fakePlayer.id, hit.blockPos, -1)
                 val useItemResult = gameMode.useItemOn(fakePlayer, level, fakePlayer.mainHandItem, InteractionHand.MAIN_HAND, hit)
-                if (useItemResult.consumesAction())
+                if (useItemResult.consumesAction()) {
                     return@withConsumer useItemResult
+                }
                 return@withConsumer gameMode.useItem(fakePlayer, level, fakePlayer.mainHandItem, InteractionHand.MAIN_HAND)
             }
         }
         if (hit is EntityHitResult) {
             return withConsumer(hit.entity) { useOnSpecificEntity(hit.entity, hit) }
         }
-        return InteractionResult.FAIL;
+        return InteractionResult.FAIL
     }
 
     fun use(skipEntity: Boolean, skipBlock: Boolean): InteractionResult {
@@ -194,13 +200,16 @@ class FakePlayerProxy(private val fakePlayer: ServerPlayer, private val range: I
     }
 
     fun swing(skipEntity: Boolean, skipBlock: Boolean, entityFilter: Predicate<Entity>?): Pair<Boolean, String> {
-        val hit = findHit(skipEntity = skipEntity, skipBlock = skipBlock, entityFilter = entityFilter);
-        if (hit.type == HitResult.Type.MISS)
+        val hit = findHit(skipEntity = skipEntity, skipBlock = skipBlock, entityFilter = entityFilter)
+        if (hit.type == HitResult.Type.MISS) {
             return Pair.of(false, "Nothing to swing")
-        if (hit is BlockHitResult)
+        }
+        if (hit is BlockHitResult) {
             return swingBlock(hit)
-        if (hit is EntityHitResult)
+        }
+        if (hit is EntityHitResult) {
             return swingEntity(hit)
+        }
         return Pair.of(false, "Nothing found")
     }
 
@@ -209,13 +218,16 @@ class FakePlayerProxy(private val fakePlayer: ServerPlayer, private val range: I
         val state = level.getBlockState(pos)
         val block = state.block
         val tool = fakePlayer.mainHandItem
-        if (block != digBlock || pos != digPosition)
+        if (block != digBlock || pos != digPosition) {
             setState(block, pos)
+        }
         if (!level.isEmptyBlock(pos) && !state.material.isLiquid) {
-            if (PeripheraliumPlatform.isBlockProtected(pos, state, fakePlayer))
+            if (PeripheraliumPlatform.isBlockProtected(pos, state, fakePlayer)) {
                 return Pair.of(false, "Cannot break protected block")
-            if (block == Blocks.BEDROCK || state.getDestroySpeed(level, pos) <= -1f)
+            }
+            if (block == Blocks.BEDROCK || state.getDestroySpeed(level, pos) <= -1f) {
                 return Pair.of(false, "Unbreakable block detected")
+            }
             val breakSpeed = 0.5f * tool.getDestroySpeed(state) / state.getDestroySpeed(level, pos) - 0.1f
             for (i in 0..9) {
                 currentDamage += breakSpeed
@@ -232,20 +244,23 @@ class FakePlayerProxy(private val fakePlayer: ServerPlayer, private val range: I
                     break
                 }
             }
-            return Pair.of(true, "");
+            return Pair.of(true, "")
         }
-        return Pair.of(false, "Nothing to dig here");
+        return Pair.of(false, "Nothing to dig here")
     }
 
     fun swingEntity(hit: EntityHitResult): Pair<Boolean, String> {
         val tool = fakePlayer.mainHandItem
-        if (tool.isEmpty)
-            return Pair.of(false, "Cannot swing without tool");
+        if (tool.isEmpty) {
+            return Pair.of(false, "Cannot swing without tool")
+        }
         val entity = hit.entity
-        if (entity !is LivingEntity)
+        if (entity !is LivingEntity) {
             return Pair.of(false, "Incorrect entity hit")
-        if (!fakePlayer.canAttack(entity))
+        }
+        if (!fakePlayer.canAttack(entity)) {
             return Pair.of(false, "Can't swing this entity")
+        }
         withConsumer(entity) { fakePlayer.attack(entity) }
         fakePlayer.cooldowns.addCooldown(tool.item, 1)
         return Pair.of(true, "")

@@ -2,7 +2,6 @@ package site.siredvin.peripheralium.storage
 
 import net.minecraft.core.BlockPos
 import net.minecraft.world.Container
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraftforge.common.capabilities.ForgeCapabilities
@@ -12,7 +11,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler
 import net.minecraftforge.items.IItemHandler
 import net.minecraftforge.items.wrapper.InvWrapper
 import site.siredvin.peripheralium.api.storage.SlottedStorage
-
 
 object ForgeStorageUtils {
     fun extractFluidHandler(something: Any?): IFluidHandler? {
@@ -34,8 +32,9 @@ object ForgeStorageUtils {
     }
 
     fun extractStorageFromBlock(level: Level, pos: BlockPos, blockEntity: BlockEntity?): SlottedStorage? {
-        if (blockEntity == null)
+        if (blockEntity == null) {
             return null
+        }
         val itemHandler = extractItemHandler(blockEntity) ?: return null
         return ItemHandlerWrapper(itemHandler)
     }

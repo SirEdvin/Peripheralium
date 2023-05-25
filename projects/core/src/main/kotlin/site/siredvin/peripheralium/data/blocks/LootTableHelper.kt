@@ -20,23 +20,25 @@ object LootTableHelper {
 
     fun dropNamedBlock(consumer: BiConsumer<ResourceLocation, LootTable.Builder>, wrapper: Supplier<out Block>) {
         dropBlock(
-            consumer, wrapper,
+            consumer,
+            wrapper,
             LootItem.lootTableItem(wrapper.get()).apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY)),
-            ExplosionCondition.survivesExplosion()
+            ExplosionCondition.survivesExplosion(),
         )
     }
 
     fun dropBlock(
-        consumer: BiConsumer<ResourceLocation, LootTable.Builder>, wrapper: Supplier<out Block>,
+        consumer: BiConsumer<ResourceLocation, LootTable.Builder>,
+        wrapper: Supplier<out Block>,
         drop: LootPoolEntryContainer.Builder<*>,
-        condition: LootItemCondition.Builder
+        condition: LootItemCondition.Builder,
     ) {
         val block = wrapper.get()
         consumer.accept(
             block.lootTable,
             LootTable.lootTable().withPool(
-                LootPool.lootPool().setRolls(ConstantValue.exactly(1f)).add(drop).`when`(condition)
-            )
+                LootPool.lootPool().setRolls(ConstantValue.exactly(1f)).add(drop).`when`(condition),
+            ),
         )
     }
 }

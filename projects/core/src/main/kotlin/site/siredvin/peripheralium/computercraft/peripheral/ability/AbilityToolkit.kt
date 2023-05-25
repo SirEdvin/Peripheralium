@@ -12,20 +12,21 @@ import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 
 object AbilityToolkit {
 
-    private fun <T: IOwnerAbility> extractAbilityFromTurtle(turtle: ITurtleAccess, side: TurtleSide, ability: PeripheralOwnerAbility<T>): T? {
+    private fun <T : IOwnerAbility> extractAbilityFromTurtle(turtle: ITurtleAccess, side: TurtleSide, ability: PeripheralOwnerAbility<T>): T? {
         val targetPeripheral = turtle.getPeripheral(side)
-        if (targetPeripheral !is IOwnedPeripheral<*>)
+        if (targetPeripheral !is IOwnedPeripheral<*>) {
             return null
+        }
         return targetPeripheral.peripheralOwner!!.getAbility(ability)
     }
 
-    fun <T: IOwnerAbility> extractAbility(ability: PeripheralOwnerAbility<T>, level: Level, pos: BlockPos): Pair<T?, String?> {
+    fun <T : IOwnerAbility> extractAbility(ability: PeripheralOwnerAbility<T>, level: Level, pos: BlockPos): Pair<T?, String?> {
         val entity: BlockEntity = level.getBlockEntity(pos)
             ?: return Pair.onlyRight("Target block doesn't posses required ability")
         val turtle = PeripheraliumPlatform.getTurtleAccess(entity)
         if (turtle != null) {
             val targetAbility = extractAbilityFromTurtle(turtle, TurtleSide.LEFT, ability) ?: extractAbilityFromTurtle(turtle, TurtleSide.RIGHT, ability)
-            ?: return Pair.onlyRight("Turtle doesn't posses required ability")
+                ?: return Pair.onlyRight("Turtle doesn't posses required ability")
             return Pair.onlyLeft(targetAbility)
         }
         return Pair.onlyRight("Target block doesn't posses required ability")

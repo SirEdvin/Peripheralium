@@ -6,9 +6,8 @@ import net.minecraft.world.level.material.Material
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 
 object Blocks {
-    val PERIPHERALIUM_BLOCK = PeripheraliumPlatform.registerBlock("peripheralium_block", {Block(BlockBehaviour.Properties.of(Material.STONE).destroyTime(0.5f)) })
+    val PERIPHERALIUM_BLOCK = PeripheraliumPlatform.registerBlock("peripheralium_block", { Block(BlockBehaviour.Properties.of(Material.STONE).destroyTime(0.5f)) })
 
     fun doSomething() {
-
     }
 }

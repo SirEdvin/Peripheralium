@@ -10,7 +10,7 @@ import site.siredvin.peripheralium.api.storage.SlottedStorage
 import site.siredvin.peripheralium.api.storage.StorageUtils
 import kotlin.test.assertEquals
 
-abstract class SlottedStorageTests: StorageTests() {
+abstract class SlottedStorageTests : StorageTests() {
 
     override fun createStorage(items: List<ItemStack>, secondary: Boolean): AccessibleStorage {
         return createSlottedStorage(items, secondary)
@@ -18,19 +18,26 @@ abstract class SlottedStorageTests: StorageTests() {
     abstract fun createSlottedStorage(items: List<ItemStack>, secondary: Boolean): SlottedStorage
 
     fun createSlottedStorage(sizes: List<Int>, stack: ItemStack, secondary: Boolean): SlottedStorage {
-        return createSlottedStorage(sizes.map {
-            if (it == 0)
-                ItemStack.EMPTY
-            else
-                stack.copyWithCount(it)
-        }, secondary)
+        return createSlottedStorage(
+            sizes.map {
+                if (it == 0) {
+                    ItemStack.EMPTY
+                } else
+                    stack.copyWithCount(it)
+            },
+            secondary,
+        )
     }
 
     data class MoveArguments(
-        val initialFrom: List<Int>, val initialTo: List<Int>,
-        val moveLimit: Int, val expectedMoveAmount: Int,
-        val expectedFrom: List<Int>, val expectedTo: List<Int>,
-        val fromSlot: Int = -1, val toSlot: Int = -1,
+        val initialFrom: List<Int>,
+        val initialTo: List<Int>,
+        val moveLimit: Int,
+        val expectedMoveAmount: Int,
+        val expectedFrom: List<Int>,
+        val expectedTo: List<Int>,
+        val fromSlot: Int = -1,
+        val toSlot: Int = -1,
     )
 
     companion object {
@@ -45,27 +52,39 @@ abstract class SlottedStorageTests: StorageTests() {
             return listOf(
                 Arguments.of(
                     MoveArguments(
-                        listOf(64, 0, 64), listOf(64, 64, 0),
-                        128, 64,
-                        listOf(0, 0, 64), listOf(64, 64, 64),
-                        0, 2
-                    )
+                        listOf(64, 0, 64),
+                        listOf(64, 64, 0),
+                        128,
+                        64,
+                        listOf(0, 0, 64),
+                        listOf(64, 64, 64),
+                        0,
+                        2,
+                    ),
                 ),
                 Arguments.of(
                     MoveArguments(
-                        listOf(64, 64, 64), listOf(64, 64, 64),
-                        128, 0,
-                        listOf(64, 64, 64), listOf(64, 64, 64),
-                        1, 2
-                    )
+                        listOf(64, 64, 64),
+                        listOf(64, 64, 64),
+                        128,
+                        0,
+                        listOf(64, 64, 64),
+                        listOf(64, 64, 64),
+                        1,
+                        2,
+                    ),
                 ),
                 Arguments.of(
                     MoveArguments(
-                        listOf(64, 64, 64), listOf(64, 64, 32),
-                        128, 32,
-                        listOf(32, 64, 64), listOf(64, 64, 64),
-                        0, 2
-                    )
+                        listOf(64, 64, 64),
+                        listOf(64, 64, 32),
+                        128,
+                        32,
+                        listOf(32, 64, 64),
+                        listOf(64, 64, 64),
+                        0,
+                        2,
+                    ),
                 ),
             )
         }

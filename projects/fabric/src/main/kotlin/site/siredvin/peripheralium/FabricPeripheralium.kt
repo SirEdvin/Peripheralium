@@ -9,14 +9,15 @@ import site.siredvin.peripheralium.fabric.FabricPeripheraliumPlatform
 import site.siredvin.peripheralium.storage.FabricStorageUtils
 import site.siredvin.peripheralium.xplat.LibCommonHooks
 
-
-object FabricPeripheralium: ModInitializer {
+object FabricPeripheralium : ModInitializer {
 
     init {
         PeripheraliumCore.configure(FabricPeripheraliumPlatform(), FabricIngredients)
-        PeripheraliumCore.configureCreativeTab(FabricItemGroup.builder(
-            ResourceLocation(PeripheraliumCore.MOD_ID, "tab")
-        )).build()
+        PeripheraliumCore.configureCreativeTab(
+            FabricItemGroup.builder(
+                ResourceLocation(PeripheraliumCore.MOD_ID, "tab"),
+            ),
+        ).build()
         // Register extract storages
         ExtractorProxy.addStorageExtractor(FabricStorageUtils::extractStorage)
     }

@@ -9,7 +9,6 @@ import site.siredvin.peripheralium.util.text
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.RecipeIngredients
 
-
 object PeripheraliumCore {
     const val MOD_ID = "peripheralium"
 

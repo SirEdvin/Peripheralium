@@ -26,7 +26,6 @@ import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-
 @Mod.EventBusSubscriber(modid = PeripheraliumCore.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 object ForgeDataGenerators {
     @SubscribeEvent
@@ -36,8 +35,8 @@ object ForgeDataGenerators {
             ForgeGeneratorSink(
                 generator.getVanillaPack(true),
                 event.existingFileHelper,
-                event.lookupProvider
-            )
+                event.lookupProvider,
+            ),
         )
     }
     class ForgeGeneratorSink(private val generator: DataGenerator.PackGenerator, private val existingFiles: ExistingFileHelper, private val registries: CompletableFuture<HolderLookup.Provider>) : GeneratorSink {
@@ -63,11 +62,10 @@ object ForgeDataGenerators {
 
         override fun entityTags(modID: String, tags: Consumer<TagConsumer<EntityType<*>>>): TagsProvider<EntityType<*>> {
             return add { out ->
-                object: EntityTypeTagsProvider(out, registries, modID, existingFiles) {
+                object : EntityTypeTagsProvider(out, registries, modID, existingFiles) {
                     override fun addTags(arg: HolderLookup.Provider) {
-                        tags.accept {  x -> LibTagAppender(XplatRegistries.ENTITY_TYPES, getOrCreateRawBuilder(x)) }
+                        tags.accept { x -> LibTagAppender(XplatRegistries.ENTITY_TYPES, getOrCreateRawBuilder(x)) }
                     }
-
                 }
             }
         }
@@ -85,7 +83,7 @@ object ForgeDataGenerators {
 
                             override fun copy(
                                 block: TagKey<Block>,
-                                item: TagKey<Item>
+                                item: TagKey<Item>,
                             ) {
                                 self.copy(block, item)
                             }
@@ -95,5 +93,4 @@ object ForgeDataGenerators {
             }
         }
     }
-
 }

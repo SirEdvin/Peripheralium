@@ -14,8 +14,9 @@ object ContainerUtils {
 
     fun extract(container: Container, slot: Int, limit: Int, predicate: Predicate<ItemStack>): ItemStack {
         val existingStack = container.getItem(slot)
-        if (existingStack.isEmpty || !predicate.test(existingStack))
+        if (existingStack.isEmpty || !predicate.test(existingStack)) {
             return ItemStack.EMPTY
+        }
         return container.removeItem(slot, limit)
     }
 
@@ -25,11 +26,13 @@ object ContainerUtils {
         var slidingLimit = limit
         var stack = ItemStack.EMPTY
         for (currentSlot in startSlot..realEndSlot) {
-            if (limit <= 0)
+            if (limit <= 0) {
                 return stack
+            }
             val extractedStack = extract(container, currentSlot, slidingLimit, predicate)
-            if (extractedStack.isEmpty)
+            if (extractedStack.isEmpty) {
                 continue
+            }
             slidingLimit -= extractedStack.count
             if (stack.isEmpty) { // first time something successfully extracted
                 stack = extractedStack
@@ -48,15 +51,17 @@ object ContainerUtils {
     fun storeItem(container: Container, stack: ItemStack, startSlot: Int = 0, endSlot: Int = -1): ItemStack {
         val maxStackSize = minOf(stack.maxStackSize, container.maxStackSize)
         val realEndSlot = if (endSlot == -1) container.containerSize - 1 else endSlot
-        if (maxStackSize <= 0)
+        if (maxStackSize <= 0) {
             return stack
+        }
 
         var slidingStack = stack
         for (currentSlot in startSlot..realEndSlot) {
             val slotStack = container.getItem(currentSlot)
             if (slotStack.isEmpty) {
-                if (!container.canPlaceItem(currentSlot, slidingStack))
+                if (!container.canPlaceItem(currentSlot, slidingStack)) {
                     continue
+                }
                 if (slidingStack.count <= maxStackSize) {
                     container.setItem(currentSlot, slidingStack)
                     return ItemStack.EMPTY
@@ -65,10 +70,12 @@ object ContainerUtils {
                 }
             } else {
                 val slotMaxStackSize = minOf(slotStack.maxStackSize, maxStackSize)
-                if (slotStack.count >= slotMaxStackSize)
+                if (slotStack.count >= slotMaxStackSize) {
                     continue
-                if (!StorageUtils.canMerge(slotStack, slidingStack, slotMaxStackSize))
+                }
+                if (!StorageUtils.canMerge(slotStack, slidingStack, slotMaxStackSize)) {
                     continue
+                }
 
                 slidingStack = StorageUtils.inplaceMerge(slotStack, slidingStack)
 

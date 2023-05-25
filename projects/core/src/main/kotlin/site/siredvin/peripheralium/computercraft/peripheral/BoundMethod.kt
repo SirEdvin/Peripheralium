@@ -22,7 +22,7 @@ class BoundMethod(private val target: Any, method: NamedMethod<PeripheralMethod>
     fun apply(
         access: IComputerAccess,
         context: ILuaContext,
-        arguments: IArguments
+        arguments: IArguments,
     ): MethodResult {
         return method.apply(target, context, access, arguments)
     }

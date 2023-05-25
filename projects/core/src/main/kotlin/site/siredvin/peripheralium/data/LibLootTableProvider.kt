@@ -9,13 +9,14 @@ import site.siredvin.peripheralium.common.setup.Blocks
 import site.siredvin.peripheralium.data.blocks.LootTableHelper
 import java.util.function.BiConsumer
 
-
 object LibLootTableProvider {
     fun getTables(): List<LootTableProvider.SubProviderEntry> {
         return listOf(
-            LootTableProvider.SubProviderEntry({ LootTableSubProvider {
-                registerBlocks(it)
-            } }, LootContextParamSets.BLOCK)
+            LootTableProvider.SubProviderEntry({
+                LootTableSubProvider {
+                    registerBlocks(it)
+                }
+            }, LootContextParamSets.BLOCK),
         )
     }
 

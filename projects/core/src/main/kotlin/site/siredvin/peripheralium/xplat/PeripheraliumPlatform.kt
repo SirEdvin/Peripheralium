@@ -2,13 +2,8 @@ package site.siredvin.peripheralium.xplat
 
 import com.mojang.authlib.GameProfile
 import dan200.computercraft.api.pocket.IPocketUpgrade
-import dan200.computercraft.api.pocket.PocketUpgradeDataProvider
-import dan200.computercraft.api.pocket.PocketUpgradeSerialiser
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.ITurtleUpgrade
-import dan200.computercraft.api.turtle.TurtleUpgradeDataProvider
-import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
-import dan200.computercraft.api.upgrades.UpgradeDataProvider
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
 import net.minecraft.nbt.CompoundTag
@@ -35,11 +30,9 @@ import site.siredvin.peripheralium.PeripheraliumCore
 import site.siredvin.peripheralium.common.items.DescriptiveBlockItem
 import java.util.*
 import java.util.function.BiFunction
-import java.util.function.Consumer
 import java.util.function.Function
 import java.util.function.Predicate
 import java.util.function.Supplier
-
 
 interface PeripheraliumPlatform {
 
@@ -51,8 +44,9 @@ interface PeripheraliumPlatform {
         }
 
         fun get(): PeripheraliumPlatform {
-            if (_IMPL == null)
+            if (_IMPL == null) {
                 throw IllegalStateException("You should init Peripheral Platform first")
+            }
             return _IMPL!!
         }
 
@@ -67,19 +61,19 @@ interface PeripheraliumPlatform {
             return get().createFakePlayer(level, profile)
         }
 
-        fun <T: Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T> {
+        fun <T : Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T> {
             return get().registerItem(key, item)
         }
 
-        fun <T: Item> registerItem(name: String, item: Supplier<T>): Supplier<T> {
+        fun <T : Item> registerItem(name: String, item: Supplier<T>): Supplier<T> {
             return registerItem(ResourceLocation(PeripheraliumCore.MOD_ID, name), item)
         }
 
-        fun <T: Block> registerBlock(key: ResourceLocation, block: Supplier<T>, itemFactory: (T) -> (Item)): Supplier<T> {
+        fun <T : Block> registerBlock(key: ResourceLocation, block: Supplier<T>, itemFactory: (T) -> (Item)): Supplier<T> {
             return get().registerBlock(key, block, itemFactory)
         }
 
-        fun <T: Block> registerBlock(name: String, block: Supplier<T>, itemFactory: (T) -> (Item) = { block -> DescriptiveBlockItem(block, Item.Properties()) }): Supplier<T> {
+        fun <T : Block> registerBlock(name: String, block: Supplier<T>, itemFactory: (T) -> (Item) = { block -> DescriptiveBlockItem(block, Item.Properties()) }): Supplier<T> {
             return get().registerBlock(ResourceLocation(PeripheraliumCore.MOD_ID, name), block, itemFactory)
         }
 
@@ -129,14 +123,14 @@ interface PeripheraliumPlatform {
 
         fun <T : BlockEntity> createBlockEntityType(
             factory: BiFunction<BlockPos, BlockState, T>,
-            block: Block
+            block: Block,
         ): BlockEntityType<T> {
             return get().createBlockEntityType(factory, block)
         }
 
         fun <T : Entity> createEntityType(
             name: ResourceLocation,
-            factory: Function<Level, T>
+            factory: Function<Level, T>,
         ): EntityType<T> {
             return get().createEntityType(name, factory)
         }
@@ -159,9 +153,9 @@ interface PeripheraliumPlatform {
 
     fun createFakePlayer(level: ServerLevel, profile: GameProfile): ServerPlayer
 
-    fun <T: Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T>
+    fun <T : Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T>
 
-    fun <T: Block> registerBlock(key: ResourceLocation, block: Supplier<T>, itemFactory: (T) -> (Item)): Supplier<T>
+    fun <T : Block> registerBlock(key: ResourceLocation, block: Supplier<T>, itemFactory: (T) -> (Item)): Supplier<T>
 
     fun getTurtleAccess(entity: BlockEntity): ITurtleAccess?
 
@@ -187,16 +181,15 @@ interface PeripheraliumPlatform {
 
     fun <T : BlockEntity> createBlockEntityType(
         factory: BiFunction<BlockPos, BlockState, T>,
-        block: Block
+        block: Block,
     ): BlockEntityType<T>
 
     fun <T : Entity> createEntityType(
         name: ResourceLocation,
-        factory: Function<Level, T>
+        factory: Function<Level, T>,
     ): EntityType<T>
 
     fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack>
     fun createPocketsWithUpgrade(upgrade: IPocketUpgrade): List<ItemStack>
     fun isOre(block: BlockState): Boolean
-
 }

@@ -12,17 +12,16 @@ import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.item.crafting.SmeltingRecipe
 import net.minecraft.world.item.crafting.SmokingRecipe
 import net.minecraft.world.level.ItemLike
-import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.util.function.Consumer
 
-class TweakedSmeltingRecipeBuilder<T: AbstractCookingRecipe>(
+class TweakedSmeltingRecipeBuilder<T : AbstractCookingRecipe>(
     itemLike: ItemLike,
     private val ingredient: Ingredient,
     private val experience: Float,
     private val cookingTime: Int,
     private var serializer: RecipeSerializer<T>,
-    private var group: String? = null
+    private var group: String? = null,
 ) {
     private val result: Item
 
@@ -31,7 +30,7 @@ class TweakedSmeltingRecipeBuilder<T: AbstractCookingRecipe>(
     }
 
     companion object {
-        fun <T: AbstractCookingRecipe> cooking(ingredient: Ingredient, itemLike: ItemLike, experience: Float, cookingTime: Int, simpleCookingSerializer: RecipeSerializer<T>): TweakedSmeltingRecipeBuilder<T> {
+        fun <T : AbstractCookingRecipe> cooking(ingredient: Ingredient, itemLike: ItemLike, experience: Float, cookingTime: Int, simpleCookingSerializer: RecipeSerializer<T>): TweakedSmeltingRecipeBuilder<T> {
             return TweakedSmeltingRecipeBuilder(itemLike, ingredient, experience, cookingTime, simpleCookingSerializer)
         }
 
@@ -79,8 +78,8 @@ class TweakedSmeltingRecipeBuilder<T: AbstractCookingRecipe>(
                 var10006,
                 var10007,
                 var10008,
-                serializer
-            )
+                serializer,
+            ),
         )
     }
 
@@ -91,7 +90,7 @@ class TweakedSmeltingRecipeBuilder<T: AbstractCookingRecipe>(
         private val result: Item,
         private val experience: Float,
         private val cookingTime: Int,
-        private val serializer: RecipeSerializer<out AbstractCookingRecipe?>
+        private val serializer: RecipeSerializer<out AbstractCookingRecipe?>,
     ) : FinishedRecipe {
         override fun serializeRecipeData(jsonObject: JsonObject) {
             if (group.isNotEmpty()) {

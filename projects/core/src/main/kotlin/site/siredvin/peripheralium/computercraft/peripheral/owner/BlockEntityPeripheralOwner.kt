@@ -30,7 +30,7 @@ class BlockEntityPeripheralOwner<T>(private val tileEntity: T, private val facin
         get() = tileEntity
 
     override val facing: Direction
-        get() = tileEntity.blockState.getValue(facingProperty);
+        get() = tileEntity.blockState.getValue(facingProperty)
 
     override val owner: Player?
         get() = (tileEntity as? IOwnedBlockEntity)?.player
@@ -46,8 +46,9 @@ class BlockEntityPeripheralOwner<T>(private val tileEntity: T, private val facin
     }
 
     override fun <T> withPlayer(function: (ServerPlayer) -> T, overwrittenDirection: Direction?, skipInventory: Boolean): T {
-        if (tileEntity !is IOwnedBlockEntity)
+        if (tileEntity !is IOwnedBlockEntity) {
             throw IllegalArgumentException("Cannot perform player logic without owned block entity")
+        }
         return FakePlayerProviderBlockEntity.withPlayer(tileEntity, function, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
     }
 
@@ -55,8 +56,9 @@ class BlockEntityPeripheralOwner<T>(private val tileEntity: T, private val facin
         get() = ItemStack.EMPTY
 
     override fun storeItem(stored: ItemStack): ItemStack {
-        if (storage == null)
+        if (storage == null) {
             return stored
+        }
         return storage!!.storeItem(stored)
     }
 

@@ -11,8 +11,9 @@ object FabricExtractorProxy {
     @Suppress("UNUSED_PARAMETER")
     fun extractFluidStorage(level: Level, obj: Any?): Storage<FluidVariant>? {
         if (obj is BlockEntity) {
-            if (obj.isRemoved)
+            if (obj.isRemoved) {
                 return null
+            }
             return FluidStorage.SIDED.find(obj.level, obj.blockPos, null)
         }
         return null
@@ -21,8 +22,9 @@ object FabricExtractorProxy {
     @Suppress("UNUSED_PARAMETER")
     fun extractItemStorage(level: Level, obj: Any?): Storage<ItemVariant>? {
         if (obj is BlockEntity) {
-            if (obj.isRemoved)
+            if (obj.isRemoved) {
                 return null
+            }
             return net.fabricmc.fabric.api.transfer.v1.item.ItemStorage.SIDED.find(obj.level, obj.blockPos, null)
         }
         return null

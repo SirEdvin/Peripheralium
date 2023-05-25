@@ -4,7 +4,7 @@ import net.minecraft.world.Container
 import net.minecraft.world.item.ItemStack
 import java.util.function.Predicate
 
-class TargetableContainer(private val container: Container): SlottedStorage {
+class TargetableContainer(private val container: Container) : SlottedStorage {
     override fun takeItems(limit: Int, startSlot: Int, endSlot: Int, predicate: Predicate<ItemStack>): ItemStack {
         return ContainerUtils.takeItems(container, limit, startSlot, endSlot, predicate)
     }
@@ -27,5 +27,4 @@ class TargetableContainer(private val container: Container): SlottedStorage {
 
     override val size: Int
         get() = container.containerSize
-
 }

@@ -14,7 +14,8 @@ import site.siredvin.peripheralium.util.radiusCorrect
 import site.siredvin.peripheralium.util.representation.LuaInterpretation
 import kotlin.math.min
 
-class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadius: Int, private val xpToFuelRate: Int, private val xpTransferOperation: IPeripheralOperation<Any?>): IOwnerAbility,
+class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadius: Int, private val xpToFuelRate: Int, private val xpTransferOperation: IPeripheralOperation<Any?>) :
+    IOwnerAbility,
     IPeripheralPlugin {
     companion object {
         private const val COLLECTED_XP_AMOUNT = "CollectedXPAmount"
@@ -38,7 +39,7 @@ class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadi
 
     @Throws(LuaException::class)
     protected fun withXPTransfer(
-        function: IPeripheralFunction<Any?, MethodResult>
+        function: IPeripheralFunction<Any?, MethodResult>,
     ): MethodResult {
         val ability: OperationAbility = owner.getAbility(PeripheralOwnerAbility.OPERATION)!!
         return ability.performOperation(xpTransferOperation, null, null, function, null, null)
@@ -104,13 +105,15 @@ class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadi
         val pos: BlockPos = owner.pos
         val targetPos: BlockPos = LuaInterpretation.asBlockPos(pos, rawBlockPos)
         return withXPTransfer {
-            if (!radiusCorrect(pos, targetPos, interactionRadius))
+            if (!radiusCorrect(pos, targetPos, interactionRadius)) {
                 return@withXPTransfer MethodResult.of(null, "Turtle are too far away")
+            }
 
             val abilityExtractResult =
                 AbilityToolkit.extractAbility(PeripheralOwnerAbility.EXPERIENCE, owner.level!!, targetPos)
-            if (abilityExtractResult.rightPresent())
+            if (abilityExtractResult.rightPresent()) {
                 return@withXPTransfer MethodResult.of(null, abilityExtractResult.right)
+            }
             val transferAmount = min(getStoredXP(), limit)
             adjustStoredXP(-transferAmount)
             abilityExtractResult.left!!.adjustStoredXP(transferAmount)

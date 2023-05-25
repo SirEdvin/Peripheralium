@@ -10,8 +10,8 @@ fun itemTooltip(descriptionId: String): MutableComponent {
         String.format(
             "%s.tooltip.%s",
             descriptionId.substring(0, lastIndex).replaceFirst("^block".toRegex(), "item"),
-            descriptionId.substring(lastIndex + 1)
-        )
+            descriptionId.substring(lastIndex + 1),
+        ),
     )
 }
 
@@ -21,8 +21,9 @@ fun itemExtra(descriptionId: String, extra: String): MutableComponent {
         String.format(
             "%s.extra.%s.%s",
             descriptionId.substring(0, lastIndex).replaceFirst("^block".toRegex(), "item"),
-            descriptionId.substring(lastIndex + 1), extra
-        )
+            descriptionId.substring(lastIndex + 1),
+            extra,
+        ),
     )
 }
 
@@ -32,9 +33,10 @@ fun itemExtra(descriptionId: String, extra: String, vararg args: Any): MutableCo
         String.format(
             "%s.extra.%s.%s",
             descriptionId.substring(0, lastIndex).replaceFirst("^block".toRegex(), "item"),
-            descriptionId.substring(lastIndex + 1), extra
+            descriptionId.substring(lastIndex + 1),
+            extra,
         ),
-        *args
+        *args,
     )
 }
 

@@ -4,10 +4,9 @@ import dan200.computercraft.api.lua.LuaFunction
 import net.minecraftforge.energy.IEnergyStorage
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 
-
-class ForgeEnergyPlugin(private val storage: IEnergyStorage): IPeripheralPlugin {
+class ForgeEnergyPlugin(private val storage: IEnergyStorage) : IPeripheralPlugin {
     override val additionalType: String
-        get() = PeripheralPluginUtils.TYPES.ENERGY_STORAGE
+        get() = PeripheralPluginUtils.Type.ENERGY_STORAGE
 
     @LuaFunction(mainThread = true)
     fun getEnergy(): Int {

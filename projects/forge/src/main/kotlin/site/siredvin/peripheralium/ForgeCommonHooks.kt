@@ -1,8 +1,6 @@
 package site.siredvin.peripheralium
 
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.item.ItemEntity
-import net.minecraftforge.event.CreativeModeTabEvent
 import net.minecraftforge.event.entity.EntityJoinLevelEvent
 import net.minecraftforge.event.entity.living.LivingDropsEvent
 import net.minecraftforge.eventbus.api.EventPriority
@@ -22,7 +20,7 @@ object ForgeCommonHooks {
         event.drops.removeIf { itemEntity: ItemEntity ->
             LibCommonHooks.onLivingDrop(
                 event.entity,
-                itemEntity.item
+                itemEntity.item,
             )
         }
     }

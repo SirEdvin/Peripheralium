@@ -52,8 +52,9 @@ object DropConsumer {
 
     fun consume(stack: ItemStack) {
         val leftStack = consumer!!(stack)
-        if (!leftStack.isEmpty)
+        if (!leftStack.isEmpty) {
             remainingDrop!!.add(leftStack)
+        }
     }
 
     fun onEntitySpawn(entity: Entity): Boolean {
@@ -65,10 +66,10 @@ object DropConsumer {
     }
 
     fun onLivingDrop(entity: Entity, stack: ItemStack): Boolean {
-        if (entity != targetEntity)
+        if (entity != targetEntity) {
             return false
+        }
         consume(stack)
         return true
     }
-
 }

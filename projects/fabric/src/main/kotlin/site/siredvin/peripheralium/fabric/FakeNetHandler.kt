@@ -10,7 +10,7 @@ import net.minecraft.network.protocol.game.*
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.ServerGamePacketListenerImpl
 
-class FakeNetHandler(player: ServerPlayer): ServerGamePacketListenerImpl(player.level.server!!, CONNECTION, player) {
+class FakeNetHandler(player: ServerPlayer) : ServerGamePacketListenerImpl(player.level.server!!, CONNECTION, player) {
 
     companion object {
         private val CONNECTION: Connection = Connection(PacketFlow.CLIENTBOUND)

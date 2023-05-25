@@ -5,7 +5,6 @@ import dan200.computercraft.api.turtle.AbstractTurtleUpgrade
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.TurtleSide
 import dan200.computercraft.api.turtle.TurtleUpgradeType
-import net.minecraft.client.resources.model.ModelResourceLocation
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
@@ -15,7 +14,7 @@ abstract class BaseTurtleUpgrade<T : IOwnedPeripheral<*>>(
     id: ResourceLocation,
     type: TurtleUpgradeType,
     adjective: String,
-    stack: ItemStack
+    stack: ItemStack,
 ) : AbstractTurtleUpgrade(id, type, adjective, stack) {
 
     protected abstract fun buildPeripheral(turtle: ITurtleAccess, side: TurtleSide): T

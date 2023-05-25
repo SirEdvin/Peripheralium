@@ -14,7 +14,7 @@ enum class VerticalDirection(val minecraftDirection: Direction) {
                 return valueOf(name.uppercase())
             } catch (exc: IllegalArgumentException) {
                 val allValues = Arrays.stream(values()).map { mode -> mode.name.lowercase() }.collect(
-                    Collectors.toList()
+                    Collectors.toList(),
                 ).joinToString(", ")
                 throw LuaException("Vertical direction should be one of: $allValues")
             }

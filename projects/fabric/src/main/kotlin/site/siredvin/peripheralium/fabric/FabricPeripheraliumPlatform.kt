@@ -51,18 +51,17 @@ import java.util.function.Function
 import java.util.function.Predicate
 import java.util.function.Supplier
 
-
-class FabricPeripheraliumPlatform: PeripheraliumPlatform {
+class FabricPeripheraliumPlatform : PeripheraliumPlatform {
 
     companion object {
         const val FORGE_COMPACT_DEVIDER = 81.0
     }
-    
-    private class FabricRegistryWrapper<T>(private val name: ResourceLocation, private val registry: Registry<T>): RegistryWrapper<T> {
+
+    private class FabricRegistryWrapper<T>(private val name: ResourceLocation, private val registry: Registry<T>) : RegistryWrapper<T> {
         override fun getId(something: T): Int {
             val id = registry.getId(something)
             if (id == -1) throw IllegalArgumentException()
-            return id;
+            return id
         }
 
         override fun getKey(something: T): ResourceLocation {
@@ -88,7 +87,6 @@ class FabricPeripheraliumPlatform: PeripheraliumPlatform {
         override fun tryGet(location: ResourceLocation): T? {
             return registry.get(location)
         }
-
     }
 
     override val fluidCompactDivider: Double
@@ -115,24 +113,28 @@ class FabricPeripheraliumPlatform: PeripheraliumPlatform {
     }
 
     override fun getTurtleAccess(entity: BlockEntity): ITurtleAccess? {
-        if (entity is TurtleBlockEntity)
+        if (entity is TurtleBlockEntity) {
             return entity.access
+        }
         return null
     }
 
     override fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean {
-        if (player.level.server?.isUnderSpawnProtection(player.level as ServerLevel, pos, player) == true)
+        if (player.level.server?.isUnderSpawnProtection(player.level as ServerLevel, pos, player) == true) {
             return true
+        }
         return !PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(player.level, player, pos, state, null)
     }
 
     override fun interactWithEntity(player: ServerPlayer, hand: InteractionHand, entity: Entity, hit: EntityHitResult): InteractionResult {
         val fabricInteraction = UseEntityCallback.EVENT.invoker().interact(player, entity.level, InteractionHand.MAIN_HAND, entity, hit)
-        if (fabricInteraction.consumesAction())
+        if (fabricInteraction.consumesAction()) {
             return fabricInteraction
+        }
         val entityInteraction = entity.interactAt(player, hit.location.subtract(entity.position()), InteractionHand.MAIN_HAND)
-        if (entityInteraction.consumesAction())
+        if (entityInteraction.consumesAction()) {
             return entityInteraction
+        }
         return player.interactOn(entity, hand)
     }
 
@@ -140,7 +142,7 @@ class FabricPeripheraliumPlatform: PeripheraliumPlatform {
         player: ServerPlayer,
         stack: ItemStack,
         hit: BlockHitResult,
-        canUseBlock: Predicate<BlockState>
+        canUseBlock: Predicate<BlockState>,
     ): InteractionResult {
         val result = UseBlockCallback.EVENT.invoker().interact(player, player.level, InteractionHand.MAIN_HAND, hit)
         if (result != InteractionResult.PASS) return result
@@ -182,14 +184,14 @@ class FabricPeripheraliumPlatform: PeripheraliumPlatform {
 
     override fun <T : Entity> createEntityType(
         name: ResourceLocation,
-        factory: Function<Level, T>
+        factory: Function<Level, T>,
     ): EntityType<T> {
         return FabricEntityTypeBuilder.create(MobCategory.MISC) { _, level -> factory.apply(level) }.build()
     }
 
     override fun <T : BlockEntity> createBlockEntityType(
         factory: BiFunction<BlockPos, BlockState, T>,
-        block: Block
+        block: Block,
     ): BlockEntityType<T> {
         return FabricBlockEntityTypeBuilder.create({ t: BlockPos, u: BlockState ->
             factory.apply(t, u)

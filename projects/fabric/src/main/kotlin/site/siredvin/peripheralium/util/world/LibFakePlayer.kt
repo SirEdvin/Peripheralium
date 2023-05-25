@@ -16,13 +16,14 @@ import site.siredvin.peripheralium.PeripheraliumCore
 import java.lang.ref.WeakReference
 import java.util.*
 
-
 class LibFakePlayer(
-    level: ServerLevel, owner: Entity?, profile: GameProfile?,
-): ServerPlayer(
+    level: ServerLevel,
+    owner: Entity?,
+    profile: GameProfile?,
+) : ServerPlayer(
     level.server,
     level,
-    if (profile != null && profile.isComplete) profile else PROFILE
+    if (profile != null && profile.isComplete) profile else PROFILE,
 ) {
     companion object {
         val PROFILE = GameProfile(UUID.fromString("6e483f02-30db-4454-b612-3a167614b276"), "[" + PeripheraliumCore.MOD_ID + "]")
@@ -37,14 +38,14 @@ class LibFakePlayer(
         } else {
             this.owner = null
         }
-        val playerList = level.server.playerList;
-        val currentPlayer = playerList.getPlayer(profile!!.id);
-        if (currentPlayer != null)
+        val playerList = level.server.playerList
+        val currentPlayer = playerList.getPlayer(profile!!.id)
+        if (currentPlayer != null) {
             advancements.setPlayer(currentPlayer)
+        }
     }
 
     override fun openTextEdit(p_175141_1_: SignBlockEntity) {}
-
 
     override fun isSilent(): Boolean {
         return true
@@ -58,7 +59,7 @@ class LibFakePlayer(
     override fun playSound(soundIn: SoundEvent, volume: Float, pitch: Float) {}
 
     override fun getEyeHeight(pose: Pose): Float {
-        return 0f;
+        return 0f
     }
 
     override fun tick() {}

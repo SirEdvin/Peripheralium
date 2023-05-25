@@ -10,7 +10,6 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.level.ItemLike
-import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.util.function.Consumer
 
@@ -82,8 +81,8 @@ class TweakedShapelessRecipeBuilder(itemLike: ItemLike, private val count: Int) 
                 var10004,
                 var10005,
                 var10006,
-                ingredients
-            )
+                ingredients,
+            ),
         )
     }
 
@@ -92,7 +91,7 @@ class TweakedShapelessRecipeBuilder(itemLike: ItemLike, private val count: Int) 
         private val result: Item,
         private val count: Int,
         private val group: String,
-        private val ingredients: List<Ingredient>
+        private val ingredients: List<Ingredient>,
     ) :
         FinishedRecipe {
         override fun serializeRecipeData(jsonObject: JsonObject) {

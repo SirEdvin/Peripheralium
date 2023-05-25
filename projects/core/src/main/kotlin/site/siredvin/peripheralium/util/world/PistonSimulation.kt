@@ -25,7 +25,7 @@ object PistonSimulation {
 
         blocksToDestroy.asReversed().forEach {
             val blockState = level.getBlockState(it)
-            val blockEntity = if(blockState.hasBlockEntity()) level.getBlockEntity(it) else null
+            val blockEntity = if (blockState.hasBlockEntity()) level.getBlockEntity(it) else null
             Block.dropResources(blockState, level, it, blockEntity)
             level.setBlock(it, Blocks.AIR.defaultBlockState(), 18)
             if (!blockState.`is`(BlockTags.FIRE)) {
@@ -42,13 +42,14 @@ object PistonSimulation {
             level.setBlock(targetPos, newBlockState, 68)
             level.setBlockEntity(
                 MovingPistonBlock.newMovingBlockEntity(
-                targetPos,
-                newBlockState,
-                blockState,
-                direction,
-                isExtending,
-                false
-            ))
+                    targetPos,
+                    newBlockState,
+                    blockState,
+                    direction,
+                    isExtending,
+                    false,
+                ),
+            )
             blockStateCache[it] = blockState
         }
 
@@ -63,7 +64,7 @@ object PistonSimulation {
         blocksToDestroy.asReversed().forEach {
             val blockState = blockStateCache[it]!!
             blockState.updateIndirectNeighbourShapes(level, it, 2)
-            level.updateNeighborsAt(it,blockState.block)
+            level.updateNeighborsAt(it, blockState.block)
         }
 
         blocksToPush.asReversed().forEach {

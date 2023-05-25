@@ -22,13 +22,14 @@ enum class InteractionMode {
         }
 
         fun luaValueOf(name: String, allowedMods: Set<InteractionMode>): InteractionMode {
-            if (name == "*")
+            if (name == "*") {
                 return ANY
+            }
             try {
                 return valueOf(name.uppercase())
             } catch (exc: IllegalArgumentException) {
                 val allValues = allowedMods.stream().map { mode -> mode.name.lowercase() }.collect(
-                    Collectors.toList()
+                    Collectors.toList(),
                 ).joinToString(", ")
                 throw LuaException("Interaction mode should be one of: $allValues")
             }

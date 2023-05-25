@@ -17,7 +17,7 @@ import java.util.function.Function
 object FakePlayerProviderTurtle {
     /*
     Highly inspired by https://github.com/SquidDev-CC/plethora/blob/minecraft-1.12/src/main/java/org/squiddev/plethora/integration/computercraft/FakePlayerProviderTurtle.java
-    */
+     */
     private val registeredPlayers: WeakHashMap<ITurtleAccess, ServerPlayer> =
         WeakHashMap<ITurtleAccess, ServerPlayer>()
 
@@ -101,7 +101,7 @@ object FakePlayerProviderTurtle {
     }
 
     fun <T> withPlayer(turtle: ITurtleAccess, function: Function<ServerPlayer, T>, overwrittenDirection: Direction? = null, skipInventory: Boolean = false): T {
-        val player: ServerPlayer = getPlayer(turtle, turtle.owningPlayer?: FakePlayerProxy.DUMMY_PROFILE)
+        val player: ServerPlayer = getPlayer(turtle, turtle.owningPlayer ?: FakePlayerProxy.DUMMY_PROFILE)
         load(player, turtle, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
         val result = function.apply(player)
         unload(player, turtle, skipInventory = skipInventory)

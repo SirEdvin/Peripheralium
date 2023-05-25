@@ -6,7 +6,6 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.item.crafting.RecipeSerializer
-import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.util.function.Consumer
 
@@ -14,7 +13,7 @@ class TweakedUpgradeRecipeBuilder(
     private val type: RecipeSerializer<*>,
     private val base: Ingredient,
     private val addition: Ingredient,
-    private val result: Item
+    private val result: Item,
 ) {
 
     companion object {
@@ -38,8 +37,8 @@ class TweakedUpgradeRecipeBuilder(
                 var10004,
                 var10005,
                 var10006,
-                var10007
-            )
+                var10007,
+            ),
         )
     }
 
