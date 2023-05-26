@@ -6,21 +6,116 @@ plugins {
     id("org.parchmentmc.librarian.forgegradle")
 }
 
-val modVersion: String by extra
-val minecraftVersion: String by extra
-val modBaseName: String by extra
 
-abstract class ForgeShackingExtension {
-    abstract val commonProjectName: Property<String>
-    abstract val useKotlin: Property<Boolean>
-    abstract val useAT: Property<Boolean>
+fun configureForge(targetProject: Project, useAT: Boolean, commonProjectName: String) {
+
+    val minecraftVersion: String by targetProject.extra
+    val modBaseName: String by targetProject.extra
+
+    targetProject.minecraft {
+        val extractedLibs = targetProject.extensions.getByType<VersionCatalogsExtension>().named("libs")
+        // So, this exists mostly because mapping for 1.19.4 forge are not complete (?)
+        mappings(
+            "parchment",
+            "${extractedLibs.findVersion("parchmentMc").get()}-${
+                extractedLibs.findVersion("parchment").get()
+            }-$minecraftVersion"
+        )
+
+        if (useAT) {
+            accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
+        }
+
+        runs {
+            all {
+                property("forge.logging.markers", "REGISTRIES")
+                property("forge.logging.console.level", "debug")
+                property("mixin.env.remapRefMap", "true")
+                property("mixin.env.refMapRemappingFile", "${targetProject.projectDir}/build/createSrgToMcp/output.srg")
+            }
+
+            val client by registering {
+                workingDirectory(file("run"))
+            }
+
+            val server by registering {
+                workingDirectory(file("run/server"))
+                arg("--nogui")
+            }
+
+            val data by registering {
+                workingDirectory(file("run"))
+                args(
+                    "--mod", modBaseName, "--all",
+                    "--output", file("src/generated/resources/"),
+                    "--existing", project(":core").file("src/main/resources/"),
+                    "--existing", file("src/main/resources/"),
+                )
+            }
+        }
+    }
+
+    targetProject.dependencies {
+        val extractedLibs = targetProject.extensions.getByType<VersionCatalogsExtension>().named("libs")
+        minecraft("net.minecraftforge:forge:$minecraftVersion-${extractedLibs.findVersion("forge").get()}")
+
+        compileOnly(project(":${commonProjectName}")) {
+            exclude("cc.tweaked")
+            exclude("fuzs.forgeconfigapiport")
+        }
+    }
+
+    targetProject.tasks {
+        val extractedLibs = targetProject.extensions.getByType<VersionCatalogsExtension>().named("libs")
+        val forgeVersion = extractedLibs.findVersion("forge").get()
+        val computercraftVersion = extractedLibs.findVersion("cc-tweaked").get()
+
+        processResources {
+            from(project(":${commonProjectName}").sourceSets.main.get().resources)
+
+            inputs.property("version", targetProject.version)
+            inputs.property("forgeVersion", forgeVersion)
+            inputs.property("computercraftVersion", computercraftVersion)
+
+            filesMatching("META-INF/mods.toml") {
+                expand(
+                    mapOf(
+                        "forgeVersion" to forgeVersion,
+                        "file" to mapOf("jarVersion" to targetProject.version),
+                        "computercraftVersion" to computercraftVersion,
+                    ),
+                )
+            }
+            exclude(".cache")
+        }
+        withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+            if (name == "compileKotlin") {
+                source(project(":${commonProjectName}").sourceSets.main.get().allSource)
+            }
+        }
+        withType<JavaCompile> {
+            if (name == "compileJava") {
+                source(project(":${commonProjectName}").sourceSets.main.get().allSource)
+            }
+        }
+    }
 }
 
-val forgeShacking = project.extensions.create("forgeShacking", ForgeShackingExtension::class.java)
-forgeShacking.commonProjectName.convention("core")
-forgeShacking.useKotlin.convention(true)
-forgeShacking.useAT.convention(false)
+class ForgeShakingExtension(private val targetProject: Project) {
+    val commonProjectName: Property<String> = targetProject.objects.property(String::class.java)
+    val useAT: Property<Boolean> = targetProject.objects.property(Boolean::class.java)
 
+    fun shake() {
+        configureForge(targetProject, useAT.get(), commonProjectName.get())
+    }
+}
+
+val forgeShaking: ForgeShakingExtension = ForgeShakingExtension(project)
+project.extensions.add("forgeShaking", forgeShaking)
+
+val modVersion: String by project.extra
+val minecraftVersion: String by project.extra
+val modBaseName: String by project.extra
 val configureProject: ConfigureProject by extra
 configureProject.configure(modBaseName, modVersion, "forge", minecraftVersion)
 
@@ -31,90 +126,6 @@ repositories {
         url = uri("https://thedarkcolour.github.io/KotlinForForge/")
         content {
             includeGroup("thedarkcolour")
-        }
-    }
-}
-
-minecraft {
-    val extractedLibs = project.extensions.getByType<VersionCatalogsExtension>().named("libs")
-    // So, this exists mostly because mapping for 1.19.4 forge are not complete (?)
-    mappings("parchment", "${extractedLibs.findVersion("parchmentMc").get()}-${extractedLibs.findVersion("parchment").get()}-$minecraftVersion")
-
-    if (forgeShacking.useAT.get()) {
-        accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
-    }
-
-    runs {
-        all {
-            property("forge.logging.markers", "REGISTRIES")
-            property("forge.logging.console.level", "debug")
-            property("mixin.env.remapRefMap", "true")
-            property("mixin.env.refMapRemappingFile", "$projectDir/build/createSrgToMcp/output.srg")
-            forceExit = false
-        }
-
-        val client by registering {
-            workingDirectory(file("run"))
-        }
-
-        val server by registering {
-            workingDirectory(file("run/server"))
-            arg("--nogui")
-        }
-
-        val data by registering {
-            workingDirectory(file("run"))
-            args(
-                "--mod", modBaseName, "--all",
-                "--output", file("src/generated/resources/"),
-                "--existing", project(":core").file("src/main/resources/"),
-                "--existing", file("src/main/resources/"),
-            )
-        }
-    }
-}
-
-dependencies {
-    val extractedLibs = project.extensions.getByType<VersionCatalogsExtension>().named("libs")
-    minecraft("net.minecraftforge:forge:$minecraftVersion-${extractedLibs.findVersion("forge").get()}")
-
-    compileOnly(project(":${forgeShacking.commonProjectName.get()}")) {
-        exclude("cc.tweaked")
-        exclude("fuzs.forgeconfigapiport")
-    }
-}
-
-tasks {
-    val extractedLibs = project.extensions.getByType<VersionCatalogsExtension>().named("libs")
-    val forgeVersion = extractedLibs.findVersion("forge").get()
-    val computercraftVersion = extractedLibs.findVersion("cc-tweaked").get()
-
-    processResources {
-        from(project(":${forgeShacking.commonProjectName.get()}").sourceSets.main.get().resources)
-
-        inputs.property("version", project.version)
-        inputs.property("forgeVersion", forgeVersion)
-        inputs.property("computercraftVersion", computercraftVersion)
-
-        filesMatching("META-INF/mods.toml") {
-            expand(
-                mapOf(
-                    "forgeVersion" to forgeVersion,
-                    "file" to mapOf("jarVersion" to project.version),
-                    "computercraftVersion" to computercraftVersion,
-                ),
-            )
-        }
-        exclude(".cache")
-    }
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        if (name == "compileKotlin") {
-            source(project(":${forgeShacking.commonProjectName.get()}").sourceSets.main.get().allSource)
-        }
-    }
-    withType<JavaCompile> {
-        if (name == "compileJava") {
-            source(project(":${forgeShacking.commonProjectName.get()}").sourceSets.main.get().allSource)
         }
     }
 }

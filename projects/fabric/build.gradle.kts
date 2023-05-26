@@ -14,11 +14,12 @@ val modBaseName: String by extra
 val configureMinecraft: ConfigureFabric by extra
 
 configureMinecraft.configure(
-    modBaseName, modVersion, minecraftVersion,
+    modBaseName,
+    modVersion,
+    minecraftVersion,
     project(":core").file("src/main/resources/peripheralium.accesswidener"),
-    "core"
+    "core",
 )
-
 
 repositories {
     // location of the maven that hosts JEI files since January 2023
@@ -74,9 +75,13 @@ tasks.test {
 
 modPublishing {
     output.set(tasks.remapJar)
-    requiredDependencies.set(listOf(
-        "cc-tweaked", "forge-config-api-port-fabric", "fabric-language-kotlin"
-    ))
+    requiredDependencies.set(
+        listOf(
+            "cc-tweaked",
+            "forge-config-api-port-fabric",
+            "fabric-language-kotlin",
+        ),
+    )
 }
 
 publishing {

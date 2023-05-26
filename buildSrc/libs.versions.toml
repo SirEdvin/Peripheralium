@@ -1,10 +1,19 @@
 [versions]
+
 kotlin = "1.8.21"
+cc-tweaked = "1.104.0"
+
+# Forge dependencies
+forge = "45.0.42"
+forge-kotlin = "4.2.0"
+parchment = "2023.03.12"
+parchmentMc = "1.19.3"
+
 # Build tools
 changelog = "2.0.0"
 curseForgeGradle = "1.0.11"
 loom = "1.1.9"
-forgeGradle = "5.1.+"
+forgeGradle = "6.+"
 librarian = "1.+"
 minotaur = "2.+"
 #mixinGradle = "0.7.+"

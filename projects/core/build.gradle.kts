@@ -17,7 +17,7 @@ configureProject.configure(modBaseName, modVersion, "common", minecraftVersion)
 configureMinecraft.configure(
     minecraftVersion,
     "src/main/resources/peripheralium-common.accesswidener",
-    "src/main/resources/peripheralium.accesswidener"
+    "src/main/resources/peripheralium.accesswidener",
 )
 
 sourceSets {

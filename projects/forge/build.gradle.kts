@@ -7,10 +7,12 @@ plugins {
     id("peripheralium.forge")
 }
 
-forgeShacking {
+forgeShaking {
     commonProjectName.set("core")
     useAT.set(true)
 }
+
+forgeShaking.shake()
 
 repositories {
     // location of the maven that hosts JEI files since January 2023
@@ -51,10 +53,12 @@ tasks.test {
 
 modPublishing {
     output.set(tasks.jar)
-    requiredDependencies.set(listOf(
-        "cc-tweaked",
-        "kotlin-for-forge"
-    ))
+    requiredDependencies.set(
+        listOf(
+            "cc-tweaked",
+            "kotlin-for-forge",
+        ),
+    )
 }
 
 publishing {
