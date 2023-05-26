@@ -1,6 +1,5 @@
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.extra
-import org.gradle.kotlin.dsl.repositories
 import java.util.function.Consumer
 
 plugins {
@@ -33,6 +32,8 @@ fun setupSubproject(subproject: Project) {
     subproject.apply(plugin = "com.diffplug.spotless")
     subproject.apply(plugin = "peripheralium.base")
     subproject.apply(plugin = "peripheralium.linting")
+    subproject.apply(plugin = "idea")
+
     subproject.extra["curseforgeKey"] = secretEnv["CURSEFORGE_KEY"] ?: System.getenv("CURSEFORGE_KEY") ?: ""
     subproject.extra["modrinthKey"] = secretEnv["MODRINTH_KEY"] ?: System.getenv("MODRINTH_KEY") ?: ""
     subproject.extra["rootProjectDir"] = rootProjectDir
@@ -41,6 +42,6 @@ fun setupSubproject(subproject: Project) {
 
 val x1 = ::setupSubproject
 
-project.extra["setupSubproject"] = Consumer<Project> {
+extra["setupSubproject"] = Consumer<Project> {
     setupSubproject(it)
 }

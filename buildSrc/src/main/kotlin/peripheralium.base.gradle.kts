@@ -1,4 +1,5 @@
 import org.gradle.kotlin.dsl.repositories
+import site.siredvin.peripheralium.gradle.ConfigureProject
 
 plugins {
     java
@@ -24,7 +25,7 @@ repositories {
     }
 }
 
-fun connectMainIntegrations() {
+extra["connectMainIntegrations"] = Runnable {
     repositories {
         maven {
             url = uri("https://www.cursemaven.com")
@@ -46,5 +47,17 @@ fun connectMainIntegrations() {
                 includeGroup("dev.architectury")
             }
         }
+    }
+}
+
+extra["configureProject"] = ConfigureProject { modBaseName, modVersion, projectPart, minecraftVersion ->
+
+    base {
+        archivesName.set("$modBaseName-$projectPart-$minecraftVersion")
+        version = modVersion
+    }
+
+    sourceSets.main.configure {
+        resources.srcDir("src/generated/resources")
     }
 }

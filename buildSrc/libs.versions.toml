@@ -1,0 +1,27 @@
+[versions]
+kotlin = "1.8.21"
+# Build tools
+checkstyle = "10.3.4"
+#curseForgeGradle = "1.0.11"
+#fabric-loom = "1.1.10"
+#forgeGradle = "5.1.+"
+#librarian = "1.+"
+#minotaur = "2.+"
+#mixinGradle = "0.7.+"
+#nullAway = "0.9.9"
+quiltflower = "1.8.0"
+spotless = "6.17.0"
+#taskTree = "2.1.1"
+vanillaGradle = "0.2.1-SNAPSHOT"
+
+[libraries]
+#curseForgeGradle = { module = "net.darkhax.curseforgegradle:CurseForgeGradle", version.ref = "curseForgeGradle" }
+#fabric-loom = { module = "net.fabricmc:fabric-loom", version.ref = "fabric-loom" }
+#forgeGradle = { module = "net.minecraftforge.gradle:ForgeGradle", version.ref = "forgeGradle" }
+plugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+#librarian = { module = "org.parchmentmc:librarian", version.ref = "librarian" }
+#minotaur = { module = "com.modrinth.minotaur:Minotaur", version.ref = "minotaur" }
+#nullAway = { module = "com.uber.nullaway:nullaway", version.ref = "nullAway" }
+#quiltflower = { module = "io.github.juuxel:loom-quiltflower", version.ref = "quiltflower" }
+plugin-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
+plugin-vanillaGradle = { module = "org.spongepowered:vanillagradle", version.ref = "vanillaGradle" }

@@ -46,6 +46,7 @@ repositories {
 
 dependencies {
 //    implementation(libs.errorProne.plugin)
-    implementation(libs.kotlin.plugin)
-    implementation(libs.spotless.plugin)
+    implementation(libs.plugin.kotlin)
+    implementation(libs.plugin.spotless)
+    implementation(libs.plugin.vanillaGradle)
 }

@@ -1,30 +1,24 @@
+import site.siredvin.peripheralium.gradle.ConfigureProject
+import site.siredvin.peripheralium.gradle.ConfigureVanillaMinecraft
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    alias(libs.plugins.vanillaGradle)
-    id(libs.plugins.kotlin.get().pluginId) apply false
-    idea
+    id("peripheralium.vanilla")
 }
 
 val modVersion: String by extra
 val minecraftVersion: String by extra
 val modBaseName: String by extra
 
-base {
-    archivesName.set("$modBaseName-common-$minecraftVersion")
-    version = modVersion
-}
+val configureProject: ConfigureProject by extra
+val configureMinecraft: ConfigureVanillaMinecraft by extra
 
-sourceSets.main.configure {
-    resources.srcDir("src/generated/resources")
-}
-
-minecraft {
-    version(minecraftVersion)
-    accessWideners(
-        "src/main/resources/peripheralium-common.accesswidener",
-        "src/main/resources/peripheralium.accesswidener",
-    )
-}
+configureProject.configure(modBaseName, modVersion, "common", minecraftVersion)
+configureMinecraft.configure(
+    minecraftVersion,
+    "src/main/resources/peripheralium-common.accesswidener",
+    "src/main/resources/peripheralium.accesswidener"
+)
 
 sourceSets {
     create("testFixtures") {
