@@ -49,6 +49,8 @@ rootProject.name = "Peripheralium $minecraftVersion"
 include(":core")
 include(":forge")
 include(":fabric")
+include(":testiralium")
+include(":testiraliumforge")
 
 
 for (project in rootProject.children) {
