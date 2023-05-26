@@ -26,29 +26,12 @@ base {
 }
 
 repositories {
-    mavenCentral()
-    // For CC:T common code
-    maven {
-        url = uri("https://squiddev.cc/maven/")
-        content {
-            includeGroup("cc.tweaked")
-            includeModule("org.squiddev", "Cobalt")
-        }
-    }
     // location of the maven that hosts JEI files since January 2023
     maven {
         name = "Jared's maven"
         url = uri("https://maven.blamejared.com/")
         content {
             includeGroup("mezz.jei")
-        }
-    }
-    // For Forge configuration common code
-    maven {
-        name = "Fuzs Mod Resources"
-        url = uri("https://raw.githubusercontent.com/Fuzss/modresources/main/maven/")
-        content {
-            includeGroup("fuzs.forgeconfigapiport")
         }
     }
 }
