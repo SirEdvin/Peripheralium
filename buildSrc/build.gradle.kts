@@ -45,8 +45,13 @@ repositories {
 }
 
 dependencies {
-//    implementation(libs.errorProne.plugin)
     implementation(libs.plugin.kotlin)
     implementation(libs.plugin.spotless)
     implementation(libs.plugin.vanillaGradle)
+    implementation(libs.plugin.loom)
+    implementation(libs.plugin.curseForgeGradle)
+    implementation(libs.plugin.minotaur)
+    implementation(libs.plugin.changelog)
+    implementation(libs.plugin.forgeGradle)
+    implementation(libs.plugin.librarian)
 }
