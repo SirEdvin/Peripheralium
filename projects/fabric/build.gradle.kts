@@ -9,7 +9,7 @@ import site.siredvin.peripheralium.gradle.mavenDependencies
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.loom)
-    alias(libs.plugins.kotlin)
+    id(libs.plugins.kotlin.get().pluginId) apply false
     idea
     id("com.matthewprenger.cursegradle") version "1.4.0"
     id("org.jetbrains.changelog") version "1.3.1"

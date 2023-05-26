@@ -8,7 +8,7 @@ import site.siredvin.peripheralium.gradle.mavenDependencies
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    alias(libs.plugins.kotlin)
+    id(libs.plugins.kotlin.get().pluginId) apply false
     id("net.minecraftforge.gradle") version "5.+"
     id("org.parchmentmc.librarian.forgegradle") version "1.+"
     id("com.matthewprenger.cursegradle") version "1.4.0"
