@@ -1,5 +1,3 @@
-import site.siredvin.peripheralium.gradle.ConfigureVanillaMinecraft
-
 plugins {
     java
     id("org.spongepowered.gradle.vanilla")

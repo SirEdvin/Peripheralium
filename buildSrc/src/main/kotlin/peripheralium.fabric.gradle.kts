@@ -1,6 +1,3 @@
-import site.siredvin.peripheralium.gradle.ConfigureFabric
-import site.siredvin.peripheralium.gradle.ConfigureProject
-
 plugins {
     java
     id("fabric-loom")

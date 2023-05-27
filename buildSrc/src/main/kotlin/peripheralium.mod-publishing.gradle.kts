@@ -1,6 +1,5 @@
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
 import org.jetbrains.changelog.date
-import site.siredvin.peripheralium.gradle.setProvider
 
 plugins {
     id("net.darkhax.curseforgegradle")
@@ -58,7 +57,7 @@ class ModPublishingExtension(private val targetProject: Project) {
             versionNumber.set("$minecraftVersion-${targetProject.version}")
             versionName.set("$minecraftVersion-${targetProject.version}")
             versionType.set(MODRINTH_RELEASE_TYPE)
-            uploadFile.setProvider(output)
+            uploadFile.set(output.get())
             gameVersions.add(minecraftVersion)
             changelog.set(targetProject.changelog.renderItem(targetProject.changelog.get(modVersion).withHeader(false)))
             dependencies {

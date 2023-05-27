@@ -1,5 +1,3 @@
-import site.siredvin.peripheralium.gradle.ConfigureProject
-
 plugins {
     `java`
     id("net.minecraftforge.gradle")

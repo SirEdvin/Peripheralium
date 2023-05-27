@@ -1,5 +1,3 @@
-import site.siredvin.peripheralium.gradle.ConfigureVanillaMinecraft
-
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("peripheralium.vanilla")

@@ -1,4 +1,3 @@
-import site.siredvin.peripheralium.gradle.ConfigureFabric
 import site.siredvin.peripheralium.gradle.mavenDependencies
 
 @Suppress("DSL_SCOPE_VIOLATION")

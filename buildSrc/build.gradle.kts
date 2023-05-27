@@ -1,12 +1,10 @@
-// SPDX-FileCopyrightText: 2022 The CC: Tweaked Developers
-//
-// SPDX-License-Identifier: MPL-2.0
-//
-// Shameless copy from CC:Tweaked, again
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
 
 plugins {
     `java-gradle-plugin`
     `kotlin-dsl`
+    `maven-publish`
+    id("groovy-gradle-plugin")
 }
 
 // Duplicated in settings.gradle.kts
@@ -39,3 +37,26 @@ dependencies {
     implementation(libs.plugin.forgeGradle)
     implementation(libs.plugin.librarian)
 }
+
+
+
+group = "site.siredvin"
+archivesName.set("buildenv")
+version = "0.1.0"
+
+gradlePlugin {
+    website.set("https://github.com/SirEdvin")
+    vcsUrl.set("https://github.com/SirEdvin/Peripheralium")
+}
+
+publishing {
+    repositories {
+        maven("https://mvn.siredvin.site/minecraft") {
+            name = "SirEdvin"
+            credentials(PasswordCredentials::class)
+        }
+    }
+}
+
+
+
