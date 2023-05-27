@@ -6,19 +6,11 @@ plugins {
 
 repositories {
     mavenCentral()
-    // For CC:T common code
-    maven {
-        url = uri("https://squiddev.cc/maven/")
+    maven("https://mvn.siredvin.site/minecraft") {
+        name = "SirEdvin's Minecraft repository"
         content {
             includeGroup("cc.tweaked")
-            includeModule("org.squiddev", "Cobalt")
-        }
-    }
-    // For Forge configuration common code
-    maven {
-        name = "Fuzs Mod Resources"
-        url = uri("https://raw.githubusercontent.com/Fuzss/modresources/main/maven/")
-        content {
+            includeGroup("org.squiddev")
             includeGroup("fuzs.forgeconfigapiport")
         }
     }
