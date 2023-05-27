@@ -5,9 +5,18 @@ plugins {
     id("org.spongepowered.gradle.vanilla")
 }
 
-extra["configureMinecraft"] = ConfigureVanillaMinecraft { minecraftVersion, accessWideners ->
-    minecraft {
-        version(minecraftVersion)
-        accessWideners(*accessWideners)
+class VanillaShakingExtension(private val targetProject: Project) {
+    val accessWideners: ListProperty<String> = targetProject.objects.listProperty(String::class.java)
+
+    fun shake() {
+        val minecraftVersion: String by targetProject.extra
+
+        targetProject.minecraft {
+            version(minecraftVersion)
+            accessWideners(*accessWideners.get().toTypedArray())
+        }
     }
 }
+
+val vanillaShaking = VanillaShakingExtension(project)
+project.extensions.add("vanillaShaking", vanillaShaking)

@@ -7,12 +7,16 @@ plugins {
     id("peripheralium.forge")
 }
 
+baseShaking {
+    projectPart.set("forge")
+    shake()
+}
+
 forgeShaking {
     commonProjectName.set("core")
     useAT.set(true)
+    shake()
 }
-
-forgeShaking.shake()
 
 repositories {
     // location of the maven that hosts JEI files since January 2023
@@ -59,6 +63,7 @@ modPublishing {
             "kotlin-for-forge",
         ),
     )
+    shake()
 }
 
 publishing {

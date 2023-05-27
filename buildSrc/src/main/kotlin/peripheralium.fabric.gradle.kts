@@ -6,10 +6,11 @@ plugins {
     id("fabric-loom")
 }
 
-extra["configureMinecraft"] = ConfigureFabric { modBaseName, modVersion, minecraftVersion, accessWidener, commonProjectName ->
-    val configureProject: ConfigureProject by extra
-    configureProject.configure(modBaseName, modVersion, "fabric", minecraftVersion)
-    dependencies {
+fun configureFabric(targetProject: Project, accessWidener: File, commonProjectName: String) {
+    val minecraftVersion: String by targetProject.extra
+    val modBaseName: String by targetProject.extra
+
+    targetProject.dependencies {
         minecraft("com.mojang:minecraft:$minecraftVersion")
         mappings(loom.officialMojangMappings())
         implementation(project(":$commonProjectName")) {
@@ -17,7 +18,7 @@ extra["configureMinecraft"] = ConfigureFabric { modBaseName, modVersion, minecra
         }
     }
 
-    loom {
+    targetProject.loom {
         accessWidenerPath.set(accessWidener)
         runs {
             named("client") {
@@ -36,11 +37,11 @@ extra["configureMinecraft"] = ConfigureFabric { modBaseName, modVersion, minecra
         }
     }
 
-    tasks {
+    targetProject.tasks {
         processResources {
             from(project(":$commonProjectName").sourceSets.main.get().resources)
-            inputs.property("version", project.version)
-            filesMatching("fabric.mod.json") { expand(mutableMapOf("version" to project.version)) }
+            inputs.property("version", targetProject.version)
+            filesMatching("fabric.mod.json") { expand(mutableMapOf("version" to targetProject.version)) }
             exclude(".cache")
         }
         withType<JavaCompile> {
@@ -55,3 +56,15 @@ extra["configureMinecraft"] = ConfigureFabric { modBaseName, modVersion, minecra
         }
     }
 }
+
+class FabricShakingExtension(private val targetProject: Project) {
+    val commonProjectName: Property<String> = targetProject.objects.property(String::class.java)
+    val accessWidener: Property<File> = targetProject.objects.property(File::class.java)
+
+    fun shake() {
+        configureFabric(targetProject, accessWidener.get(), commonProjectName.get())
+    }
+}
+
+val fabricShaking = FabricShakingExtension(project)
+project.extensions.add("fabricShaking", fabricShaking)

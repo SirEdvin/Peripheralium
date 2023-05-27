@@ -1,5 +1,4 @@
 import org.gradle.kotlin.dsl.repositories
-import site.siredvin.peripheralium.gradle.ConfigureProject
 
 plugins {
     java
@@ -25,8 +24,8 @@ repositories {
     }
 }
 
-extra["connectMainIntegrations"] = Runnable {
-    repositories {
+fun connectIntegrationRepositories(targetProject: Project) {
+    targetProject.repositories {
         maven {
             url = uri("https://www.cursemaven.com")
             name = "Curse Maven"
@@ -50,14 +49,29 @@ extra["connectMainIntegrations"] = Runnable {
     }
 }
 
-extra["configureProject"] = ConfigureProject { modBaseName, modVersion, projectPart, minecraftVersion ->
+class BaseShakingExtension(private val targetProject: Project) {
+    val projectPart: Property<String> = targetProject.objects.property(String::class.java)
+    val integrationRepositories: Property<Boolean> = targetProject.objects.property(Boolean::class.java)
 
-    base {
-        archivesName.set("$modBaseName-$projectPart-$minecraftVersion")
-        version = modVersion
-    }
+    fun shake() {
+        val minecraftVersion: String by targetProject.extra
+        val modBaseName: String by targetProject.extra
+        val modVersion: String by targetProject.extra
 
-    sourceSets.main.configure {
-        resources.srcDir("src/generated/resources")
+        integrationRepositories.convention(false)
+
+        if (integrationRepositories.get())
+            connectIntegrationRepositories(targetProject)
+        targetProject.base {
+            archivesName.set("$modBaseName-$projectPart-$minecraftVersion")
+            version = modVersion
+        }
+
+        targetProject.sourceSets.main.configure {
+            resources.srcDir("src/generated/resources")
+        }
     }
 }
+
+val baseShaking = BaseShakingExtension(project)
+project.extensions.add("baseShaking", baseShaking)

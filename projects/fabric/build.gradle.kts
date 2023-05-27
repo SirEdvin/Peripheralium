@@ -11,15 +11,17 @@ plugins {
 val modVersion: String by extra
 val minecraftVersion: String by extra
 val modBaseName: String by extra
-val configureMinecraft: ConfigureFabric by extra
 
-configureMinecraft.configure(
-    modBaseName,
-    modVersion,
-    minecraftVersion,
-    project(":core").file("src/main/resources/peripheralium.accesswidener"),
-    "core",
-)
+baseShaking {
+    projectPart.set("fabric")
+    shake()
+}
+
+fabricShaking {
+    commonProjectName.set("core")
+    accessWidener.set(project(":core").file("src/main/resources/peripheralium.accesswidener"))
+    shake()
+}
 
 repositories {
     // location of the maven that hosts JEI files since January 2023
@@ -82,6 +84,7 @@ modPublishing {
             "fabric-language-kotlin",
         ),
     )
+    shake()
 }
 
 publishing {

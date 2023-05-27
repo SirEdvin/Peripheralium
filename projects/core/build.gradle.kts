@@ -1,24 +1,27 @@
-import site.siredvin.peripheralium.gradle.ConfigureProject
 import site.siredvin.peripheralium.gradle.ConfigureVanillaMinecraft
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("peripheralium.vanilla")
+    id("peripheralium.publishing")
 }
 
 val modVersion: String by extra
 val minecraftVersion: String by extra
 val modBaseName: String by extra
 
-val configureProject: ConfigureProject by extra
-val configureMinecraft: ConfigureVanillaMinecraft by extra
+baseShaking {
+    projectPart.set("common")
+    shake()
+}
 
-configureProject.configure(modBaseName, modVersion, "common", minecraftVersion)
-configureMinecraft.configure(
-    minecraftVersion,
-    "src/main/resources/peripheralium-common.accesswidener",
-    "src/main/resources/peripheralium.accesswidener",
-)
+vanillaShaking {
+    accessWideners.set(listOf(
+        "src/main/resources/peripheralium-common.accesswidener",
+        "src/main/resources/peripheralium.accesswidener",
+    ))
+    shake()
+}
 
 sourceSets {
     create("testFixtures") {
@@ -51,16 +54,4 @@ java.registerFeature("testFixtures") {
 
 tasks.test {
     useJUnitPlatform()
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            artifactId = base.archivesName.get()
-            from(components["java"])
-        }
-    }
-    repositories {
-        mavenLocal()
-    }
 }

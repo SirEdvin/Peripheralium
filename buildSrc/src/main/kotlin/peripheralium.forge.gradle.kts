@@ -113,12 +113,6 @@ class ForgeShakingExtension(private val targetProject: Project) {
 val forgeShaking: ForgeShakingExtension = ForgeShakingExtension(project)
 project.extensions.add("forgeShaking", forgeShaking)
 
-val modVersion: String by project.extra
-val minecraftVersion: String by project.extra
-val modBaseName: String by project.extra
-val configureProject: ConfigureProject by extra
-configureProject.configure(modBaseName, modVersion, "forge", minecraftVersion)
-
 repositories {
     // location of the maven that hosts JEI files since January 2023
     maven {
