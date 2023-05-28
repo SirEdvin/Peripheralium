@@ -1,17 +1,14 @@
 package site.siredvin.peripheralium.util.world
 
 import com.mojang.authlib.GameProfile
+import net.fabricmc.fabric.api.entity.FakePlayer
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.stats.Stat
-import net.minecraft.world.MenuProvider
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.level.block.entity.SignBlockEntity
 import site.siredvin.peripheralium.PeripheraliumCore
 import java.lang.ref.WeakReference
 import java.util.*
@@ -20,8 +17,7 @@ class LibFakePlayer(
     level: ServerLevel,
     owner: Entity?,
     profile: GameProfile?,
-) : ServerPlayer(
-    level.server,
+) : FakePlayer(
     level,
     if (profile != null && profile.isComplete) profile else PROFILE,
 ) {
@@ -45,8 +41,6 @@ class LibFakePlayer(
         }
     }
 
-    override fun openTextEdit(p_175141_1_: SignBlockEntity) {}
-
     override fun isSilent(): Boolean {
         return true
     }
@@ -62,31 +56,11 @@ class LibFakePlayer(
         return 0f
     }
 
-    override fun tick() {}
-
-    override fun doTick() {
-        super.doTick()
-    }
-
-    override fun awardStat(stat: Stat<*>, increment: Int) {}
-
-    override fun isInvulnerableTo(source: DamageSource): Boolean {
-        return true
-    }
-
     override fun canHarmPlayer(other: Player): Boolean {
         return true
     }
 
     override fun die(damageSource: DamageSource) {}
-
-    override fun openMenu(menu: MenuProvider?): OptionalInt {
-        return OptionalInt.empty()
-    }
-
-    override fun startRiding(vehicle: Entity, force: Boolean): Boolean {
-        return false
-    }
 
     override fun getStandingEyeHeight(pose: Pose, dimensions: EntityDimensions): Float {
         return 0f

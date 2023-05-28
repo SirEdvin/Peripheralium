@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Fabric version now also use FakePlayer from API
+
 ## [0.5.4] - 2023-05-24
 
 ### Removed
