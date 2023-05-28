@@ -12,7 +12,7 @@ parchmentMc = "1.19.3"
 # Build tools
 changelog = "2.0.0"
 curseForgeGradle = "1.0.11"
-loom = "1.1.9"
+loom = "1.2.+"
 forgeGradle = "6.+"
 librarian = "1.+"
 minotaur = "2.+"
