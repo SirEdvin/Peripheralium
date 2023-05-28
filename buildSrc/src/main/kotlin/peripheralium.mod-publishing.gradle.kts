@@ -25,43 +25,53 @@ class ModPublishingExtension(private val targetProject: Project) {
         val MODRINTH_RELEASE_TYPE: String by targetProject.extra
         val modrinthKey: String by targetProject.extra
 
-        targetProject.changelog {
-            version.set(modVersion)
-            path.set("$rootProjectDir/CHANGELOG.md")
-            header.set(provider { "[${version.get()}] - ${date()}" })
-            itemPrefix.set("-")
-            keepUnreleasedSection.set(true)
-            unreleasedTerm.set("[Unreleased]")
-            groups.set(listOf())
-        }
+        val isUnstable = modVersion.split("-").size > 1
 
-        val publishCurseForge by targetProject.tasks.registering(TaskPublishCurseForge::class) {
-            group = PublishingPlugin.PUBLISH_TASK_GROUP
-            description = "Upload artifacts to CurseForge"
-            apiToken = curseforgeKey
-            enabled = apiToken != ""
+        if (!isUnstable) {
 
-            val mainFile = upload(CURSEFORGE_ID, output.get().archiveFile)
-            // Power of SquidDev is truly terrifuning
-            dependsOn(output) // See https://github.com/Darkhax/CurseForgeGradle/pull/7.
-            mainFile.releaseType = CURSEFORGE_RELEASE_TYPE
-            mainFile.gameVersions.add(minecraftVersion)
-            mainFile.changelog = targetProject.changelog.renderItem(targetProject.changelog.get(modVersion).withHeader(false))
-            mainFile.changelogType = "markdown"
-            requiredDependencies.get().forEach(mainFile::addRequirement)
-        }
+            targetProject.changelog {
+                version.set(modVersion)
+                path.set("$rootProjectDir/CHANGELOG.md")
+                header.set(provider { "[${version.get()}] - ${date()}" })
+                itemPrefix.set("-")
+                keepUnreleasedSection.set(true)
+                unreleasedTerm.set("[Unreleased]")
+                groups.set(listOf())
+            }
 
-        targetProject.modrinth {
-            token.set(modrinthKey)
-            projectId.set(MODRINTH_ID)
-            versionNumber.set("$minecraftVersion-${targetProject.version}")
-            versionName.set("$minecraftVersion-${targetProject.version}")
-            versionType.set(MODRINTH_RELEASE_TYPE)
-            uploadFile.set(output.get())
-            gameVersions.add(minecraftVersion)
-            changelog.set(targetProject.changelog.renderItem(targetProject.changelog.get(modVersion).withHeader(false)))
-            dependencies {
-                requiredDependencies.get().forEach(required::project)
+            val publishCurseForge by targetProject.tasks.registering(TaskPublishCurseForge::class) {
+                group = PublishingPlugin.PUBLISH_TASK_GROUP
+                description = "Upload artifacts to CurseForge"
+                apiToken = curseforgeKey
+                enabled = apiToken != ""
+
+                val mainFile = upload(CURSEFORGE_ID, output.get().archiveFile)
+                // Power of SquidDev is truly terrifuning
+                dependsOn(output) // See https://github.com/Darkhax/CurseForgeGradle/pull/7.
+                mainFile.releaseType = CURSEFORGE_RELEASE_TYPE
+                mainFile.gameVersions.add(minecraftVersion)
+                mainFile.changelog =
+                    targetProject.changelog.renderItem(targetProject.changelog.get(modVersion).withHeader(false))
+                mainFile.changelogType = "markdown"
+                requiredDependencies.get().forEach(mainFile::addRequirement)
+            }
+
+            targetProject.modrinth {
+                token.set(modrinthKey)
+                projectId.set(MODRINTH_ID)
+                versionNumber.set("$minecraftVersion-${targetProject.version}")
+                versionName.set("$minecraftVersion-${targetProject.version}")
+                versionType.set(MODRINTH_RELEASE_TYPE)
+                uploadFile.set(output.get())
+                gameVersions.add(minecraftVersion)
+                changelog.set(
+                    targetProject.changelog.renderItem(
+                        targetProject.changelog.get(modVersion).withHeader(false)
+                    )
+                )
+                dependencies {
+                    requiredDependencies.get().forEach(required::project)
+                }
             }
         }
     }

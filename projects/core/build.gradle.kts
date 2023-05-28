@@ -14,10 +14,12 @@ baseShaking {
 }
 
 vanillaShaking {
-    accessWideners.set(listOf(
-        "src/main/resources/peripheralium-common.accesswidener",
-        "src/main/resources/peripheralium.accesswidener",
-    ))
+    accessWideners.set(
+        listOf(
+            "src/main/resources/peripheralium-common.accesswidener",
+            "src/main/resources/peripheralium.accesswidener",
+        ),
+    )
     shake()
 }
 
@@ -52,4 +54,8 @@ java.registerFeature("testFixtures") {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+publishingShaking {
+    shake()
 }

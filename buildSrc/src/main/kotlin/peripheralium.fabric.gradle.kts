@@ -42,9 +42,16 @@ fun configureFabric(targetProject: Project, accessWidener: File?, commonProjectN
         processResources {
             from(project(":$commonProjectName").sourceSets.main.get().resources)
             inputs.property("version", targetProject.version)
+            val basePropertyMap = mutableMapOf(
+                "version" to targetProject.version
+            )
+            versionMappings.entries.forEach {
+                inputs.property("${it.key}Version", extractedLibs.findVersion(it.value).get())
+                basePropertyMap["${it.key}Version"] = extractedLibs.findVersion(it.value).get()
+            }
+
             filesMatching("fabric.mod.json") {
-                expand(mapOf("version" to targetProject.version))
-                expand(versionMappings.entries.associate { "${it.key}Version" to extractedLibs.findVersion(it.value).get() })
+                expand(basePropertyMap)
             }
             exclude(".cache")
         }

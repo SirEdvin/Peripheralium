@@ -63,7 +63,7 @@ class BaseShakingExtension(private val targetProject: Project) {
         if (integrationRepositories.get())
             connectIntegrationRepositories(targetProject)
         targetProject.base {
-            archivesName.set("$modBaseName-$projectPart-$minecraftVersion")
+            archivesName.set("$modBaseName-${projectPart.get()}-$minecraftVersion")
             version = modVersion
         }
 

@@ -43,7 +43,7 @@ dependencies {
 
 group = "site.siredvin"
 archivesName.set("buildenv")
-version = "0.2.0"
+version = "0.2.1"
 
 gradlePlugin {
     website.set("https://github.com/SirEdvin")

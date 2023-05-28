@@ -15,6 +15,11 @@ baseShaking {
 forgeShaking {
     commonProjectName.set("core")
     useAT.set(true)
+    extraVersionMappings.set(
+        mapOf(
+            "computercraft" to "cc-tweaked",
+        ),
+    )
     shake()
 }
 
@@ -66,14 +71,19 @@ modPublishing {
     shake()
 }
 
-publishing {
-    publications {
-        named<MavenPublication>("maven") {
-            fg.component(this)
-            mavenDependencies {
-                exclude(dependencies.create("site.siredvin:"))
-                exclude(libs.jei.forge.get())
+publishingShaking {
+    shake()
+    project.publishing {
+        publications {
+            named<MavenPublication>("maven") {
+                fg.component(this)
+                mavenDependencies {
+                    exclude(dependencies.create("site.siredvin:"))
+                    exclude(libs.jei.forge.get())
+                }
             }
         }
     }
 }
+
+

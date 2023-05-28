@@ -19,6 +19,11 @@ baseShaking {
 fabricShaking {
     commonProjectName.set("core")
     accessWidener.set(project(":core").file("src/main/resources/peripheralium.accesswidener"))
+    extraVersionMappings.set(
+        mapOf(
+            "computercraft" to "cc-tweaked",
+        ),
+    )
     shake()
 }
 
@@ -86,12 +91,15 @@ modPublishing {
     shake()
 }
 
-publishing {
-    publications {
-        named<MavenPublication>("maven") {
-            mavenDependencies {
-                exclude(dependencies.create("site.siredvin:"))
-                exclude(libs.jei.fabric.get())
+publishingShaking {
+    shake()
+    project.publishing {
+        publications {
+            named<MavenPublication>("maven") {
+                mavenDependencies {
+                    exclude(project.dependencies.create("site.siredvin:"))
+                    exclude(libs.jei.fabric.get())
+                }
             }
         }
     }

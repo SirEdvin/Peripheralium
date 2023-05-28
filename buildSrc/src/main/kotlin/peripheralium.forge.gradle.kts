@@ -83,15 +83,16 @@ fun configureForge(targetProject: Project, useAT: Boolean, commonProjectName: St
 
             inputs.property("version", targetProject.version)
             inputs.property("forgeVersion", forgeVersion)
-
+            val basePropertyMap = mutableMapOf(
+                "forgeVersion" to forgeVersion,
+                "file" to mapOf("jarVersion" to targetProject.version),
+            )
+            versionMappings.entries.forEach {
+                inputs.property("${it.key}Version", extractedLibs.findVersion(it.value).get())
+                basePropertyMap["${it.key}Version"] = extractedLibs.findVersion(it.value).get()
+            }
             filesMatching("META-INF/mods.toml") {
-                expand(
-                    mapOf(
-                        "forgeVersion" to forgeVersion,
-                        "file" to mapOf("jarVersion" to targetProject.version),
-                    ),
-                )
-                expand(versionMappings.entries.associate { "${it.key}Version" to extractedLibs.findVersion(it.value).get() })
+                expand(basePropertyMap)
             }
             exclude(".cache")
         }
