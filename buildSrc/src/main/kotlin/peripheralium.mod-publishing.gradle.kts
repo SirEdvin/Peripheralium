@@ -10,7 +10,12 @@ plugins {
 class ModPublishingExtension(private val targetProject: Project) {
     val output: Property<AbstractArchiveTask> = targetProject.objects.property(AbstractArchiveTask::class.java)
     val requiredDependencies: ListProperty<String> = targetProject.objects.listProperty(String::class.java)
+    val requiredDependenciesCurseforge: ListProperty<String> = targetProject.objects.listProperty(String::class.java)
+    val requiredDependenciesModrinth: ListProperty<String> = targetProject.objects.listProperty(String::class.java)
     init {
+        requiredDependencies.convention(emptyList())
+        requiredDependenciesCurseforge.convention(emptyList())
+        requiredDependenciesModrinth.convention(emptyList())
         output.finalizeValueOnRead()
     }
 
@@ -28,7 +33,6 @@ class ModPublishingExtension(private val targetProject: Project) {
         val isUnstable = modVersion.split("-").size > 1
 
         if (!isUnstable) {
-
             targetProject.changelog {
                 version.set(modVersion)
                 path.set("$rootProjectDir/CHANGELOG.md")
@@ -54,6 +58,7 @@ class ModPublishingExtension(private val targetProject: Project) {
                     targetProject.changelog.renderItem(targetProject.changelog.get(modVersion).withHeader(false))
                 mainFile.changelogType = "markdown"
                 requiredDependencies.get().forEach(mainFile::addRequirement)
+                requiredDependenciesCurseforge.get().forEach(mainFile::addRequirement)
             }
 
             targetProject.modrinth {
@@ -71,6 +76,7 @@ class ModPublishingExtension(private val targetProject: Project) {
                 )
                 dependencies {
                     requiredDependencies.get().forEach(required::project)
+                    requiredDependenciesModrinth.get().forEach(required::project)
                 }
             }
         }

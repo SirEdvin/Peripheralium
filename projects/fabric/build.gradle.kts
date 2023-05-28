@@ -84,10 +84,11 @@ modPublishing {
     requiredDependencies.set(
         listOf(
             "cc-tweaked",
-            "forge-config-api-port-fabric",
             "fabric-language-kotlin",
         ),
     )
+    requiredDependenciesCurseforge.add("forge-config-api-port-fabric")
+    requiredDependenciesModrinth.add("forge-config-api-port")
     shake()
 }
 
