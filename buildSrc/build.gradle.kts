@@ -36,13 +36,14 @@ dependencies {
     implementation(libs.plugin.changelog)
     implementation(libs.plugin.forgeGradle)
     implementation(libs.plugin.librarian)
+    implementation(libs.plugin.mixinGradle)
 }
 
 
 
 group = "site.siredvin"
 archivesName.set("buildenv")
-version = "0.1.0"
+version = "0.1.4"
 
 gradlePlugin {
     website.set("https://github.com/SirEdvin")

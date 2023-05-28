@@ -9,6 +9,8 @@ class VanillaShakingExtension(private val targetProject: Project) {
     fun shake() {
         val minecraftVersion: String by targetProject.extra
 
+        accessWideners.convention(emptyList())
+
         targetProject.minecraft {
             version(minecraftVersion)
             accessWideners(*accessWideners.get().toTypedArray())

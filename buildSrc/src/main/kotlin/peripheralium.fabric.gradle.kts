@@ -3,7 +3,7 @@ plugins {
     id("fabric-loom")
 }
 
-fun configureFabric(targetProject: Project, accessWidener: File, commonProjectName: String) {
+fun configureFabric(targetProject: Project, accessWidener: File?, commonProjectName: String, createRefmap: Boolean, versionMappings: Map<String, String>) {
     val minecraftVersion: String by targetProject.extra
     val modBaseName: String by targetProject.extra
 
@@ -16,7 +16,10 @@ fun configureFabric(targetProject: Project, accessWidener: File, commonProjectNa
     }
 
     targetProject.loom {
-        accessWidenerPath.set(accessWidener)
+        if (accessWidener != null)
+            accessWidenerPath.set(accessWidener)
+        if (createRefmap)
+            mixin.defaultRefmapName.set("$modBaseName.refmap.json")
         runs {
             named("client") {
                 configName = "Fabric Client"
@@ -35,10 +38,14 @@ fun configureFabric(targetProject: Project, accessWidener: File, commonProjectNa
     }
 
     targetProject.tasks {
+        val extractedLibs = targetProject.extensions.getByType<VersionCatalogsExtension>().named("libs")
         processResources {
             from(project(":$commonProjectName").sourceSets.main.get().resources)
             inputs.property("version", targetProject.version)
-            filesMatching("fabric.mod.json") { expand(mutableMapOf("version" to targetProject.version)) }
+            filesMatching("fabric.mod.json") {
+                expand(mapOf("version" to targetProject.version))
+                expand(versionMappings.entries.associate { "${it.key}Version" to extractedLibs.findVersion(it.value).get() })
+            }
             exclude(".cache")
         }
         withType<JavaCompile> {
@@ -57,9 +64,13 @@ fun configureFabric(targetProject: Project, accessWidener: File, commonProjectNa
 class FabricShakingExtension(private val targetProject: Project) {
     val commonProjectName: Property<String> = targetProject.objects.property(String::class.java)
     val accessWidener: Property<File> = targetProject.objects.property(File::class.java)
+    val createRefmap: Property<Boolean> = targetProject.objects.property(Boolean::class.java)
+    val extraVersionMappings: MapProperty<String, String> = targetProject.objects.mapProperty(String::class.java, String::class.java)
 
     fun shake() {
-        configureFabric(targetProject, accessWidener.get(), commonProjectName.get())
+        createRefmap.convention(false)
+        extraVersionMappings.convention(emptyMap())
+        configureFabric(targetProject, accessWidener.orNull, commonProjectName.get(), createRefmap.get(), extraVersionMappings.get())
     }
 }
 

@@ -1,14 +1,18 @@
-import java.util.function.Consumer
+import java.util.function.BiConsumer
 
 plugins {
     java
     id("peripheralium.root")
 }
 
-val setupSubproject: Consumer<Project> by extra
+subprojectShaking {
+    withKotlin.set(true)
+}
+
+val setupSubproject = subprojectShaking::setupSubproject
 
 subprojects {
-    setupSubproject.accept(this)
+    setupSubproject(this)
 }
 
 repositories {

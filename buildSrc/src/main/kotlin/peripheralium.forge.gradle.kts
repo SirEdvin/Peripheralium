@@ -2,10 +2,11 @@ plugins {
     `java`
     id("net.minecraftforge.gradle")
     id("org.parchmentmc.librarian.forgegradle")
+    id("org.spongepowered.mixin")
 }
 
 
-fun configureForge(targetProject: Project, useAT: Boolean, commonProjectName: String) {
+fun configureForge(targetProject: Project, useAT: Boolean, commonProjectName: String, useMixins: Boolean, versionMappings: Map<String, String>) {
 
     val minecraftVersion: String by targetProject.extra
     val modBaseName: String by targetProject.extra
@@ -63,26 +64,34 @@ fun configureForge(targetProject: Project, useAT: Boolean, commonProjectName: St
         }
     }
 
+    if (useMixins) {
+        targetProject.mixin {
+            add(targetProject.sourceSets.main.get(), "$modBaseName.refmap.json")
+            config("$modBaseName.mixins.json")
+        }
+        targetProject.dependencies {
+            annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+        }
+    }
+
     targetProject.tasks {
         val extractedLibs = targetProject.extensions.getByType<VersionCatalogsExtension>().named("libs")
         val forgeVersion = extractedLibs.findVersion("forge").get()
-        val computercraftVersion = extractedLibs.findVersion("cc-tweaked").get()
 
         processResources {
             from(project(":${commonProjectName}").sourceSets.main.get().resources)
 
             inputs.property("version", targetProject.version)
             inputs.property("forgeVersion", forgeVersion)
-            inputs.property("computercraftVersion", computercraftVersion)
 
             filesMatching("META-INF/mods.toml") {
                 expand(
                     mapOf(
                         "forgeVersion" to forgeVersion,
                         "file" to mapOf("jarVersion" to targetProject.version),
-                        "computercraftVersion" to computercraftVersion,
                     ),
                 )
+                expand(versionMappings.entries.associate { "${it.key}Version" to extractedLibs.findVersion(it.value).get() })
             }
             exclude(".cache")
         }
@@ -102,9 +111,13 @@ fun configureForge(targetProject: Project, useAT: Boolean, commonProjectName: St
 class ForgeShakingExtension(private val targetProject: Project) {
     val commonProjectName: Property<String> = targetProject.objects.property(String::class.java)
     val useAT: Property<Boolean> = targetProject.objects.property(Boolean::class.java)
+    val useMixins: Property<Boolean> = targetProject.objects.property(Boolean::class.java)
+    val extraVersionMappings: MapProperty<String, String> = targetProject.objects.mapProperty(String::class.java, String::class.java)
 
     fun shake() {
-        configureForge(targetProject, useAT.get(), commonProjectName.get())
+        useMixins.convention(false)
+        extraVersionMappings.convention(emptyMap())
+        configureForge(targetProject, useAT.get(), commonProjectName.get(), useMixins.get(), extraVersionMappings.get())
     }
 }
 
@@ -112,7 +125,6 @@ val forgeShaking: ForgeShakingExtension = ForgeShakingExtension(project)
 project.extensions.add("forgeShaking", forgeShaking)
 
 repositories {
-    // location of the maven that hosts JEI files since January 2023
     maven {
         name = "Kotlin for Forge"
         url = uri("https://thedarkcolour.github.io/KotlinForForge/")

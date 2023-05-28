@@ -12,6 +12,7 @@ repositories {
             includeGroup("cc.tweaked")
             includeGroup("org.squiddev")
             includeGroup("fuzs.forgeconfigapiport")
+            includeGroup("site.siredvin")
         }
     }
 }
@@ -36,6 +37,13 @@ fun connectIntegrationRepositories(targetProject: Project) {
             url = uri("https://maven.architectury.dev/")
             content {
                 includeGroup("dev.architectury")
+            }
+        }
+        maven {
+            url = uri("https://maven.shedaniel.me/")
+            content {
+                includeGroup("me.shedaniel.cloth")
+                includeGroup("me.shedaniel")
             }
         }
     }
