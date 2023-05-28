@@ -2,7 +2,7 @@ import java.util.function.BiConsumer
 
 plugins {
     java
-    id("peripheralium.root")
+    id("site.siredvin.root") version "0.3.3"
 }
 
 subprojectShaking {
