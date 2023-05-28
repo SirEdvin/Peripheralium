@@ -21,8 +21,9 @@ abstract class StorageTests {
             sizes.map {
                 if (it == 0) {
                     ItemStack.EMPTY
-                } else
+                } else {
                     stack.copyWithCount(it)
+                }
             },
             secondary,
         )
