@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Scanning now is ability with infinite scanning possibilities
+
+### Removed
+
+- AreaInteractionMode, which was used only for scanning logic
+
 ## [0.5.5] - 2023-05-28
 
 ### Changed

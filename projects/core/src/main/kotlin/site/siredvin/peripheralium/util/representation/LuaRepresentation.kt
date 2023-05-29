@@ -7,8 +7,10 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.ExperienceOrb
 import net.minecraft.world.entity.npc.Villager
 import net.minecraft.world.entity.npc.VillagerProfession
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.enchantment.Enchantment
@@ -155,6 +157,21 @@ object LuaRepresentation {
             data["type"] = vilData.type.toString()
         }
         return data
+    }
+
+    fun forExpirenceOrb(orb: ExperienceOrb): MutableMap<String, Any> {
+        val base = forEntity(orb)
+        base["xpValue"] = orb.value
+        return base
+    }
+
+    fun forPlayer(player: Player): MutableMap<String, Any> {
+        val base = forEntity(player)
+        base["experienceLevel"] = player.experienceLevel
+        base["foodLevel"] = player.foodData.foodLevel
+        base["saturationLevel"] = player.foodData.saturationLevel
+        base["isCreative"] = player.isCreative
+        return base
     }
 
     /**

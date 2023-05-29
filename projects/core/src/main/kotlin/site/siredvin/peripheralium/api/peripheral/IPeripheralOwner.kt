@@ -1,6 +1,7 @@
 package site.siredvin.peripheralium.api.peripheral
 
 import dan200.computercraft.api.lua.LuaException
+import dan200.computercraft.api.lua.LuaFunction
 import dan200.computercraft.api.lua.MethodResult
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -17,7 +18,7 @@ import java.util.function.Consumer
 
 interface IPeripheralOwner {
     val name: String?
-        @dan200.computercraft.api.lua.LuaFunction get() {
+        @LuaFunction get() {
             return owner?.customName.toString()
         }
     val targetRepresentation: Any?
@@ -38,8 +39,8 @@ interface IPeripheralOwner {
     fun destroyUpgrade()
     fun isMovementPossible(level: Level, pos: BlockPos): Boolean
     fun move(level: Level, pos: BlockPos): Boolean
-    fun <T : IOwnerAbility> attachAbility(ability: PeripheralOwnerAbility<T>, abilityImplementation: T)
-    fun <T : IOwnerAbility> getAbility(ability: PeripheralOwnerAbility<T>): T?
+    fun <T : IOwnerAbility> attachAbility(ability: IPeripheralOwnerAbility<T>, abilityImplementation: T)
+    fun <T : IOwnerAbility> getAbility(ability: IPeripheralOwnerAbility<T>): T?
     val abilities: Collection<IOwnerAbility>
 
     @Throws(LuaException::class)
