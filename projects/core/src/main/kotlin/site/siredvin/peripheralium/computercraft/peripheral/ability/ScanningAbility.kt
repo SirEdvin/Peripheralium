@@ -129,6 +129,13 @@ class ScanningAbility<T : IPeripheralOwner>(val owner: T, val maxRadius: Int) : 
 
     private val scanningMethods: MutableMap<String, ScanningMethod<T>> = mutableMapOf()
 
+    override val operations: List<IPeripheralOperation<*>>
+        get() = scanningMethods.map { it.value.operation }.toSet().toList()
+
+    override fun collectConfiguration(data: MutableMap<String, Any>) {
+        data["maxRadius"] = maxRadius
+    }
+
     fun attachBlockScan(operation: IPeripheralOperation<SphereOperationContext>, vararg enriches: BiConsumer<BlockState, MutableMap<String, Any>>): ScanningAbility<T> {
         return attachScanningMethod(BlockScanningMethod(operation, enriches))
     }

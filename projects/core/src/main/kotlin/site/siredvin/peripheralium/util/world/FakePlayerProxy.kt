@@ -13,6 +13,7 @@ import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySelector
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Pose
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.ClipContext
@@ -177,9 +178,11 @@ class FakePlayerProxy(val fakePlayer: ServerPlayer, private val range: Int = 4) 
         val hit = findHit(skipEntity, skipBlock, entityFilter)
         if (hit is BlockHitResult) {
             return withConsumer(level, hit.blockPos) {
-                val useOnResult = PeripheraliumPlatform.useOn(fakePlayer, fakePlayer.mainHandItem, hit) { true }
-                if (useOnResult.consumesAction()) {
-                    return@withConsumer useOnResult
+                if (fakePlayer.pose != Pose.CROUCHING) {
+                    val useOnResult = PeripheraliumPlatform.useOn(fakePlayer, fakePlayer.mainHandItem, hit) { true }
+                    if (useOnResult.consumesAction()) {
+                        return@withConsumer useOnResult
+                    }
                 }
                 level.destroyBlockProgress(fakePlayer.id, hit.blockPos, -1)
                 val useItemResult = gameMode.useItemOn(fakePlayer, level, fakePlayer.mainHandItem, InteractionHand.MAIN_HAND, hit)
