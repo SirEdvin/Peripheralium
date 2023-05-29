@@ -5,7 +5,6 @@ import dan200.computercraft.api.turtle.TurtleSide
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -16,6 +15,7 @@ import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOw
 import site.siredvin.peripheralium.computercraft.peripheral.ability.TurtleFuelAbility
 import site.siredvin.peripheralium.util.DataStorageUtil
 import site.siredvin.peripheralium.util.world.FakePlayerProviderTurtle
+import site.siredvin.peripheralium.util.world.FakePlayerProxy
 
 class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : BasePeripheralOwner() {
 
@@ -42,7 +42,7 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
         turtle.updateUpgradeNBTData(side)
     }
 
-    override fun <T> withPlayer(function: (ServerPlayer) -> T, overwrittenDirection: Direction?, skipInventory: Boolean): T {
+    override fun <T> withPlayer(function: (FakePlayerProxy) -> T, overwrittenDirection: Direction?, skipInventory: Boolean): T {
         return FakePlayerProviderTurtle.withPlayer(turtle, function, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
     }
 

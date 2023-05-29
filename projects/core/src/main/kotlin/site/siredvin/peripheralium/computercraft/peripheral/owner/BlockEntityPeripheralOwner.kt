@@ -3,7 +3,6 @@ package site.siredvin.peripheralium.computercraft.peripheral.owner
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -16,6 +15,7 @@ import site.siredvin.peripheralium.api.storage.SlottedStorage
 import site.siredvin.peripheralium.common.blocks.GenericBlockEntityBlock
 import site.siredvin.peripheralium.util.DataStorageUtil
 import site.siredvin.peripheralium.util.world.FakePlayerProviderBlockEntity
+import site.siredvin.peripheralium.util.world.FakePlayerProxy
 import java.util.*
 
 class BlockEntityPeripheralOwner<T>(private val tileEntity: T, private val facingProperty: DirectionProperty = GenericBlockEntityBlock.FACING) :
@@ -45,7 +45,7 @@ class BlockEntityPeripheralOwner<T>(private val tileEntity: T, private val facin
         tileEntity.setChanged()
     }
 
-    override fun <T> withPlayer(function: (ServerPlayer) -> T, overwrittenDirection: Direction?, skipInventory: Boolean): T {
+    override fun <T> withPlayer(function: (FakePlayerProxy) -> T, overwrittenDirection: Direction?, skipInventory: Boolean): T {
         if (tileEntity !is IOwnedBlockEntity) {
             throw IllegalArgumentException("Cannot perform player logic without owned block entity")
         }

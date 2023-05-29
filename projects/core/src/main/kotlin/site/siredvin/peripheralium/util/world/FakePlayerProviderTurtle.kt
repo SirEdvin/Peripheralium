@@ -18,13 +18,13 @@ object FakePlayerProviderTurtle {
     /*
     Highly inspired by https://github.com/SquidDev-CC/plethora/blob/minecraft-1.12/src/main/java/org/squiddev/plethora/integration/computercraft/FakePlayerProviderTurtle.java
      */
-    private val registeredPlayers: WeakHashMap<ITurtleAccess, ServerPlayer> =
-        WeakHashMap<ITurtleAccess, ServerPlayer>()
+    private val registeredPlayers: WeakHashMap<ITurtleAccess, FakePlayerProxy> =
+        WeakHashMap<ITurtleAccess, FakePlayerProxy>()
 
-    private fun getPlayer(turtle: ITurtleAccess, profile: GameProfile): ServerPlayer {
-        var fake: ServerPlayer? = registeredPlayers[turtle]
+    private fun getPlayer(turtle: ITurtleAccess, profile: GameProfile): FakePlayerProxy {
+        var fake: FakePlayerProxy? = registeredPlayers[turtle]
         if (fake == null) {
-            fake = PeripheraliumPlatform.createFakePlayer(turtle.level as ServerLevel, profile)
+            fake = FakePlayerProxy(PeripheraliumPlatform.createFakePlayer(turtle.level as ServerLevel, profile))
             registeredPlayers[turtle] = fake
         }
         return fake
@@ -100,11 +100,11 @@ object FakePlayerProviderTurtle {
         }
     }
 
-    fun <T> withPlayer(turtle: ITurtleAccess, function: Function<ServerPlayer, T>, overwrittenDirection: Direction? = null, skipInventory: Boolean = false): T {
-        val player: ServerPlayer = getPlayer(turtle, turtle.owningPlayer ?: FakePlayerProxy.DUMMY_PROFILE)
-        load(player, turtle, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
+    fun <T> withPlayer(turtle: ITurtleAccess, function: Function<FakePlayerProxy, T>, overwrittenDirection: Direction? = null, skipInventory: Boolean = false): T {
+        val player: FakePlayerProxy = getPlayer(turtle, turtle.owningPlayer ?: FakePlayerProxy.DUMMY_PROFILE)
+        load(player.fakePlayer, turtle, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
         val result = function.apply(player)
-        unload(player, turtle, skipInventory = skipInventory)
+        unload(player.fakePlayer, turtle, skipInventory = skipInventory)
         return result
     }
 }

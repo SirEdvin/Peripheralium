@@ -16,13 +16,13 @@ import java.util.*
 import java.util.function.Function
 
 object FakePlayerProviderPocket {
-    private val registeredPlayers: WeakHashMap<IPocketAccess, ServerPlayer> =
-        WeakHashMap<IPocketAccess, ServerPlayer>()
+    private val registeredPlayers: WeakHashMap<IPocketAccess, FakePlayerProxy> =
+        WeakHashMap<IPocketAccess, FakePlayerProxy>()
 
-    private fun getPlayer(pocket: IPocketAccess, profile: GameProfile): ServerPlayer {
-        var fake: ServerPlayer? = registeredPlayers[pocket]
+    private fun getPlayer(pocket: IPocketAccess, profile: GameProfile): FakePlayerProxy {
+        var fake: FakePlayerProxy? = registeredPlayers[pocket]
         if (fake == null) {
-            fake = PeripheraliumPlatform.createFakePlayer(pocket.entity!!.level as ServerLevel, profile)
+            fake = FakePlayerProxy(PeripheraliumPlatform.createFakePlayer(pocket.entity!!.level as ServerLevel, profile))
             registeredPlayers[pocket] = fake
         }
         return fake
@@ -88,14 +88,14 @@ object FakePlayerProviderPocket {
         }
     }
 
-    fun <T> withPlayer(pocket: IPocketAccess, function: Function<ServerPlayer, T>, overwrittenDirection: Direction? = null, skipInventory: Boolean = false): T {
+    fun <T> withPlayer(pocket: IPocketAccess, function: Function<FakePlayerProxy, T>, overwrittenDirection: Direction? = null, skipInventory: Boolean = false): T {
         val realPlayer = pocket.entity as? Player
             ?: throw LuaException("Cannot init player for this pocket computer for some reason")
-        val player: ServerPlayer =
+        val player: FakePlayerProxy =
             getPlayer(pocket, realPlayer.gameProfile ?: FakePlayerProxy.DUMMY_PROFILE)
-        load(player, realPlayer, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
+        load(player.fakePlayer, realPlayer, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
         val result = function.apply(player)
-        unload(player, realPlayer, skipInventory = skipInventory)
+        unload(player.fakePlayer, realPlayer, skipInventory = skipInventory)
         return result
     }
 }

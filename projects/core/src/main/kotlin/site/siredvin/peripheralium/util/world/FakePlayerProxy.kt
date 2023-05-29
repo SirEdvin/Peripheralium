@@ -31,7 +31,7 @@ import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.*
 import java.util.function.Predicate
 
-class FakePlayerProxy(private val fakePlayer: ServerPlayer, private val range: Int = 4) {
+class FakePlayerProxy(val fakePlayer: ServerPlayer, private val range: Int = 4) {
 
     companion object {
         val DUMMY_PROFILE = GameProfile(UUID.fromString("6e483f02-30db-4454-b612-3a167614b276"), "[" + PeripheraliumCore.MOD_ID + "]")
@@ -177,7 +177,7 @@ class FakePlayerProxy(private val fakePlayer: ServerPlayer, private val range: I
         val hit = findHit(skipEntity, skipBlock, entityFilter)
         if (hit is BlockHitResult) {
             return withConsumer(level, hit.blockPos) {
-                val useOnResult = PeripheraliumPlatform.useOn(fakePlayer, fakePlayer.mainHandItem, hit, { true })
+                val useOnResult = PeripheraliumPlatform.useOn(fakePlayer, fakePlayer.mainHandItem, hit) { true }
                 if (useOnResult.consumesAction()) {
                     return@withConsumer useOnResult
                 }
@@ -229,19 +229,15 @@ class FakePlayerProxy(private val fakePlayer: ServerPlayer, private val range: I
                 return Pair.of(false, "Unbreakable block detected")
             }
             val breakSpeed = 0.5f * tool.getDestroySpeed(state) / state.getDestroySpeed(level, pos) - 0.1f
-            for (i in 0..9) {
-                currentDamage += breakSpeed
-                level.destroyBlockProgress(fakePlayer.id, pos, i)
-
-                if (currentDamage > 9) {
-                    withConsumer(level, pos) {
-                        level.playSound(null, pos, state.soundType.breakSound, SoundSource.NEUTRAL, .25f, 1f)
-                        gameMode.handleBlockBreakAction(pos, ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK, fakePlayer.direction.opposite, 1, 1)
-                        gameMode.destroyBlock(pos)
-                        level.destroyBlockProgress(fakePlayer.id, pos, -1)
-                        setState(null, null)
-                    }
-                    break
+            currentDamage += 9 * breakSpeed
+            level.destroyBlockProgress(fakePlayer.id, pos, currentDamage.toInt())
+            if (currentDamage > 9) {
+                withConsumer(level, pos) {
+                    level.playSound(null, pos, state.soundType.breakSound, SoundSource.NEUTRAL, .25f, 1f)
+                    gameMode.handleBlockBreakAction(pos, ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK, fakePlayer.direction.opposite, 1, 1)
+                    gameMode.destroyBlock(pos)
+                    level.destroyBlockProgress(fakePlayer.id, pos, -1)
+                    setState(null, null)
                 }
             }
             return Pair.of(true, "")

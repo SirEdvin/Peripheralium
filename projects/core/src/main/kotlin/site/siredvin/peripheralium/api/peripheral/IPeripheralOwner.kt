@@ -6,13 +6,13 @@ import dan200.computercraft.api.lua.MethodResult
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.storage.SlottedStorage
 import site.siredvin.peripheralium.computercraft.peripheral.ability.OperationAbility
 import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
+import site.siredvin.peripheralium.util.world.FakePlayerProxy
 import java.util.function.BiConsumer
 import java.util.function.Consumer
 
@@ -33,7 +33,7 @@ interface IPeripheralOwner {
 
     fun markDataStorageDirty()
 
-    fun <T> withPlayer(function: (ServerPlayer) -> T, overwrittenDirection: Direction? = null, skipInventory: Boolean = false): T
+    fun <T> withPlayer(function: (FakePlayerProxy) -> T, overwrittenDirection: Direction? = null, skipInventory: Boolean = false): T
     val toolInMainHand: ItemStack
     fun storeItem(stored: ItemStack): ItemStack
     fun destroyUpgrade()

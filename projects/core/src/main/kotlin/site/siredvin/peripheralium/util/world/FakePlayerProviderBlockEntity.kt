@@ -20,16 +20,16 @@ import java.util.*
 import java.util.function.Function
 
 object FakePlayerProviderBlockEntity {
-    private val registeredPlayers: WeakHashMap<BlockEntity, ServerPlayer> =
-        WeakHashMap<BlockEntity, ServerPlayer>()
+    private val registeredPlayers: WeakHashMap<BlockEntity, FakePlayerProxy> =
+        WeakHashMap<BlockEntity, FakePlayerProxy>()
 
-    private fun getPlayer(blockEntity: BlockEntity, profile: GameProfile): ServerPlayer {
+    private fun getPlayer(blockEntity: BlockEntity, profile: GameProfile): FakePlayerProxy {
         if (blockEntity !is IOwnedBlockEntity || blockEntity.player == null) {
             throw IllegalArgumentException("Cannot use fake player logic without owned block entity")
         }
-        var fake: ServerPlayer? = registeredPlayers[blockEntity]
+        var fake: FakePlayerProxy? = registeredPlayers[blockEntity]
         if (fake == null) {
-            fake = PeripheraliumPlatform.createFakePlayer(blockEntity.player!!.level as ServerLevel, profile)
+            fake = FakePlayerProxy(PeripheraliumPlatform.createFakePlayer(blockEntity.player!!.level as ServerLevel, profile))
             registeredPlayers[blockEntity] = fake
         }
         return fake
@@ -113,21 +113,21 @@ object FakePlayerProviderBlockEntity {
         }
     }
 
-    fun <T> withPlayer(blockEntity: BlockEntity, function: Function<ServerPlayer, T>, overwrittenDirection: Direction? = null, skipInventory: Boolean = false): T {
+    fun <T> withPlayer(blockEntity: BlockEntity, function: Function<FakePlayerProxy, T>, overwrittenDirection: Direction? = null, skipInventory: Boolean = false): T {
         if (blockEntity !is IOwnedBlockEntity || blockEntity.player == null) {
             throw IllegalArgumentException("Cannot use fake player logic without owned block entity")
         }
         val realPlayer = blockEntity.player
             ?: throw LuaException("Cannot init player for this block entity computer for some reason")
-        val player: ServerPlayer =
+        val player: FakePlayerProxy =
             getPlayer(blockEntity, realPlayer.gameProfile)
         val storage = ExtractorProxy.extractStorage(blockEntity.level!!, blockEntity.blockPos, blockEntity = null) as? SlottedStorage
         if (!skipInventory && storage == null) {
             throw IllegalArgumentException("Cannot init fake player with storage and with block entity without storage")
         }
-        load(player, realPlayer, storage, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
+        load(player.fakePlayer, realPlayer, storage, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
         val result = function.apply(player)
-        unload(player, realPlayer, storage, skipInventory = skipInventory)
+        unload(player.fakePlayer, realPlayer, storage, skipInventory = skipInventory)
         return result
     }
 }
