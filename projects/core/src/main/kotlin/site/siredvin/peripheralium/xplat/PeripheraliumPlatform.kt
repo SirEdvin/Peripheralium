@@ -1,10 +1,12 @@
 package site.siredvin.peripheralium.xplat
 
 import com.mojang.authlib.GameProfile
+import dan200.computercraft.api.peripheral.IPeripheral
 import dan200.computercraft.api.pocket.IPocketUpgrade
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.ITurtleUpgrade
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.core.Registry
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
@@ -79,6 +81,10 @@ interface PeripheraliumPlatform {
 
         fun getTurtleAccess(entity: BlockEntity): ITurtleAccess? {
             return get().getTurtleAccess(entity)
+        }
+
+        fun getPeripheral(level: Level, pos: BlockPos, side: Direction?): IPeripheral? {
+            return get().getPeripheral(level, pos, side)
         }
 
         fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean {
@@ -158,6 +164,8 @@ interface PeripheraliumPlatform {
     fun <T : Block> registerBlock(key: ResourceLocation, block: Supplier<T>, itemFactory: (T) -> (Item)): Supplier<T>
 
     fun getTurtleAccess(entity: BlockEntity): ITurtleAccess?
+
+    fun getPeripheral(level: Level, pos: BlockPos, side: Direction?): IPeripheral?
 
     fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean
 

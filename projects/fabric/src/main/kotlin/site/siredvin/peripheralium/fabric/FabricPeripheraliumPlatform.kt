@@ -1,6 +1,8 @@
 package site.siredvin.peripheralium.fabric
 
 import com.mojang.authlib.GameProfile
+import dan200.computercraft.api.peripheral.IPeripheral
+import dan200.computercraft.api.peripheral.PeripheralLookup
 import dan200.computercraft.api.pocket.IPocketUpgrade
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.ITurtleUpgrade
@@ -15,10 +17,7 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricEntityTypeBuilder
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags
-import net.minecraft.core.BlockPos
-import net.minecraft.core.Holder
-import net.minecraft.core.HolderSet
-import net.minecraft.core.Registry
+import net.minecraft.core.*
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
@@ -117,6 +116,10 @@ class FabricPeripheraliumPlatform : PeripheraliumPlatform {
             return entity.access
         }
         return null
+    }
+
+    override fun getPeripheral(level: Level, pos: BlockPos, side: Direction?): IPeripheral? {
+        return PeripheralLookup.get().find(level, pos, side)
     }
 
     override fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean {

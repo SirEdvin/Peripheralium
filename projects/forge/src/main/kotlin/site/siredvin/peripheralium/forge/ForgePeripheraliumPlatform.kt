@@ -1,18 +1,17 @@
 package site.siredvin.peripheralium.forge
 
 import com.mojang.authlib.GameProfile
+import dan200.computercraft.api.peripheral.IPeripheral
 import dan200.computercraft.api.pocket.IPocketUpgrade
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.ITurtleUpgrade
+import dan200.computercraft.impl.Peripherals
 import dan200.computercraft.impl.PocketUpgrades
 import dan200.computercraft.impl.TurtleUpgrades
 import dan200.computercraft.shared.ModRegistry
 import dan200.computercraft.shared.turtle.blocks.TurtleBlockEntity
 import dan200.computercraft.shared.util.NBTUtil
-import net.minecraft.core.BlockPos
-import net.minecraft.core.Holder
-import net.minecraft.core.HolderSet
-import net.minecraft.core.Registry
+import net.minecraft.core.*
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.resources.ResourceKey
@@ -115,6 +114,10 @@ class ForgePeripheraliumPlatform : PeripheraliumPlatform {
             return entity.access
         }
         return null
+    }
+
+    override fun getPeripheral(level: Level, pos: BlockPos, side: Direction?): IPeripheral? {
+        return Peripherals.getPeripheral(level, pos, side) {}
     }
 
     override fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean {
