@@ -118,7 +118,7 @@ class FabricPeripheraliumPlatform : PeripheraliumPlatform {
         return null
     }
 
-    override fun getPeripheral(level: Level, pos: BlockPos, side: Direction?): IPeripheral? {
+    override fun getPeripheral(level: Level, pos: BlockPos, side: Direction): IPeripheral? {
         return PeripheralLookup.get().find(level, pos, side)
     }
 

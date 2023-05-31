@@ -116,7 +116,7 @@ class ForgePeripheraliumPlatform : PeripheraliumPlatform {
         return null
     }
 
-    override fun getPeripheral(level: Level, pos: BlockPos, side: Direction?): IPeripheral? {
+    override fun getPeripheral(level: Level, pos: BlockPos, side: Direction): IPeripheral? {
         return Peripherals.getPeripheral(level, pos, side) {}
     }
 
