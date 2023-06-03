@@ -8,6 +8,7 @@ import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.ExperienceOrb
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.npc.Villager
 import net.minecraft.world.entity.npc.VillagerProfession
 import net.minecraft.world.entity.player.Player
@@ -41,6 +42,12 @@ object LuaRepresentation {
         data["name"] = entity.name.string
         data["tags"] = entity.tags
         return data
+    }
+
+    fun forLivingEntity(entity: LivingEntity): MutableMap<String, Any> {
+        val base = forEntity(entity)
+        base["health"] = entity.health
+        return base
     }
 
     fun <T : Entity> withPos(entity: T, facing: Direction, center: BlockPos, converter: (T) -> (MutableMap<String, Any>)): MutableMap<String, Any> {
@@ -166,7 +173,7 @@ object LuaRepresentation {
     }
 
     fun forPlayer(player: Player): MutableMap<String, Any> {
-        val base = forEntity(player)
+        val base = forLivingEntity(player)
         base["experienceLevel"] = player.experienceLevel
         base["foodLevel"] = player.foodData.foodLevel
         base["saturationLevel"] = player.foodData.saturationLevel
