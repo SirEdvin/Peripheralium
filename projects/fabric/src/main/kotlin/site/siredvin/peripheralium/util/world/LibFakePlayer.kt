@@ -65,4 +65,8 @@ class LibFakePlayer(
     override fun getStandingEyeHeight(pose: Pose, dimensions: EntityDimensions): Float {
         return 0f
     }
+
+    override fun getAttackStrengthScale(f: Float): Float {
+        return 1f
+    }
 }

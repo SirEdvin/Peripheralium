@@ -31,4 +31,8 @@ class ForgeFakePlayer(level: ServerLevel, profile: GameProfile) : FakePlayer(lev
     override fun getEyeY(): Double {
         return y + 0.2
     }
+
+    override fun getAttackStrengthScale(f: Float): Float {
+        return 1f
+    }
 }
