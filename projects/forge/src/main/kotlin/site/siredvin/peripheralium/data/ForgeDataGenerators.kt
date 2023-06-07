@@ -5,6 +5,8 @@ import net.minecraft.data.DataGenerator
 import net.minecraft.data.DataProvider
 import net.minecraft.data.PackOutput
 import net.minecraft.data.loot.LootTableProvider
+import net.minecraft.data.models.BlockModelGenerators
+import net.minecraft.data.models.ItemModelGenerators
 import net.minecraft.data.tags.EntityTypeTagsProvider
 import net.minecraft.data.tags.ItemTagsProvider
 import net.minecraft.data.tags.TagsProvider
@@ -18,10 +20,7 @@ import net.minecraftforge.data.event.GatherDataEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod
 import site.siredvin.peripheralium.PeripheraliumCore
-import site.siredvin.peripheralium.data.blocks.GeneratorSink
-import site.siredvin.peripheralium.data.blocks.ItemTagConsumer
-import site.siredvin.peripheralium.data.blocks.LibTagAppender
-import site.siredvin.peripheralium.data.blocks.TagConsumer
+import site.siredvin.peripheralium.data.blocks.*
 import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -91,6 +90,10 @@ object ForgeDataGenerators {
                     }
                 }
             }
+        }
+
+        override fun models(blocks: Consumer<BlockModelGenerators>, items: Consumer<ItemModelGenerators>) {
+            add { ModelProvider(it, blocks, items) }
         }
     }
 }

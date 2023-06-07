@@ -10,6 +10,8 @@ import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider
 import net.minecraft.core.HolderLookup
 import net.minecraft.data.DataProvider
 import net.minecraft.data.loot.LootTableProvider
+import net.minecraft.data.models.BlockModelGenerators
+import net.minecraft.data.models.ItemModelGenerators
 import net.minecraft.data.tags.TagsProvider
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
@@ -17,10 +19,7 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.storage.loot.LootTable
-import site.siredvin.peripheralium.data.blocks.GeneratorSink
-import site.siredvin.peripheralium.data.blocks.ItemTagConsumer
-import site.siredvin.peripheralium.data.blocks.LibTagAppender
-import site.siredvin.peripheralium.data.blocks.TagConsumer
+import site.siredvin.peripheralium.data.blocks.*
 import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.util.function.BiConsumer
 import java.util.function.Consumer
@@ -90,6 +89,10 @@ class FabricDataGenerators : DataGeneratorEntrypoint {
                     }
                 }
             }
+        }
+
+        override fun models(blocks: Consumer<BlockModelGenerators>, items: Consumer<ItemModelGenerators>) {
+            add { ModelProvider(it, blocks, items) }
         }
     }
 

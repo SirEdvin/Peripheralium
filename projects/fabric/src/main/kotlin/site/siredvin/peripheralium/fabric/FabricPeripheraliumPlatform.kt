@@ -86,6 +86,10 @@ class FabricPeripheraliumPlatform : PeripheraliumPlatform {
         override fun tryGet(location: ResourceLocation): T? {
             return registry.get(location)
         }
+
+        override fun iterator(): Iterator<T> {
+            return registry.iterator()
+        }
     }
 
     override val fluidCompactDivider: Double

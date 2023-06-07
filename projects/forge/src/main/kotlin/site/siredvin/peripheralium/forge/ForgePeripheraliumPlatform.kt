@@ -53,7 +53,9 @@ import java.util.function.Function
 import java.util.function.Predicate
 import java.util.function.Supplier
 
+@Suppress("UnstableApiUsage")
 class ForgePeripheraliumPlatform : PeripheraliumPlatform {
+
     private class ForgeRegistryWrapper<T>(private val name: ResourceLocation, private val registry: ForgeRegistry<T>) : RegistryWrapper<T> {
         override fun getId(something: T): Int {
             val id = registry.getID(something)
@@ -84,6 +86,10 @@ class ForgePeripheraliumPlatform : PeripheraliumPlatform {
 
         override fun tryGet(location: ResourceLocation): T? {
             return registry.getValue(location)
+        }
+
+        override fun iterator(): Iterator<T> {
+            return registry.iterator()
         }
     }
 

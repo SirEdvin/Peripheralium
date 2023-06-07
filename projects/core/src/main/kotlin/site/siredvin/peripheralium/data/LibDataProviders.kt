@@ -8,5 +8,6 @@ object LibDataProviders {
             LibRecipeProvider(it)
         }
         generator.lootTable(LibLootTableProvider.getTables())
+        generator.models(LibBlockModelProvider::addModels, LibItemModelProvider::addModels)
     }
 }

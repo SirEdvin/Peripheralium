@@ -1,7 +1,10 @@
 package site.siredvin.peripheralium.data.blocks
 
+import net.minecraft.client.renderer.block.model.ItemModelGenerator
 import net.minecraft.data.DataProvider
 import net.minecraft.data.loot.LootTableProvider
+import net.minecraft.data.models.BlockModelGenerators
+import net.minecraft.data.models.ItemModelGenerators
 import net.minecraft.data.tags.TagsProvider
 import net.minecraft.tags.TagBuilder
 import net.minecraft.tags.TagKey
@@ -18,6 +21,7 @@ interface GeneratorSink {
 
     fun entityTags(modID: String, tags: Consumer<TagConsumer<EntityType<*>>>): TagsProvider<EntityType<*>>
     fun itemTags(modID: String, tags: Consumer<ItemTagConsumer>, blocks: TagsProvider<Block>): TagsProvider<Item>
+    fun models(blocks: Consumer<BlockModelGenerators>, items: Consumer<ItemModelGenerators>)
 }
 
 fun interface TagConsumer<T> {
