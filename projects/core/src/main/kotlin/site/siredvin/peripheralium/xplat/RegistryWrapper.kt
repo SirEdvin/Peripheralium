@@ -10,6 +10,4 @@ interface RegistryWrapper<T> : HolderGetter<T>, Iterable<T> {
 
     fun tryGet(location: ResourceLocation): T?
     fun get(id: Int): T
-
-
 }

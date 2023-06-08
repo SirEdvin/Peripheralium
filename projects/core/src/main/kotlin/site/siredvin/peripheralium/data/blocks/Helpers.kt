@@ -11,15 +11,17 @@ import java.util.*
 fun createFlatItem(
     generators: ItemModelGenerators,
     model: ResourceLocation,
-    vararg textures: ResourceLocation
+    vararg textures: ResourceLocation,
 ) {
     if (textures.size > 5) throw IndexOutOfBoundsException("Too many layers")
     if (textures.isEmpty()) throw IndexOutOfBoundsException("Must have at least one texture")
     if (textures.size == 1) {
         ModelTemplates.FLAT_ITEM.create(
-            model, TextureMapping.layer0(
-                textures[0]
-            ), generators.output
+            model,
+            TextureMapping.layer0(
+                textures[0],
+            ),
+            generators.output,
         )
         return
     }

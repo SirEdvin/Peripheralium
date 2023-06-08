@@ -17,13 +17,13 @@ object LibBlockModelProvider {
         val model = ModelTemplates.CUBE_ALL.create(
             peripheraliumBlock,
             TextureMapping.cube(peripheraliumBlock).put(TextureSlot.ALL, TextureMapping.getBlockTexture(peripheraliumBlock)),
-            generators.modelOutput
+            generators.modelOutput,
         )
         generators.blockStateOutput.accept(
             MultiVariantGenerator.multiVariant(
                 Blocks.PERIPHERALIUM_BLOCK.get(),
-                Variant.variant().with(VariantProperties.MODEL, model)
-            )
+                Variant.variant().with(VariantProperties.MODEL, model),
+            ),
         )
         generators.delegateItemModel(peripheraliumBlock, ModelLocationUtils.getModelLocation(peripheraliumBlock))
     }

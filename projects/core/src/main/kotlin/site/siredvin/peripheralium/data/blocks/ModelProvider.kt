@@ -31,7 +31,7 @@ import java.util.function.Supplier
 class ModelProvider(
     output: PackOutput,
     private val blocks: Consumer<BlockModelGenerators>,
-    private val items: Consumer<ItemModelGenerators>
+    private val items: Consumer<ItemModelGenerators>,
 ) : DataProvider {
     private val blockStatePath: PackOutput.PathProvider
     private val modelPath: PackOutput.PathProvider
@@ -69,7 +69,7 @@ class ModelProvider(
         saveCollection(
             output,
             futures,
-            blockStates
+            blockStates,
         ) { blockStatePath.json(XplatRegistries.BLOCKS.getKey(it)) }
         saveCollection(output, futures, models, modelPath::json)
         return Util.sequenceFailFast(futures)
@@ -79,7 +79,7 @@ class ModelProvider(
         output: CachedOutput,
         futures: MutableList<CompletableFuture<*>>,
         items: Map<T, Supplier<JsonElement>>,
-        getLocation: Function<T, Path>
+        getLocation: Function<T, Path>,
     ) {
         for ((key, value) in items) {
             val path = getLocation.apply(key)

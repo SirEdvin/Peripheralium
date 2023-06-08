@@ -1,6 +1,5 @@
 package site.siredvin.peripheralium.data.blocks
 
-import net.minecraft.client.renderer.block.model.ItemModelGenerator
 import net.minecraft.data.DataProvider
 import net.minecraft.data.loot.LootTableProvider
 import net.minecraft.data.models.BlockModelGenerators
