@@ -4,8 +4,8 @@ import com.google.gson.JsonObject
 import net.minecraft.data.CachedOutput
 import net.minecraft.data.DataProvider
 import net.minecraft.data.PackOutput
+import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
-import site.siredvin.peripheralium.common.items.DescriptiveItem
 import java.util.concurrent.CompletableFuture
 import java.util.stream.Stream
 
@@ -47,15 +47,18 @@ abstract class LanguageProvider(
         translations[id] = text
     }
 
-    fun add(item: DescriptiveItem, text: String, tooltip: String? = null) {
+    fun add(item: Item, text: String, tooltip: String? = null) {
         add(item.descriptionId, text)
         if (tooltip != null) {
             add(item.descriptionId + ".tooltip", tooltip)
         }
     }
 
-    fun add(block: Block, text: String) {
+    fun add(block: Block, text: String, tooltip: String? = null) {
         add(block.descriptionId, text)
+        if (tooltip != null) {
+            add(block.descriptionId.replace("block", "item") + ".tooltip", tooltip)
+        }
     }
 
     fun add(record: TextRecord, text: String) {
