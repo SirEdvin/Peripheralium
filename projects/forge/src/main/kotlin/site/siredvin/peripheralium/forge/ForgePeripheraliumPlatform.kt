@@ -24,7 +24,6 @@ import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.ChunkPos
@@ -43,18 +42,15 @@ import net.minecraftforge.event.level.BlockEvent.BreakEvent
 import net.minecraftforge.eventbus.api.Event
 import net.minecraftforge.registries.ForgeRegistry
 import net.minecraftforge.registries.RegistryManager
-import site.siredvin.peripheralium.ForgePeripheralium
-import site.siredvin.peripheralium.PeripheraliumCore
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.RegistryWrapper
 import java.util.*
 import java.util.function.BiFunction
 import java.util.function.Function
 import java.util.function.Predicate
-import java.util.function.Supplier
 
 @Suppress("UnstableApiUsage")
-class ForgePeripheraliumPlatform : PeripheraliumPlatform {
+object ForgePeripheraliumPlatform : PeripheraliumPlatform {
 
     private class ForgeRegistryWrapper<T>(private val name: ResourceLocation, private val registry: ForgeRegistry<T>) : RegistryWrapper<T> {
         override fun getId(something: T): Int {
@@ -102,17 +98,6 @@ class ForgePeripheraliumPlatform : PeripheraliumPlatform {
 
     override fun createFakePlayer(level: ServerLevel, profile: GameProfile): ServerPlayer {
         return ForgeFakePlayer(level, profile)
-    }
-
-    override fun <T : Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T> {
-        return ForgePeripheralium.itemsRegistry.register(key.path, item)
-    }
-
-    override fun <T : Block> registerBlock(key: ResourceLocation, block: Supplier<T>, itemFactory: (T) -> Item): Supplier<T> {
-        PeripheraliumCore.LOGGER.warn("Register block")
-        val blockRegister = ForgePeripheralium.blocksRegistry.register(key.path, block)
-        ForgePeripheralium.itemsRegistry.register(key.path) { itemFactory(blockRegister.get()) }
-        return blockRegister
     }
 
     override fun getTurtleAccess(entity: BlockEntity): ITurtleAccess? {

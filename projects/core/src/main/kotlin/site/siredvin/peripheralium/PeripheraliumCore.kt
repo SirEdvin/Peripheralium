@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger
 import site.siredvin.peripheralium.common.setup.Blocks
 import site.siredvin.peripheralium.common.setup.Items
 import site.siredvin.peripheralium.util.text
+import site.siredvin.peripheralium.xplat.LibPlatform
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.RecipeIngredients
 
@@ -24,7 +25,8 @@ object PeripheraliumCore {
             }
     }
 
-    fun configure(platform: PeripheraliumPlatform, ingredients: RecipeIngredients) {
+    fun configure(libPlatform: LibPlatform, platform: PeripheraliumPlatform, ingredients: RecipeIngredients) {
+        LibPlatform.configure(libPlatform)
         PeripheraliumPlatform.configure(platform)
         RecipeIngredients.configure(ingredients)
     }

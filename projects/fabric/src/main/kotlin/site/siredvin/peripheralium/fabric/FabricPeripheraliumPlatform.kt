@@ -31,7 +31,6 @@ import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.ChunkPos
@@ -48,13 +47,9 @@ import java.util.*
 import java.util.function.BiFunction
 import java.util.function.Function
 import java.util.function.Predicate
-import java.util.function.Supplier
 
-class FabricPeripheraliumPlatform : PeripheraliumPlatform {
-
-    companion object {
-        const val FORGE_COMPACT_DEVIDER = 81.0
-    }
+object FabricPeripheraliumPlatform : PeripheraliumPlatform {
+    const val FORGE_COMPACT_DEVIDER = 81.0
 
     private class FabricRegistryWrapper<T>(private val name: ResourceLocation, private val registry: Registry<T>) : RegistryWrapper<T> {
         override fun getId(something: T): Int {
@@ -102,17 +97,6 @@ class FabricPeripheraliumPlatform : PeripheraliumPlatform {
 
     override fun createFakePlayer(level: ServerLevel, profile: GameProfile): ServerPlayer {
         return FabricFakePlayer.create(level, profile)
-    }
-
-    override fun <T : Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T> {
-        val registeredItem = Registry.register(BuiltInRegistries.ITEM, key, item.get())
-        return Supplier { registeredItem }
-    }
-
-    override fun <T : Block> registerBlock(key: ResourceLocation, block: Supplier<T>, itemFactory: (T) -> Item): Supplier<T> {
-        val registeredBlock = Registry.register(BuiltInRegistries.BLOCK, key, block.get())
-        Registry.register(BuiltInRegistries.ITEM, key, itemFactory(registeredBlock))
-        return Supplier { registeredBlock }
     }
 
     override fun getTurtleAccess(entity: BlockEntity): ITurtleAccess? {

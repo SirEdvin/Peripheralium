@@ -5,39 +5,15 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 
 fun itemTooltip(descriptionId: String): MutableComponent {
-    val lastIndex = descriptionId.lastIndexOf('.')
-    return Component.translatable(
-        String.format(
-            "%s.tooltip.%s",
-            descriptionId.substring(0, lastIndex).replaceFirst("^block".toRegex(), "item"),
-            descriptionId.substring(lastIndex + 1),
-        ),
-    )
+    return Component.translatable("$descriptionId.tooltip")
 }
 
 fun itemExtra(descriptionId: String, extra: String): MutableComponent {
-    val lastIndex = descriptionId.lastIndexOf('.')
-    return Component.translatable(
-        String.format(
-            "%s.extra.%s.%s",
-            descriptionId.substring(0, lastIndex).replaceFirst("^block".toRegex(), "item"),
-            descriptionId.substring(lastIndex + 1),
-            extra,
-        ),
-    )
+    return Component.translatable("$descriptionId.extra.$extra")
 }
 
 fun itemExtra(descriptionId: String, extra: String, vararg args: Any): MutableComponent {
-    val lastIndex = descriptionId.lastIndexOf('.')
-    return Component.translatable(
-        String.format(
-            "%s.extra.%s.%s",
-            descriptionId.substring(0, lastIndex).replaceFirst("^block".toRegex(), "item"),
-            descriptionId.substring(lastIndex + 1),
-            extra,
-        ),
-        *args,
-    )
+    return Component.translatable("$descriptionId.extra.$extra", *args)
 }
 
 fun turtleAdjective(turtleID: ResourceLocation): String {

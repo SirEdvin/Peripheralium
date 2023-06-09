@@ -18,7 +18,6 @@ import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.Level
@@ -28,13 +27,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
-import site.siredvin.peripheralium.PeripheraliumCore
-import site.siredvin.peripheralium.common.items.DescriptiveBlockItem
 import java.util.*
 import java.util.function.BiFunction
 import java.util.function.Function
 import java.util.function.Predicate
-import java.util.function.Supplier
 
 interface PeripheraliumPlatform {
 
@@ -61,22 +57,6 @@ interface PeripheraliumPlatform {
 
         fun createFakePlayer(level: ServerLevel, profile: GameProfile): ServerPlayer {
             return get().createFakePlayer(level, profile)
-        }
-
-        fun <T : Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T> {
-            return get().registerItem(key, item)
-        }
-
-        fun <T : Item> registerItem(name: String, item: Supplier<T>): Supplier<T> {
-            return registerItem(ResourceLocation(PeripheraliumCore.MOD_ID, name), item)
-        }
-
-        fun <T : Block> registerBlock(key: ResourceLocation, block: Supplier<T>, itemFactory: (T) -> (Item)): Supplier<T> {
-            return get().registerBlock(key, block, itemFactory)
-        }
-
-        fun <T : Block> registerBlock(name: String, block: Supplier<T>, itemFactory: (T) -> (Item) = { block -> DescriptiveBlockItem(block, Item.Properties()) }): Supplier<T> {
-            return get().registerBlock(ResourceLocation(PeripheraliumCore.MOD_ID, name), block, itemFactory)
         }
 
         fun getTurtleAccess(entity: BlockEntity): ITurtleAccess? {
@@ -158,10 +138,6 @@ interface PeripheraliumPlatform {
     fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T>
 
     fun createFakePlayer(level: ServerLevel, profile: GameProfile): ServerPlayer
-
-    fun <T : Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T>
-
-    fun <T : Block> registerBlock(key: ResourceLocation, block: Supplier<T>, itemFactory: (T) -> (Item)): Supplier<T>
 
     fun getTurtleAccess(entity: BlockEntity): ITurtleAccess?
 
