@@ -33,7 +33,7 @@ abstract class LanguageProvider(
         )
     }
 
-    private fun getExpectedKeys(): Stream<String> {
+    open fun getExpectedKeys(): Stream<String> {
         return Stream.of(
             informationHolder.getBlocks().stream().map { it.get().descriptionId },
             informationHolder.getItems().stream().map { it.get().descriptionId },

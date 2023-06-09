@@ -6,8 +6,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.Level
-import site.siredvin.peripheralium.PeripheraliumCore
-import site.siredvin.peripheralium.util.text
+import site.siredvin.peripheralium.data.LibText
 import java.util.function.Function
 import java.util.function.Supplier
 
@@ -32,7 +31,7 @@ open class PeripheralItem(properties: Properties, private var enableSup: Supplie
         if (alwaysShow || InputConstants.isKeyDown(Minecraft.getInstance().window.window, InputConstants.KEY_LSHIFT)) {
             list.addAll(tooltips)
         } else {
-            list.add(text(PeripheraliumCore.MOD_ID, "press_for_description"))
+            list.add(LibText.PRESS_FOR_DESCRIPTION.text)
         }
     }
 

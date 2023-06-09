@@ -23,11 +23,3 @@ fun turtleAdjective(turtleID: ResourceLocation): String {
 fun pocketAdjective(pocketID: ResourceLocation): String {
     return java.lang.String.format("pocket.%s.%s", pocketID.namespace, pocketID.path)
 }
-
-fun text(modID: String, name: String): MutableComponent {
-    return Component.translatable(String.format("text.%s.%s", modID, name))
-}
-
-fun text(modID: String, name: String, vararg args: Any): MutableComponent {
-    return Component.translatable(String.format("text.%s.%s", modID, name), *args)
-}

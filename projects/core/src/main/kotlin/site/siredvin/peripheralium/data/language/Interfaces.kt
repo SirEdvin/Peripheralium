@@ -12,7 +12,9 @@ interface ModInformationHolder {
 
 interface TextRecord {
     val textID: String
-    fun text(vararg args: Any): Component {
+    val text: Component
+        get() = Component.translatable(textID)
+    fun format(vararg args: Any): Component {
         return Component.translatable(textID, *args)
     }
 }

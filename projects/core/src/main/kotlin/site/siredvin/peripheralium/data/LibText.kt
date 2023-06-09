@@ -3,7 +3,7 @@ package site.siredvin.peripheralium.data
 import site.siredvin.peripheralium.PeripheraliumCore
 import site.siredvin.peripheralium.data.language.TextRecord
 
-enum class LibTexts : TextRecord {
+enum class LibText : TextRecord {
     PRESS_FOR_DESCRIPTION,
     CREATIVE_TAB,
     ;
