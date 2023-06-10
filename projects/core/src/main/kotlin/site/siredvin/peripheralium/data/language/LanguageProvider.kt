@@ -4,6 +4,7 @@ import com.google.gson.JsonObject
 import net.minecraft.data.CachedOutput
 import net.minecraft.data.DataProvider
 import net.minecraft.data.PackOutput
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import java.util.concurrent.CompletableFuture
@@ -63,6 +64,19 @@ abstract class LanguageProvider(
 
     fun add(record: TextRecord, text: String) {
         add(record.textID, text)
+    }
+
+    fun addPocket(id: ResourceLocation, text: String) {
+        add("pocket.$id", text)
+    }
+
+    fun addTurtle(id: ResourceLocation, text: String) {
+        add("turtle.$id", text)
+    }
+
+    fun addUpgrades(id: ResourceLocation, text: String) {
+        addPocket(id, text)
+        addTurtle(id, text)
     }
 
     override fun getName(): String {
