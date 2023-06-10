@@ -67,11 +67,11 @@ abstract class LanguageProvider(
     }
 
     fun addPocket(id: ResourceLocation, text: String) {
-        add("pocket.$id", text)
+        add(id.toPocketTranslationKey(), text)
     }
 
     fun addTurtle(id: ResourceLocation, text: String) {
-        add("turtle.$id", text)
+        add(id.toTurtleTranslationKey(), text)
     }
 
     fun addUpgrades(id: ResourceLocation, text: String) {
