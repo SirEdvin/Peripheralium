@@ -7,21 +7,21 @@ kotlin-atomicfu = "0.20.2"
 # Gradle plugins
 sponge = "0.2.1-SNAPSHOT"
 loom = "1.1.9"
-forgegradle = "5.1.+"
+forgegradle = "6.+"
 spotless = "6.19.0"
 
 # Core mod dependencies
-cc-tweaked = "1.104.0"
+cc-tweaked = "1.105.0-1"
 mixin = "0.8.5"
 
 # Fabric dependencies
-fabric-api = "0.82.0+1.19.4"
-fabric-loader = "0.14.9"
+fabric-api = "0.83.0+1.20"
+fabric-loader = "0.14.21"
 fabric-kotlin = "1.9.4+kotlin.1.8.21"
 forgeconfigapirt-fabric = "6.0.2"
 
 # Forge dependencies
-forge = "45.0.42"
+forge = "46.0.1"
 forge-kotlin = "4.2.0"
 parchment = "2023.03.12"
 parchmentMc = "1.19.3"
@@ -49,8 +49,8 @@ kotlin-plugin = {module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.r
 spotless-plugin = {module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref="spotless"}
 
 # Core mod dependencies
-cc-tweaked-common = {module = "cc.tweaked:cc-tweaked-1.19.4-common-api", version.ref = "cc-tweaked"}
-cc-tweaked-core = {module = "cc.tweaked:cc-tweaked-1.19.4-core", version.ref = "cc-tweaked"}
+cc-tweaked-common = {module = "cc.tweaked:cc-tweaked-1.20-common-api", version.ref = "cc-tweaked"}
+cc-tweaked-core = {module = "cc.tweaked:cc-tweaked-1.20-core", version.ref = "cc-tweaked"}
 common-config = {module = "fuzs.forgeconfigapiport:forgeconfigapiport-common", version.ref = "forgeconfigapirt-fabric"}
 mixin = { module = "org.spongepowered:mixin", version.ref = "mixin" }
 
@@ -59,11 +59,11 @@ fabric-loader = {module = "net.fabricmc:fabric-loader", version.ref = "fabric-lo
 fabric-api = {module = "net.fabricmc.fabric-api:fabric-api", version.ref="fabric-api"}
 fabric-kotlin = {module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric-kotlin"}
 fabric-config = {module = "fuzs.forgeconfigapiport:forgeconfigapiport-fabric", version.ref = "forgeconfigapirt-fabric"}
-cc-tweaked-fabric-api = {module = "cc.tweaked:cc-tweaked-1.19.4-fabric-api", version.ref = "cc-tweaked"}
-cc-tweaked-fabric = {module = "cc.tweaked:cc-tweaked-1.19.4-fabric", version.ref = "cc-tweaked"}
+cc-tweaked-fabric-api = {module = "cc.tweaked:cc-tweaked-1.20-fabric-api", version.ref = "cc-tweaked"}
+cc-tweaked-fabric = {module = "cc.tweaked:cc-tweaked-1.20-fabric", version.ref = "cc-tweaked"}
 
 # Forge mod dependencies
-cc-tweaked-forge =  {module = "cc.tweaked:cc-tweaked-1.19.4-forge", version.ref="cc-tweaked"}
+cc-tweaked-forge =  {module = "cc.tweaked:cc-tweaked-1.20-forge", version.ref="cc-tweaked"}
 forge-kotlin = {module = "thedarkcolour:kotlinforforge", version.ref = "forge-kotlin"}
 
 # Dev mod dependencies
@@ -100,10 +100,10 @@ forge-base = ["cc-tweaked-forge"]
 # Minecraft
 #externalMods-common = ["jei-api", "nightConfig-core", "nightConfig-toml"]
 #externalMods-forge-compile = ["oculus", "jei-api"]
-externalMods-forge-runtime = ["jei-forge"]
+externalMods-forge-runtime = []
 #externalMods-fabric = ["nightConfig-core", "nightConfig-toml"]
 #externalMods-fabric-compile = ["iris", "jei-api", "rei-api", "rei-builtin"]
-externalMods-fabric-runtime = ["jei-fabric"]
+externalMods-fabric-runtime = []
 #
 ## Testing
 test = ["junit-jupiter-api", "junit-jupiter-params", "hamcrest", "jqwik-api"]

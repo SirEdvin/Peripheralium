@@ -33,6 +33,6 @@ bin/
 run/
 
 .env
-Peripheralium-1.19
+Peripheralium-*
 
 **/logs/
