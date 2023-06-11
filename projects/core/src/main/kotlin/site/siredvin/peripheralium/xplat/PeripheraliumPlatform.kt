@@ -18,6 +18,7 @@ import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.Level
@@ -121,6 +122,10 @@ interface PeripheraliumPlatform {
             return get().createEntityType(name, factory)
         }
 
+        fun createTabBuilder(): CreativeModeTab.Builder {
+            return get().createTabBuilder()
+        }
+
         fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack> {
             return get().createTurtlesWithUpgrade(upgrade)
         }
@@ -172,6 +177,8 @@ interface PeripheraliumPlatform {
         name: ResourceLocation,
         factory: Function<Level, T>,
     ): EntityType<T>
+
+    fun createTabBuilder(): CreativeModeTab.Builder
 
     fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack>
     fun createPocketsWithUpgrade(upgrade: IPocketUpgrade): List<ItemStack>

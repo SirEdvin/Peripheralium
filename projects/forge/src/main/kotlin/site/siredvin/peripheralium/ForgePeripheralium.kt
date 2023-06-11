@@ -1,10 +1,9 @@
 package site.siredvin.peripheralium
 
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
-import net.minecraftforge.event.CreativeModeTabEvent
-import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.registries.DeferredRegister
@@ -25,6 +24,8 @@ object ForgePeripheralium {
         DeferredRegister.create(ForgeRegistries.BLOCKS, PeripheraliumCore.MOD_ID)
     val itemsRegistry: DeferredRegister<Item> =
         DeferredRegister.create(ForgeRegistries.ITEMS, PeripheraliumCore.MOD_ID)
+    val creativeTabRegistry: DeferredRegister<CreativeModeTab> =
+        DeferredRegister.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), PeripheraliumCore.MOD_ID)
 
     init {
         PeripheraliumCore.configure(ForgeLibPlatform, ForgePeripheraliumPlatform, ForgeIngredients)
@@ -34,13 +35,9 @@ object ForgePeripheralium {
         LibCommonHooks.onRegister()
         blocksRegistry.register(eventBus)
         itemsRegistry.register(eventBus)
+        creativeTabRegistry.register(eventBus)
     }
 
     fun sayHi() {
-    }
-
-    @SubscribeEvent
-    fun registerCreativeTab(event: CreativeModeTabEvent.Register) {
-        event.registerCreativeModeTab(ResourceLocation(PeripheraliumCore.MOD_ID, "tab"), PeripheraliumCore::configureCreativeTab)
     }
 }

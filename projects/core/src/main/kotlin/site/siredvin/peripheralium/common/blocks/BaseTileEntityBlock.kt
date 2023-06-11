@@ -10,19 +10,18 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.BaseEntityBlock
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.RenderShape
-import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.material.Material
 import site.siredvin.peripheralium.api.blockentities.IObservingBlockEntity
 import site.siredvin.peripheralium.api.blockentities.IOwnedBlockEntity
 import site.siredvin.peripheralium.api.peripheral.IPeripheralTileEntity
+import site.siredvin.peripheralium.util.BlockUtil
 
 abstract class BaseTileEntityBlock<T : BlockEntity>(
     private val belongToTickingEntity: Boolean,
-    properties: Properties = Properties.of(Material.METAL).strength(1f, 5f).sound(SoundType.METAL).noOcclusion(),
+    properties: Properties = BlockUtil.defaultProperties(),
 ) : BaseEntityBlock(properties) {
 
     override fun getRenderShape(blockState: BlockState): RenderShape {

@@ -8,17 +8,16 @@ import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.Property
-import net.minecraft.world.level.material.Material
 import site.siredvin.peripheralium.api.blockentities.ISyncingBlockEntity
+import site.siredvin.peripheralium.util.BlockUtil
 import site.siredvin.peripheralium.xplat.XplatRegistries
 
 abstract class BaseNBTBlock<T>(
     belongToTickingEntity: Boolean,
-    properties: Properties = Properties.of(Material.METAL).strength(1f, 5f).sound(SoundType.METAL).noOcclusion(),
+    properties: Properties = BlockUtil.defaultProperties(),
 ) : BaseTileEntityBlock<T>(belongToTickingEntity, properties) where T : BlockEntity, T : ISyncingBlockEntity {
     abstract fun createItemStack(): ItemStack
 

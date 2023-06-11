@@ -1,6 +1,7 @@
 package site.siredvin.peripheralium.xplat
 
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import site.siredvin.peripheralium.PeripheraliumCore
@@ -48,10 +49,16 @@ interface LibPlatform : ModInformationHolder {
             registeredBlocks.add(registeredBlock)
             return registeredBlock
         }
+
+        fun registerCreativeTab(key: ResourceLocation, tab: CreativeModeTab): Supplier<CreativeModeTab> {
+            return get().registerCreativeTab(key, tab)
+        }
     }
 
     fun <T : Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T>
     fun <T : Block> registerBlock(key: ResourceLocation, block: Supplier<T>, itemFactory: (T) -> (Item)): Supplier<T>
+
+    fun registerCreativeTab(key: ResourceLocation, tab: CreativeModeTab): Supplier<CreativeModeTab>
 
     override fun getBlocks(): List<Supplier<out Block>> {
         return registeredBlocks

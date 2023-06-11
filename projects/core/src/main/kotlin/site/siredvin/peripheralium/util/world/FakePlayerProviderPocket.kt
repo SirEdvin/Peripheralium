@@ -22,7 +22,7 @@ object FakePlayerProviderPocket {
     private fun getPlayer(pocket: IPocketAccess, profile: GameProfile): FakePlayerProxy {
         var fake: FakePlayerProxy? = registeredPlayers[pocket]
         if (fake == null) {
-            fake = FakePlayerProxy(PeripheraliumPlatform.createFakePlayer(pocket.entity!!.level as ServerLevel, profile))
+            fake = FakePlayerProxy(PeripheraliumPlatform.createFakePlayer(pocket.entity!!.level() as ServerLevel, profile))
             registeredPlayers[pocket] = fake
         }
         return fake
@@ -30,7 +30,7 @@ object FakePlayerProviderPocket {
 
     private fun load(player: ServerPlayer, realPlayer: Player, overwrittenDirection: Direction? = null, skipInventory: Boolean = false) {
         val direction = overwrittenDirection ?: realPlayer.direction
-        player.setLevel(realPlayer.level as ServerLevel)
+        player.setServerLevel(realPlayer.level() as ServerLevel)
         val position = realPlayer.blockPosition()
         // Player position
         val pitch: Float = if (direction == Direction.UP) -90f else if (direction == Direction.DOWN) 90f else 0f

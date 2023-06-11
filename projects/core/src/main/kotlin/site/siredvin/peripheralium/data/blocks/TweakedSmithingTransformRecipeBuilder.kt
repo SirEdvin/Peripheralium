@@ -9,16 +9,17 @@ import net.minecraft.world.item.crafting.RecipeSerializer
 import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.util.function.Consumer
 
-class TweakedUpgradeRecipeBuilder(
+class TweakedSmithingTransformRecipeBuilder(
     private val type: RecipeSerializer<*>,
+    private val template: Ingredient,
     private val base: Ingredient,
     private val addition: Ingredient,
     private val result: Item,
 ) {
 
     companion object {
-        fun smithing(ingredient: Ingredient, ingredient2: Ingredient, item: Item): TweakedUpgradeRecipeBuilder {
-            return TweakedUpgradeRecipeBuilder(RecipeSerializer.SMITHING, ingredient, ingredient2, item)
+        fun smithingTransform(template: Ingredient, base: Ingredient, addition: Ingredient, item: Item): TweakedSmithingTransformRecipeBuilder {
+            return TweakedSmithingTransformRecipeBuilder(RecipeSerializer.SMITHING_TRANSFORM, template, base, addition, item)
         }
     }
 
@@ -27,17 +28,14 @@ class TweakedUpgradeRecipeBuilder(
     }
 
     fun save(consumer: Consumer<FinishedRecipe>, resourceLocation: ResourceLocation) {
-        val var10004 = type
-        val var10005 = base
-        val var10006 = addition
-        val var10007 = result
         consumer.accept(
             Result(
                 resourceLocation,
-                var10004,
-                var10005,
-                var10006,
-                var10007,
+                type,
+                template,
+                base,
+                addition,
+                result,
             ),
         )
     }
@@ -45,12 +43,14 @@ class TweakedUpgradeRecipeBuilder(
     class Result(
         private val id: ResourceLocation,
         private val type: RecipeSerializer<*>,
+        private val template: Ingredient,
         private val base: Ingredient,
         private val addition: Ingredient,
         private val result: Item,
     ) :
         FinishedRecipe {
         override fun serializeRecipeData(jsonObject: JsonObject) {
+            jsonObject.add("template", template.toJson())
             jsonObject.add("base", base.toJson())
             jsonObject.add("addition", addition.toJson())
             val jsonObject2 = JsonObject()

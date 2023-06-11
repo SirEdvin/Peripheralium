@@ -2,13 +2,11 @@ package site.siredvin.peripheralium.common.blocks
 
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.RenderShape
-import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.material.Material
-import kotlin.jvm.JvmOverloads
+import site.siredvin.peripheralium.util.BlockUtil
 
 class BaseBlock @JvmOverloads constructor(
-    properties: Properties = Properties.of(Material.METAL).strength(1f, 5f).sound(SoundType.METAL).noOcclusion(),
+    properties: Properties = BlockUtil.defaultProperties(),
 ) : Block(properties) {
     override fun getRenderShape(state: BlockState): RenderShape {
         return RenderShape.MODEL

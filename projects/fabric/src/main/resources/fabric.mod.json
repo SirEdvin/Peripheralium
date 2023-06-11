@@ -42,9 +42,9 @@
     "fabricloader": "*",
     "fabric": "*",
     "fabric-language-kotlin": "*",
-    "minecraft": "1.19.4",
+    "minecraft": "1.20",
     "java": ">=17",
-    "forgeconfigapiport": ">=6.0.2",
-    "computercraft": ">=1.104.0"
+    "forgeconfigapiport": ">=7.0.0",
+    "computercraft": ">=1.105.0-1"
   }
 }

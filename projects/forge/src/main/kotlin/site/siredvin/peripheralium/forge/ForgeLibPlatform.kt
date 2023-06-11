@@ -1,6 +1,7 @@
 package site.siredvin.peripheralium.forge
 
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import site.siredvin.peripheralium.ForgePeripheralium
@@ -18,5 +19,9 @@ object ForgeLibPlatform : LibPlatform {
         val blockRegister = ForgePeripheralium.blocksRegistry.register(key.path, block)
         ForgePeripheralium.itemsRegistry.register(key.path) { itemFactory(blockRegister.get()) }
         return blockRegister
+    }
+
+    override fun registerCreativeTab(key: ResourceLocation, tab: CreativeModeTab): Supplier<CreativeModeTab> {
+        return ForgePeripheralium.creativeTabRegistry.register(key.path) { tab }
     }
 }

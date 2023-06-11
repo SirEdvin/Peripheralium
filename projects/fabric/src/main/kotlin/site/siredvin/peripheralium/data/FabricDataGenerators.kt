@@ -27,7 +27,8 @@ import java.util.function.Consumer
 class FabricDataGenerators : DataGeneratorEntrypoint {
 
     class TabledFabricLootTableProvider(private val out: FabricDataOutput, private val table: LootTableProvider.SubProviderEntry) : SimpleFabricLootTableProvider(out, table.paramSet) {
-        override fun accept(consumer: BiConsumer<ResourceLocation, LootTable.Builder>) {
+
+        override fun generate(consumer: BiConsumer<ResourceLocation, LootTable.Builder>) {
             table.provider().get().generate(consumer)
         }
     }
@@ -41,7 +42,7 @@ class FabricDataGenerators : DataGeneratorEntrypoint {
             tables.forEach {
                 pack.addProvider { out: FabricDataOutput ->
                     object : SimpleFabricLootTableProvider(out, it.paramSet) {
-                        override fun accept(consumer: BiConsumer<ResourceLocation, LootTable.Builder>) {
+                        override fun generate(consumer: BiConsumer<ResourceLocation, LootTable.Builder>) {
                             it.provider.get().generate(consumer)
                         }
                     }

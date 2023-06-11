@@ -14,6 +14,7 @@ import dan200.computercraft.shared.util.NBTUtil
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.fabricmc.fabric.api.event.player.UseBlockCallback
 import net.fabricmc.fabric.api.event.player.UseEntityCallback
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricEntityTypeBuilder
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags
@@ -31,6 +32,7 @@ import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
+import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.ChunkPos
@@ -111,14 +113,14 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
     }
 
     override fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean {
-        if (player.level.server?.isUnderSpawnProtection(player.level as ServerLevel, pos, player) == true) {
+        if (player.server.isUnderSpawnProtection(player.serverLevel(), pos, player)) {
             return true
         }
-        return !PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(player.level, player, pos, state, null)
+        return !PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(player.level(), player, pos, state, null)
     }
 
     override fun interactWithEntity(player: ServerPlayer, hand: InteractionHand, entity: Entity, hit: EntityHitResult): InteractionResult {
-        val fabricInteraction = UseEntityCallback.EVENT.invoker().interact(player, entity.level, InteractionHand.MAIN_HAND, entity, hit)
+        val fabricInteraction = UseEntityCallback.EVENT.invoker().interact(player, entity.level(), InteractionHand.MAIN_HAND, entity, hit)
         if (fabricInteraction.consumesAction()) {
             return fabricInteraction
         }
@@ -135,11 +137,11 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
         hit: BlockHitResult,
         canUseBlock: Predicate<BlockState>,
     ): InteractionResult {
-        val result = UseBlockCallback.EVENT.invoker().interact(player, player.level, InteractionHand.MAIN_HAND, hit)
+        val result = UseBlockCallback.EVENT.invoker().interact(player, player.level(), InteractionHand.MAIN_HAND, hit)
         if (result != InteractionResult.PASS) return result
-        val block = player.level.getBlockState(hit.blockPos)
+        val block = player.level().getBlockState(hit.blockPos)
         if (!block.isAir && canUseBlock.test(block)) {
-            val useResult = block.use(player.level, player, InteractionHand.MAIN_HAND, hit)
+            val useResult = block.use(player.level(), player, InteractionHand.MAIN_HAND, hit)
             if (useResult.consumesAction()) return useResult
         }
         return stack.useOn(UseOnContext(player, InteractionHand.MAIN_HAND, hit))
@@ -187,6 +189,10 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
         return FabricBlockEntityTypeBuilder.create({ t: BlockPos, u: BlockState ->
             factory.apply(t, u)
         }).addBlock(block).build()
+    }
+
+    override fun createTabBuilder(): CreativeModeTab.Builder {
+        return FabricItemGroup.builder()
     }
 
     override fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack> {

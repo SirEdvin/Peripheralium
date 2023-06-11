@@ -25,7 +25,7 @@ object DropConsumer {
 
     fun configure(entity: Entity, consumer: ((ItemStack) -> ItemStack), range: Double = 2.0) {
         remainingDrop = mutableListOf()
-        targetLevel = entity.level
+        targetLevel = entity.level()
         this.consumer = consumer
         targetEntity = null
         dropBounds = AABB(entity.blockPosition()).inflate(range)
@@ -58,7 +58,7 @@ object DropConsumer {
     }
 
     fun onEntitySpawn(entity: Entity): Boolean {
-        if (targetLevel == entity.level && entity is ItemEntity && dropBounds!!.contains(entity.position())) {
+        if (targetLevel == entity.level() && entity is ItemEntity && dropBounds!!.contains(entity.position())) {
             consume(entity.item)
             return true
         }

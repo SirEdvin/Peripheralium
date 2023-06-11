@@ -24,6 +24,7 @@ import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
+import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.ChunkPos
@@ -112,10 +113,10 @@ object ForgePeripheraliumPlatform : PeripheraliumPlatform {
     }
 
     override fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean {
-        if (player.level.server?.isUnderSpawnProtection(player.level as ServerLevel, pos, player) == true) {
+        if (player.server.isUnderSpawnProtection(player.serverLevel(), pos, player)) {
             return true
         }
-        val event = BreakEvent(player.level, pos, state, player)
+        val event = BreakEvent(player.level(), pos, state, player)
         MinecraftForge.EVENT_BUS.post(event)
         return event.isCanceled
     }
@@ -147,7 +148,7 @@ object ForgePeripheraliumPlatform : PeripheraliumPlatform {
         hit: BlockHitResult,
         canUseBlock: Predicate<BlockState>,
     ): InteractionResult {
-        val level = player.level
+        val level = player.level()
         val pos = hit.blockPos
         val event = ForgeHooks.onRightClickBlock(player, InteractionHand.MAIN_HAND, pos, hit)
         if (event.isCanceled) return event.cancellationResult
@@ -212,6 +213,10 @@ object ForgePeripheraliumPlatform : PeripheraliumPlatform {
         factory: Function<Level, T>,
     ): EntityType<T> {
         return EntityType.Builder.of({ _, level -> factory.apply(level) }, MobCategory.MISC).build(name.toString())
+    }
+
+    override fun createTabBuilder(): CreativeModeTab.Builder {
+        return CreativeModeTab.builder()
     }
 
     override fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack> {

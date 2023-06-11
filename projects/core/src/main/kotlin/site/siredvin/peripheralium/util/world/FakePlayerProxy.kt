@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.level.ServerPlayerGameMode
 import net.minecraft.sounds.SoundSource
@@ -43,8 +44,8 @@ class FakePlayerProxy(val fakePlayer: ServerPlayer, private val range: Int = 4) 
     private var digBlock: Block? = null
     private var currentDamage = 0f
 
-    private val level: Level
-        get() = fakePlayer.level
+    private val level: ServerLevel
+        get() = fakePlayer.serverLevel()
 
     private val gameMode: ServerPlayerGameMode
         get() = fakePlayer.gameMode
@@ -224,7 +225,7 @@ class FakePlayerProxy(val fakePlayer: ServerPlayer, private val range: Int = 4) 
         if (block != digBlock || pos != digPosition) {
             setState(block, pos)
         }
-        if (!level.isEmptyBlock(pos) && !state.material.isLiquid) {
+        if (!level.isEmptyBlock(pos) && !state.liquid()) {
             if (PeripheraliumPlatform.isBlockProtected(pos, state, fakePlayer)) {
                 return Pair.of(false, "Cannot break protected block")
             }
