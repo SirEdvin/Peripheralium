@@ -2,6 +2,7 @@
   "block.peripheralium.peripheralium_block": "Блок перифераліуму",
   "item.peripheralium.peripheralium_blend": "Сирий перифераліум",
   "item.peripheralium.peripheralium_dust": "Перифераліумний пил",
+  "item.peripheralium.peripheralium_upgrade_template": "Ковальский щаблон з перифераліуму",
   "text.peripheralium.creative_tab": "Перифераліум",
   "text.peripheralium.press_for_description": "[§3Left shift§r] показити опис"
 }

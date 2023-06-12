@@ -13,6 +13,7 @@ class LibUALanguageProvider(
     override fun addTranslations() {
         add(Items.PERIPHERALIUM_DUST.get(), "Перифераліумний пил")
         add(Items.PERIPHERALIUM_BLEND.get(), "Сирий перифераліум")
+        add(Items.PERIPHERALIUM_UPGRADE_TEMPLATE.get(), "Ковальский щаблон з перифераліуму")
         add(Blocks.PERIPHERALIUM_BLOCK.get(), "Блок перифераліуму")
         add(LibText.CREATIVE_TAB, "Перифераліум")
         add(LibText.PRESS_FOR_DESCRIPTION, "[§3Left shift§r] показити опис")

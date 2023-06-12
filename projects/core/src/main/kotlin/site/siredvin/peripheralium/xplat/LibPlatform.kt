@@ -1,5 +1,9 @@
 package site.siredvin.peripheralium.xplat
 
+import dan200.computercraft.api.pocket.IPocketUpgrade
+import dan200.computercraft.api.pocket.PocketUpgradeSerialiser
+import dan200.computercraft.api.turtle.ITurtleUpgrade
+import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
@@ -60,11 +64,15 @@ interface LibPlatform : ModInformationHolder {
 
     fun registerCreativeTab(key: ResourceLocation, tab: CreativeModeTab): Supplier<CreativeModeTab>
 
-    override fun getBlocks(): List<Supplier<out Block>> {
-        return registeredBlocks
-    }
+    override val blocks: List<Supplier<out Block>>
+        get() = registeredBlocks
 
-    override fun getItems(): List<Supplier<out Item>> {
-        return registeredItems
-    }
+    override val items: List<Supplier<out Item>>
+        get() = registeredItems
+
+    override val turtleSerializers: List<Supplier<TurtleUpgradeSerialiser<out ITurtleUpgrade>>>
+        get() = emptyList()
+
+    override val pocketSerializers: List<Supplier<PocketUpgradeSerialiser<out IPocketUpgrade>>>
+        get() = emptyList()
 }

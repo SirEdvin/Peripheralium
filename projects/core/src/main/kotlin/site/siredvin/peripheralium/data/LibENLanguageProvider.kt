@@ -14,6 +14,7 @@ class LibENLanguageProvider(
         add(Items.PERIPHERALIUM_DUST.get(), "Peripheralium dust")
         add(Items.PERIPHERALIUM_BLEND.get(), "Peripheralium blend")
         add(Blocks.PERIPHERALIUM_BLOCK.get(), "Peripheralium block")
+        add(Items.PERIPHERALIUM_UPGRADE_TEMPLATE.get(), "Peripheralium upgrade template")
         add(LibText.CREATIVE_TAB, "Peripheralium")
         add(LibText.PRESS_FOR_DESCRIPTION, "[§3Left shift§r] show description")
     }

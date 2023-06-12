@@ -1,5 +1,6 @@
-// 1.19.4	2023-06-09T21:02:51.190840313	Peripheralium/Recipes
-9e0738a71f87a7dee577a3987968472f0549eb4c data/peripheralium/recipes/peripheralium_blend.json
+// 1.20	2023-06-12T21:48:02.02095058	Peripheralium/Recipes
 8599aabcce168fa65f3eb705b8c734020c056002 data/peripheralium/recipes/peripheralium_block_uncraft.json
-4e4b8e5e547840ae6027a224b06ecb056f28376d data/peripheralium/recipes/peripheralium_block.json
 d78fd454c39fa7e4e6276e4edee6a5afa76d3d7d data/peripheralium/recipes/peripheralium_dust_smelting.json
+4e4b8e5e547840ae6027a224b06ecb056f28376d data/peripheralium/recipes/peripheralium_block.json
+9e0738a71f87a7dee577a3987968472f0549eb4c data/peripheralium/recipes/peripheralium_blend.json
+3c86618a7c03f59f8849fa80c856ffb3eb245de3 data/peripheralium/recipes/peripheralium_upgrade_template.json

@@ -3,7 +3,6 @@ package site.siredvin.peripheralium
 import net.minecraft.world.item.CreativeModeTab
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import site.siredvin.peripheralium.common.setup.Blocks
 import site.siredvin.peripheralium.common.setup.Items
 import site.siredvin.peripheralium.data.LibText
 import site.siredvin.peripheralium.xplat.LibPlatform
@@ -19,9 +18,12 @@ object PeripheraliumCore {
         return builder.icon { Items.PERIPHERALIUM_DUST.get().defaultInstance }
             .title(LibText.CREATIVE_TAB.text)
             .displayItems { _, output ->
-                output.accept(Items.PERIPHERALIUM_BLEND.get().defaultInstance)
-                output.accept(Items.PERIPHERALIUM_DUST.get().defaultInstance)
-                output.accept(Blocks.PERIPHERALIUM_BLOCK.get().asItem().defaultInstance)
+                LibPlatform.holder.items.forEach {
+                    output.accept(it.get())
+                }
+                LibPlatform.holder.blocks.forEach {
+                    output.accept(it.get())
+                }
             }
     }
 

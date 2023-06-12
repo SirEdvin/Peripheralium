@@ -10,4 +10,7 @@ object FabricIngredients : RecipeIngredients {
         get() = Ingredient.of(ConventionalItemTags.REDSTONE_DUSTS)
     override val glowstoneDust: Ingredient
         get() = Ingredient.of(Items.GLOWSTONE_DUST)
+
+    override val xpBottle: Ingredient
+        get() = Ingredient.of(Items.EXPERIENCE_BOTTLE)
 }

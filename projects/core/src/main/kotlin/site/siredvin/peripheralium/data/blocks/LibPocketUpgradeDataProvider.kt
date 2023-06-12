@@ -1,9 +1,11 @@
 package site.siredvin.peripheralium.data.blocks
 
+import dan200.computercraft.api.pocket.IPocketUpgrade
 import dan200.computercraft.api.pocket.PocketUpgradeDataProvider
 import dan200.computercraft.api.pocket.PocketUpgradeSerialiser
 import net.minecraft.data.PackOutput
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.item.Item
 import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.util.function.Consumer
 import java.util.function.Supplier
@@ -22,6 +24,18 @@ abstract class LibPocketUpgradeDataProvider(output: PackOutput, serializers: Lis
         if (missedSerializers.isNotEmpty()) {
             throw IllegalArgumentException("Some serializers don't have default items: $missedSerializers")
         }
+    }
+
+    fun <V : IPocketUpgrade> simpleWithCustomItem(serialiser: PocketUpgradeSerialiser<V>, item: Item): Upgrade<PocketUpgradeSerialiser<*>> {
+        return simpleWithCustomItem(XplatRegistries.POCKET_SERIALIZERS.getKey(serialiser), serialiser, item)
+    }
+
+    fun <V : IPocketUpgrade> simpleWithCustomItem(serialiser: Supplier<PocketUpgradeSerialiser<V>>, item: Item): Upgrade<PocketUpgradeSerialiser<*>> {
+        return simpleWithCustomItem(serialiser.get(), item)
+    }
+
+    fun <V : IPocketUpgrade, S : Item> simpleWithCustomItem(serialiser: Supplier<PocketUpgradeSerialiser<V>>, item: Supplier<S>): Upgrade<PocketUpgradeSerialiser<*>> {
+        return simpleWithCustomItem(serialiser.get(), item.get())
     }
 
     abstract fun registerUpgrades(addUpgrade: Consumer<Upgrade<PocketUpgradeSerialiser<*>>>)

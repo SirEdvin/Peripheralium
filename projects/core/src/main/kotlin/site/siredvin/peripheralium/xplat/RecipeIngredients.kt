@@ -20,4 +20,5 @@ interface RecipeIngredients {
 
     val redstone: Ingredient
     val glowstoneDust: Ingredient
+    val xpBottle: Ingredient
 }

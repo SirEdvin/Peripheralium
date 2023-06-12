@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "item": "peripheralium:peripheralium_dust"
+    },
+    "X": {
+      "item": "minecraft:experience_bottle"
+    }
+  },
+  "pattern": [
+    "PPP",
+    "PXP",
+    "P P"
+  ],
+  "result": {
+    "count": 4,
+    "item": "peripheralium:peripheralium_upgrade_template"
+  }
+}

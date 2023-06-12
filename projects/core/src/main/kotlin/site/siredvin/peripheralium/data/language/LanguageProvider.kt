@@ -7,6 +7,7 @@ import net.minecraft.data.PackOutput
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
+import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.util.concurrent.CompletableFuture
 import java.util.stream.Stream
 
@@ -36,8 +37,10 @@ abstract class LanguageProvider(
 
     open fun getExpectedKeys(): Stream<String> {
         return Stream.of(
-            informationHolder.getBlocks().stream().map { it.get().descriptionId },
-            informationHolder.getItems().stream().map { it.get().descriptionId },
+            informationHolder.blocks.stream().map { it.get().descriptionId },
+            informationHolder.items.stream().map { it.get().descriptionId },
+            informationHolder.turtleSerializers.stream().map { XplatRegistries.TURTLE_SERIALIZERS.getKey(it.get()).toTurtleTranslationKey() },
+            informationHolder.pocketSerializers.stream().map { XplatRegistries.POCKET_SERIALIZERS.getKey(it.get()).toPocketTranslationKey() },
             textRecords.map { it.textID }.stream(),
         ).flatMap { it }
     }

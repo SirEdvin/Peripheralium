@@ -11,5 +11,6 @@ object LibItemModelProvider {
 
         generators.generateFlatItem(peripheraliumDust, ModelTemplates.FLAT_ITEM)
         generators.generateFlatItem(periphaliumBlend, ModelTemplates.FLAT_ITEM)
+        generators.generateFlatItem(Items.PERIPHERALIUM_UPGRADE_TEMPLATE.get(), ModelTemplates.FLAT_ITEM)
     }
 }

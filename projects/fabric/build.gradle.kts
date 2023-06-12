@@ -22,6 +22,7 @@ fabricShaking {
     extraVersionMappings.set(
         mapOf(
             "computercraft" to "cc-tweaked",
+            "forgeconfigapiport" to "forgeconfigapirt",
         ),
     )
     shake()
