@@ -2,7 +2,7 @@ import java.util.function.BiConsumer
 
 plugins {
     java
-    id("site.siredvin.root") version "0.3.8"
+    id("site.siredvin.root") version "0.3.12"
 }
 
 subprojectShaking {
