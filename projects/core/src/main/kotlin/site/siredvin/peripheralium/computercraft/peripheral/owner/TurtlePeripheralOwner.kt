@@ -50,7 +50,11 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
         get() = turtle.inventory.getItem(turtle.selectedSlot)
 
     override fun storeItem(stored: ItemStack): ItemStack {
-        return ContainerUtils.storeItem(turtle.inventory, stored, turtle.selectedSlot, turtle.selectedSlot)
+        val remainder = ContainerUtils.storeItem(turtle.inventory, stored, turtle.selectedSlot)
+        if (!remainder.isEmpty && turtle.selectedSlot > 1) {
+            return ContainerUtils.storeItem(turtle.inventory, remainder, 0, turtle.selectedSlot - 1)
+        }
+        return remainder
     }
 
     override fun destroyUpgrade() {
