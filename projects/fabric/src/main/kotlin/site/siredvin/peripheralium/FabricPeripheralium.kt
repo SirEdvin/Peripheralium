@@ -6,6 +6,7 @@ import site.siredvin.peripheralium.fabric.FabricIngredients
 import site.siredvin.peripheralium.fabric.FabricLibPlatform
 import site.siredvin.peripheralium.fabric.FabricPeripheraliumPlatform
 import site.siredvin.peripheralium.storage.FabricStorageUtils
+import site.siredvin.peripheralium.storages.fluid.FluidStorageExtractor
 import site.siredvin.peripheralium.xplat.LibCommonHooks
 
 object FabricPeripheralium : ModInitializer {
@@ -14,6 +15,7 @@ object FabricPeripheralium : ModInitializer {
         PeripheraliumCore.configure(FabricLibPlatform, FabricPeripheraliumPlatform, FabricIngredients)
         // Register extract storages
         ExtractorProxy.addStorageExtractor(FabricStorageUtils::extractStorage)
+        FluidStorageExtractor.addFluidStorageExtractor(FabricStorageUtils::extractFluidStorage)
     }
 
     fun sayHi() {}

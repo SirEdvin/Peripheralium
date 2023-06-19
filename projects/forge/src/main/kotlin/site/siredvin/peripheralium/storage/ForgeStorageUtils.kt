@@ -11,6 +11,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler
 import net.minecraftforge.items.IItemHandler
 import net.minecraftforge.items.wrapper.InvWrapper
 import site.siredvin.peripheralium.api.storage.SlottedStorage
+import site.siredvin.peripheralium.storages.fluid.FluidStorage
+import site.siredvin.peripheralium.storages.fluid.ForgeFluidStorage
 
 object ForgeStorageUtils {
     fun extractFluidHandler(something: Any?): IFluidHandler? {
@@ -37,5 +39,11 @@ object ForgeStorageUtils {
         }
         val itemHandler = extractItemHandler(blockEntity) ?: return null
         return ItemHandlerWrapper(itemHandler)
+    }
+
+    fun extractFluidStorageFromBlock(level: Level, pos: BlockPos, blockEntity: BlockEntity?): FluidStorage? {
+        if (blockEntity == null) return null
+        val fluidHandler = extractFluidHandler(blockEntity) ?: return null
+        return ForgeFluidStorage(fluidHandler)
     }
 }

@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `1.20.1` support
+- New xplat fluid system
+
 ## [0.6.2] - 2023-06-13
 
 ### Fixed
