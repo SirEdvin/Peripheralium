@@ -1,4 +1,4 @@
-package site.siredvin.peripheralium.util
+package site.siredvin.peripheralium.storages
 
 import net.minecraft.world.Container
 import net.minecraft.world.entity.player.Player

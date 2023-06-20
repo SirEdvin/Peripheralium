@@ -8,12 +8,13 @@ import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.ForgeRegistries
-import site.siredvin.peripheralium.api.storage.ExtractorProxy
 import site.siredvin.peripheralium.forge.ForgeIngredients
 import site.siredvin.peripheralium.forge.ForgeLibPlatform
 import site.siredvin.peripheralium.forge.ForgePeripheraliumPlatform
-import site.siredvin.peripheralium.storage.ForgeStorageUtils
+import site.siredvin.peripheralium.storages.ForgeStorageUtils
+import site.siredvin.peripheralium.storages.energy.EnergyStorageExtractor
 import site.siredvin.peripheralium.storages.fluid.FluidStorageExtractor
+import site.siredvin.peripheralium.storages.item.ItemStorageExtractor
 import site.siredvin.peripheralium.xplat.LibCommonHooks
 import thedarkcolour.kotlinforforge.forge.MOD_CONTEXT
 
@@ -31,8 +32,9 @@ object ForgePeripheralium {
     init {
         PeripheraliumCore.configure(ForgeLibPlatform, ForgePeripheraliumPlatform, ForgeIngredients)
         // Register extract storages
-        ExtractorProxy.addStorageExtractor(ForgeStorageUtils::extractStorageFromBlock)
+        ItemStorageExtractor.addStorageExtractor(ForgeStorageUtils::extractStorageFromBlock)
         FluidStorageExtractor.addFluidStorageExtractor(ForgeStorageUtils::extractFluidStorageFromBlock)
+        EnergyStorageExtractor.addEnergyStorageExtractor(ForgeStorageUtils::extractEnergyStorageFromBlock)
         val eventBus = MOD_CONTEXT.getKEventBus()
         LibCommonHooks.onRegister()
         blocksRegistry.register(eventBus)

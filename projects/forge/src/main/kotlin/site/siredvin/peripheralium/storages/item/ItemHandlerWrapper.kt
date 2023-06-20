@@ -1,12 +1,10 @@
-package site.siredvin.peripheralium.storage
+package site.siredvin.peripheralium.storages.item
 
 import net.minecraft.world.item.ItemStack
 import net.minecraftforge.items.IItemHandler
-import site.siredvin.peripheralium.api.storage.SlottedStorage
-import site.siredvin.peripheralium.api.storage.StorageUtils
 import java.util.function.Predicate
 
-class ItemHandlerWrapper(private val handler: IItemHandler) : SlottedStorage {
+class ItemHandlerWrapper(private val handler: IItemHandler) : SlottedItemStorage {
     override fun takeItems(limit: Int, startSlot: Int, endSlot: Int, predicate: Predicate<ItemStack>): ItemStack {
         var slidingLimit = limit
         var slidingItemStack = ItemStack.EMPTY
@@ -25,9 +23,9 @@ class ItemHandlerWrapper(private val handler: IItemHandler) : SlottedStorage {
                 slidingLimit = minOf(slidingItemStack.maxStackSize, limit)
                 slidingLimit -= extractedStack.count
             } else {
-                if (StorageUtils.canMerge(slidingItemStack, extractedStack)) {
+                if (ItemStorageUtils.canMerge(slidingItemStack, extractedStack)) {
                     val extractedCount = extractedStack.count
-                    val remainExtracted = StorageUtils.inplaceMerge(slidingItemStack, extractedStack)
+                    val remainExtracted = ItemStorageUtils.inplaceMerge(slidingItemStack, extractedStack)
                     if (!remainExtracted.isEmpty) {
                         handler.insertItem(currentSlot, remainExtracted, false)
                     }

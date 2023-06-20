@@ -1,14 +1,14 @@
 package site.siredvin.peripheralium.tests
 
 import net.minecraft.world.item.ItemStack
-import site.siredvin.peripheralium.api.storage.SlottedStorage
-import site.siredvin.peripheralium.api.storage.Storage
+import site.siredvin.peripheralium.storages.item.ItemStorage
+import site.siredvin.peripheralium.storages.item.SlottedItemStorage
 import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 object StorageTestHelpers {
-    fun assertNoOverlap(vararg storages: Storage) {
+    fun assertNoOverlap(vararg storages: ItemStorage) {
         val stacks = Collections.newSetFromMap(IdentityHashMap<ItemStack, Boolean>())
         for (storage in storages) {
             storage.getItems().forEach {
@@ -21,7 +21,7 @@ object StorageTestHelpers {
         }
     }
 
-    fun assertStorage(storage: Storage, expected: List<Int>, name: String) {
+    fun assertStorage(storage: ItemStorage, expected: List<Int>, name: String) {
         val notFoundExpected = expected.toMutableList()
         storage.getItems().forEach {
             if (!it.isEmpty) {
@@ -31,7 +31,7 @@ object StorageTestHelpers {
         assertTrue(notFoundExpected.isEmpty(), "Cannot find stack with this sizes: $notFoundExpected in $name storage")
     }
 
-    fun assertSlottedStorage(storage: SlottedStorage, expected: List<Int>, name: String) {
+    fun assertSlottedStorage(storage: SlottedItemStorage, expected: List<Int>, name: String) {
         expected.forEachIndexed { index, amount ->
             assertEquals(
                 amount,

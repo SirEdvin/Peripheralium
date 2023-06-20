@@ -9,7 +9,7 @@ import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.item.ItemStack
-import site.siredvin.peripheralium.api.storage.ContainerUtils
+import site.siredvin.peripheralium.storages.ContainerUtils
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.*
 import java.util.function.Function

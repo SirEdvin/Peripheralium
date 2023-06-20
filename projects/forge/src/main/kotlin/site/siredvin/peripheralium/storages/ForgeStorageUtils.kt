@@ -1,4 +1,4 @@
-package site.siredvin.peripheralium.storage
+package site.siredvin.peripheralium.storages
 
 import net.minecraft.core.BlockPos
 import net.minecraft.world.Container
@@ -7,14 +7,26 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraftforge.common.capabilities.ForgeCapabilities
 import net.minecraftforge.common.capabilities.ICapabilityProvider
 import net.minecraftforge.common.util.LazyOptional
+import net.minecraftforge.energy.IEnergyStorage
 import net.minecraftforge.fluids.capability.IFluidHandler
 import net.minecraftforge.items.IItemHandler
 import net.minecraftforge.items.wrapper.InvWrapper
-import site.siredvin.peripheralium.api.storage.SlottedStorage
+import site.siredvin.peripheralium.storages.energy.EnergyHandlerWrapper
+import site.siredvin.peripheralium.storages.energy.EnergyStorage
 import site.siredvin.peripheralium.storages.fluid.FluidStorage
 import site.siredvin.peripheralium.storages.fluid.ForgeFluidStorage
+import site.siredvin.peripheralium.storages.item.ItemHandlerWrapper
+import site.siredvin.peripheralium.storages.item.SlottedItemStorage
 
 object ForgeStorageUtils {
+    fun extractEnergyStorage(something: Any?): IEnergyStorage? {
+        if (something is BlockEntity && something.isRemoved) return null
+        if (something is ICapabilityProvider) {
+            val cap: LazyOptional<IEnergyStorage> = something.getCapability(ForgeCapabilities.ENERGY)
+            if (cap.isPresent) return cap.orElseThrow { NullPointerException() }
+        }
+        return something as? IEnergyStorage
+    }
     fun extractFluidHandler(something: Any?): IFluidHandler? {
         if (something is BlockEntity && something.isRemoved) return null
         if (something is ICapabilityProvider) {
@@ -33,7 +45,7 @@ object ForgeStorageUtils {
         return something as? IItemHandler ?: (something as? Container)?.let { InvWrapper(it) }
     }
 
-    fun extractStorageFromBlock(level: Level, pos: BlockPos, blockEntity: BlockEntity?): SlottedStorage? {
+    fun extractStorageFromBlock(level: Level, pos: BlockPos, blockEntity: BlockEntity?): SlottedItemStorage? {
         if (blockEntity == null) {
             return null
         }
@@ -45,5 +57,11 @@ object ForgeStorageUtils {
         if (blockEntity == null) return null
         val fluidHandler = extractFluidHandler(blockEntity) ?: return null
         return ForgeFluidStorage(fluidHandler)
+    }
+
+    fun extractEnergyStorageFromBlock(level: Level, pos: BlockPos, blockEntity: BlockEntity?): EnergyStorage? {
+        if (blockEntity == null) return null
+        val fluidHandler = extractEnergyStorage(blockEntity) ?: return null
+        return EnergyHandlerWrapper(fluidHandler)
     }
 }

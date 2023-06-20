@@ -1,11 +1,11 @@
 package site.siredvin.peripheralium.storage
 
 import net.minecraft.world.item.ItemStack
-import site.siredvin.peripheralium.api.storage.AccessibleStorage
-import site.siredvin.peripheralium.api.storage.StorageUtils
+import site.siredvin.peripheralium.storages.item.AccessibleItemStorage
+import site.siredvin.peripheralium.storages.item.ItemStorageUtils
 import java.util.function.Predicate
 
-class DummyStorage(private val maxSlots: Int, initialItems: List<ItemStack>) : AccessibleStorage {
+class DummyStorage(private val maxSlots: Int, initialItems: List<ItemStack>) : AccessibleItemStorage {
 
     val items: MutableList<ItemStack> = mutableListOf()
 
@@ -42,9 +42,9 @@ class DummyStorage(private val maxSlots: Int, initialItems: List<ItemStack>) : A
                         slidingStack = stack
                         slidingLimit = minOf(limit, stack.maxStackSize) - stack.count
                         toRemove.add(index)
-                    } else if (StorageUtils.canMerge(slidingStack, stack)) {
+                    } else if (ItemStorageUtils.canMerge(slidingStack, stack)) {
                         val originalCount = stack.count
-                        val remainder = StorageUtils.inplaceMerge(slidingStack, stack)
+                        val remainder = ItemStorageUtils.inplaceMerge(slidingStack, stack)
                         slidingLimit -= originalCount - remainder.count
                         if (remainder.isEmpty) {
                             toRemove.add(index)
@@ -62,8 +62,8 @@ class DummyStorage(private val maxSlots: Int, initialItems: List<ItemStack>) : A
 
     override fun storeItem(stack: ItemStack): ItemStack {
         items.forEach {
-            if (StorageUtils.canMerge(it, stack)) {
-                StorageUtils.inplaceMerge(it, stack)
+            if (ItemStorageUtils.canMerge(it, stack)) {
+                ItemStorageUtils.inplaceMerge(it, stack)
             }
         }
         if (stack.isEmpty) {

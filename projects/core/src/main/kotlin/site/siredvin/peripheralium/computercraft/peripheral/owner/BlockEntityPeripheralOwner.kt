@@ -10,9 +10,9 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.properties.DirectionProperty
 import site.siredvin.peripheralium.api.blockentities.IOwnedBlockEntity
 import site.siredvin.peripheralium.api.peripheral.IPeripheralTileEntity
-import site.siredvin.peripheralium.api.storage.ExtractorProxy
-import site.siredvin.peripheralium.api.storage.SlottedStorage
 import site.siredvin.peripheralium.common.blocks.GenericBlockEntityBlock
+import site.siredvin.peripheralium.storages.item.ItemStorageExtractor
+import site.siredvin.peripheralium.storages.item.SlottedItemStorage
 import site.siredvin.peripheralium.util.DataStorageUtil
 import site.siredvin.peripheralium.util.world.FakePlayerProviderBlockEntity
 import site.siredvin.peripheralium.util.world.FakePlayerProxy
@@ -37,8 +37,8 @@ class BlockEntityPeripheralOwner<T>(private val tileEntity: T, private val facin
     override val dataStorage: CompoundTag
         get() = DataStorageUtil.getDataStorage(tileEntity)
 
-    override val storage: SlottedStorage? by lazy {
-        ExtractorProxy.extractStorage(tileEntity.level!!, tileEntity.blockPos, tileEntity) as? SlottedStorage
+    override val storage: SlottedItemStorage? by lazy {
+        ItemStorageExtractor.extractStorage(tileEntity.level!!, tileEntity.blockPos, tileEntity) as? SlottedItemStorage
     }
 
     override fun markDataStorageDirty() {

@@ -1,15 +1,16 @@
-package site.siredvin.peripheralium.api.storage
+package site.siredvin.peripheralium.storages
 
 import net.minecraft.core.BlockPos
 import net.minecraft.world.Container
 import net.minecraft.world.Containers
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import site.siredvin.peripheralium.storages.item.ItemStorageUtils
 import java.util.function.Predicate
 
 object ContainerUtils {
     fun extract(container: Container, slot: Int, limit: Int, previousStack: ItemStack): ItemStack {
-        return extract(container, slot, limit) { previousStack.isEmpty || StorageUtils.canStack(previousStack, it) }
+        return extract(container, slot, limit) { previousStack.isEmpty || ItemStorageUtils.canStack(previousStack, it) }
     }
 
     fun extract(container: Container, slot: Int, limit: Int, predicate: Predicate<ItemStack>): ItemStack {
@@ -38,7 +39,7 @@ object ContainerUtils {
                 stack = extractedStack
                 slidingLimit = minOf(slidingLimit, stack.maxStackSize)
                 slidingPredicate = slidingPredicate.and {
-                    StorageUtils.canStack(stack, it)
+                    ItemStorageUtils.canStack(stack, it)
                 }
             } else {
                 stack.grow(extractedStack.count)
@@ -73,11 +74,11 @@ object ContainerUtils {
                 if (slotStack.count >= slotMaxStackSize) {
                     continue
                 }
-                if (!StorageUtils.canMerge(slotStack, slidingStack, slotMaxStackSize)) {
+                if (!ItemStorageUtils.canMerge(slotStack, slidingStack, slotMaxStackSize)) {
                     continue
                 }
 
-                slidingStack = StorageUtils.inplaceMerge(slotStack, slidingStack)
+                slidingStack = ItemStorageUtils.inplaceMerge(slotStack, slidingStack)
 
                 if (slidingStack.isEmpty) {
                     container.setChanged()

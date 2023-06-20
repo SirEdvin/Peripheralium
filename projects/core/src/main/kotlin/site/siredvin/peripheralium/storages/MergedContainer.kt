@@ -1,8 +1,9 @@
-package site.siredvin.peripheralium.util
+package site.siredvin.peripheralium.storages
 
 import net.minecraft.world.Container
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
+import site.siredvin.peripheralium.util.Pair
 
 class MergedContainer(private val containers: List<Container>) : Container {
 

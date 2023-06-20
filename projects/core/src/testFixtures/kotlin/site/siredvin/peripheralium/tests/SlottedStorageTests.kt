@@ -5,19 +5,19 @@ import net.minecraft.world.item.Items
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import site.siredvin.peripheralium.api.storage.AccessibleStorage
-import site.siredvin.peripheralium.api.storage.SlottedStorage
-import site.siredvin.peripheralium.api.storage.StorageUtils
+import site.siredvin.peripheralium.storages.item.AccessibleItemStorage
+import site.siredvin.peripheralium.storages.item.ItemStorageUtils
+import site.siredvin.peripheralium.storages.item.SlottedItemStorage
 import kotlin.test.assertEquals
 
 abstract class SlottedStorageTests : StorageTests() {
 
-    override fun createStorage(items: List<ItemStack>, secondary: Boolean): AccessibleStorage {
+    override fun createStorage(items: List<ItemStack>, secondary: Boolean): AccessibleItemStorage {
         return createSlottedStorage(items, secondary)
     }
-    abstract fun createSlottedStorage(items: List<ItemStack>, secondary: Boolean): SlottedStorage
+    abstract fun createSlottedStorage(items: List<ItemStack>, secondary: Boolean): SlottedItemStorage
 
-    fun createSlottedStorage(sizes: List<Int>, stack: ItemStack, secondary: Boolean): SlottedStorage {
+    fun createSlottedStorage(sizes: List<Int>, stack: ItemStack, secondary: Boolean): SlottedItemStorage {
         return createSlottedStorage(
             sizes.map {
                 if (it == 0) {
@@ -97,7 +97,7 @@ abstract class SlottedStorageTests : StorageTests() {
         val grassBlock = ItemStack(Items.GRASS_BLOCK, 64)
         val from = createSlottedStorage(argument.initialFrom, grassBlock, false)
         val to = createSlottedStorage(argument.initialTo, grassBlock, true)
-        val movedAmount = from.moveTo(to, argument.moveLimit, argument.fromSlot, argument.toSlot, takePredicate = StorageUtils.ALWAYS)
+        val movedAmount = from.moveTo(to, argument.moveLimit, argument.fromSlot, argument.toSlot, takePredicate = ItemStorageUtils.ALWAYS)
         assertEquals(argument.expectedMoveAmount, movedAmount)
         StorageTestHelpers.assertSlottedStorage(from, argument.expectedFrom, "from")
         StorageTestHelpers.assertSlottedStorage(to, argument.expectedTo, "to")
@@ -110,7 +110,7 @@ abstract class SlottedStorageTests : StorageTests() {
         val grassBlock = ItemStack(Items.GRASS_BLOCK, 64)
         val from = createSlottedStorage(argument.initialFrom, grassBlock, false)
         val to = createSlottedStorage(argument.initialTo, grassBlock, true)
-        val movedAmount = to.moveFrom(from, argument.moveLimit, argument.toSlot, argument.fromSlot, takePredicate = StorageUtils.ALWAYS)
+        val movedAmount = to.moveFrom(from, argument.moveLimit, argument.toSlot, argument.fromSlot, takePredicate = ItemStorageUtils.ALWAYS)
         assertEquals(argument.expectedMoveAmount, movedAmount)
         StorageTestHelpers.assertSlottedStorage(from, argument.expectedFrom, "from")
         StorageTestHelpers.assertSlottedStorage(to, argument.expectedTo, "to")

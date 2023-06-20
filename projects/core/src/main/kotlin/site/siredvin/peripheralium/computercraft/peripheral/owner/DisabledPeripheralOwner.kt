@@ -6,7 +6,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import site.siredvin.peripheralium.api.storage.SlottedStorage
+import site.siredvin.peripheralium.storages.item.SlottedItemStorage
 import site.siredvin.peripheralium.util.world.FakePlayerProxy
 
 class DisabledPeripheralOwner : BasePeripheralOwner() {
@@ -21,7 +21,7 @@ class DisabledPeripheralOwner : BasePeripheralOwner() {
     override val dataStorage: CompoundTag
         get() = CompoundTag()
 
-    override val storage: SlottedStorage?
+    override val storage: SlottedItemStorage?
         get() = null
 
     override fun markDataStorageDirty() {

@@ -12,9 +12,9 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.entity.BlockEntity
 import site.siredvin.peripheralium.api.blockentities.IOwnedBlockEntity
-import site.siredvin.peripheralium.api.storage.ExtractorProxy
-import site.siredvin.peripheralium.api.storage.SlottedStorage
-import site.siredvin.peripheralium.api.storage.StorageUtils
+import site.siredvin.peripheralium.storages.item.ItemStorageExtractor
+import site.siredvin.peripheralium.storages.item.ItemStorageUtils
+import site.siredvin.peripheralium.storages.item.SlottedItemStorage
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.*
 import java.util.function.Function
@@ -35,7 +35,7 @@ object FakePlayerProviderBlockEntity {
         return fake
     }
 
-    private fun load(player: ServerPlayer, realPlayer: Player, storage: SlottedStorage?, overwrittenDirection: Direction? = null, skipInventory: Boolean = false) {
+    private fun load(player: ServerPlayer, realPlayer: Player, storage: SlottedItemStorage?, overwrittenDirection: Direction? = null, skipInventory: Boolean = false) {
         val direction = overwrittenDirection ?: realPlayer.direction
         player.setServerLevel(realPlayer.level() as ServerLevel)
         val position = realPlayer.blockPosition()
@@ -76,7 +76,7 @@ object FakePlayerProviderBlockEntity {
         }
     }
 
-    private fun unload(player: ServerPlayer, realPlayer: Player, storage: SlottedStorage?, skipInventory: Boolean = false) {
+    private fun unload(player: ServerPlayer, realPlayer: Player, storage: SlottedItemStorage?, skipInventory: Boolean = false) {
         val playerInventory: Inventory = player.inventory
         playerInventory.selected = 0
 
@@ -99,7 +99,7 @@ object FakePlayerProviderBlockEntity {
                 for (i in size until fakeInventorySize) {
                     val remaining = playerInventory.getItem(i)
                     if (!remaining.isEmpty) {
-                        StorageUtils.toInventoryOrToWorld(
+                        ItemStorageUtils.toInventoryOrToWorld(
                             remaining,
                             storage,
                             0,
@@ -121,7 +121,7 @@ object FakePlayerProviderBlockEntity {
             ?: throw LuaException("Cannot init player for this block entity computer for some reason")
         val player: FakePlayerProxy =
             getPlayer(blockEntity, realPlayer.gameProfile)
-        val storage = ExtractorProxy.extractStorage(blockEntity.level!!, blockEntity.blockPos, blockEntity = null) as? SlottedStorage
+        val storage = ItemStorageExtractor.extractStorage(blockEntity.level!!, blockEntity.blockPos, blockEntity = null) as? SlottedItemStorage
         if (!skipInventory && storage == null) {
             throw IllegalArgumentException("Cannot init fake player with storage and with block entity without storage")
         }

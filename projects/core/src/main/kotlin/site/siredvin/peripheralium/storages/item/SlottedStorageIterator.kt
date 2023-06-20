@@ -1,8 +1,8 @@
-package site.siredvin.peripheralium.api.storage
+package site.siredvin.peripheralium.storages.item
 
 import net.minecraft.world.item.ItemStack
 
-class SlottedStorageIterator(private val storage: SlottedStorage) : Iterator<ItemStack> {
+class SlottedStorageIterator(private val storage: SlottedItemStorage) : Iterator<ItemStack> {
     private var currentIndex = 0
     override fun hasNext(): Boolean {
         return currentIndex < storage.size

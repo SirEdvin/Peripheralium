@@ -6,17 +6,17 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import site.siredvin.peripheralium.api.storage.AccessibleStorage
-import site.siredvin.peripheralium.api.storage.StorageUtils
+import site.siredvin.peripheralium.storages.item.AccessibleItemStorage
+import site.siredvin.peripheralium.storages.item.ItemStorageUtils
 import java.util.*
 import java.util.function.Predicate
 import kotlin.test.assertEquals
 
 abstract class StorageTests {
 
-    abstract fun createStorage(items: List<ItemStack>, secondary: Boolean): AccessibleStorage
+    abstract fun createStorage(items: List<ItemStack>, secondary: Boolean): AccessibleItemStorage
 
-    fun createStorage(sizes: List<Int>, stack: ItemStack, secondary: Boolean): AccessibleStorage {
+    fun createStorage(sizes: List<Int>, stack: ItemStack, secondary: Boolean): AccessibleItemStorage {
         return createStorage(
             sizes.map {
                 if (it == 0) {
@@ -88,7 +88,7 @@ abstract class StorageTests {
         val grassBlock = ItemStack(Items.GRASS_BLOCK, 64)
         val from = createStorage(argument.initialFrom, grassBlock, secondary = false)
         val to = createStorage(argument.initialTo, grassBlock, secondary = true)
-        val movedAmount = from.moveTo(to, argument.moveLimit, takePredicate = StorageUtils.ALWAYS)
+        val movedAmount = from.moveTo(to, argument.moveLimit, takePredicate = ItemStorageUtils.ALWAYS)
         assertEquals(argument.expectedMoveAmount, movedAmount)
         StorageTestHelpers.assertStorage(from, argument.expectedFrom, "from")
         StorageTestHelpers.assertStorage(to, argument.expectedTo, "to")
@@ -101,7 +101,7 @@ abstract class StorageTests {
         val grassBlock = ItemStack(Items.GRASS_BLOCK, 64)
         val from = createStorage(argument.initialFrom, grassBlock, secondary = false)
         val to = createStorage(argument.initialTo, grassBlock, secondary = true)
-        val movedAmount = to.moveFrom(from, argument.moveLimit, takePredicate = StorageUtils.ALWAYS)
+        val movedAmount = to.moveFrom(from, argument.moveLimit, takePredicate = ItemStorageUtils.ALWAYS)
         assertEquals(argument.expectedMoveAmount, movedAmount)
         StorageTestHelpers.assertStorage(from, argument.expectedFrom, "from")
         StorageTestHelpers.assertStorage(to, argument.expectedTo, "to")

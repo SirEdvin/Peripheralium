@@ -1,4 +1,4 @@
-package site.siredvin.peripheralium.api.storage
+package site.siredvin.peripheralium.storages.item
 
 import dan200.computercraft.api.lua.LuaException
 import net.minecraft.core.BlockPos
@@ -8,17 +8,17 @@ import net.minecraft.world.level.Level
 import java.util.function.Predicate
 
 @Suppress("MemberVisibilityCanBePrivate")
-object StorageUtils {
+object ItemStorageUtils {
 
     val ALWAYS: Predicate<ItemStack> = Predicate { true }
 
-    fun naiveMove(from: Storage, to: TargetableStorage, limit: Int, fromSlot: Int = -1, toSlot: Int = -1, takePredicate: Predicate<ItemStack>): Int {
+    fun naiveMove(from: ItemStorage, to: ItemSink, limit: Int, fromSlot: Int = -1, toSlot: Int = -1, takePredicate: Predicate<ItemStack>): Int {
         // TODO: This is not critical, but ideally this function should be able to move limit above (!) maxStackSize
         // Get stack to move
         val stack = if (fromSlot < 0) {
             from.takeItems(takePredicate, limit)
         } else {
-            if (from !is SlottedStorage) {
+            if (from !is SlottedItemStorage) {
                 throw LuaException("From storage doesn't support slotting")
             }
             from.takeItems(limit, fromSlot, fromSlot, takePredicate)
@@ -33,7 +33,7 @@ object StorageUtils {
         val remainder = if (toSlot < 0) {
             to.storeItem(stack)
         } else {
-            if (to !is SlottedStorage) {
+            if (to !is SlottedItemStorage) {
                 throw LuaException("To storage doesn't support slotting")
             }
             to.storeItem(stack, toSlot, toSlot)
@@ -46,7 +46,7 @@ object StorageUtils {
             if (fromSlot < 0) {
                 from.storeItem(remainder)
             } else {
-                if (from !is SlottedStorage) {
+                if (from !is SlottedItemStorage) {
                     throw LuaException("From storage doesn't support slotting")
                 }
                 from.storeItem(remainder, fromSlot, fromSlot)
@@ -86,14 +86,14 @@ object StorageUtils {
         return second
     }
 
-    fun toInventoryOrToWorld(output: ItemStack, inventory: TargetableStorage, outputPos: BlockPos, level: Level) {
+    fun toInventoryOrToWorld(output: ItemStack, inventory: SlottedItemSink, outputPos: BlockPos, level: Level) {
         val rest = inventory.storeItem(output)
         if (!rest.isEmpty) {
             Containers.dropItemStack(level, outputPos.x.toDouble(), outputPos.y.toDouble(), outputPos.z.toDouble(), rest)
         }
     }
 
-    fun toInventoryOrToWorld(output: ItemStack, inventory: SlottedStorage, startSlot: Int, outputPos: BlockPos, level: Level) {
+    fun toInventoryOrToWorld(output: ItemStack, inventory: SlottedItemStorage, startSlot: Int, outputPos: BlockPos, level: Level) {
         val rest = inventory.storeItem(output, startSlot)
         if (!rest.isEmpty) {
             Containers.dropItemStack(level, outputPos.x.toDouble(), outputPos.y.toDouble(), outputPos.z.toDouble(), rest)

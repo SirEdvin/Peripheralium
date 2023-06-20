@@ -9,9 +9,9 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import site.siredvin.peripheralium.api.storage.SlottedStorage
 import site.siredvin.peripheralium.computercraft.peripheral.ability.OperationAbility
 import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
+import site.siredvin.peripheralium.storages.item.SlottedItemStorage
 import site.siredvin.peripheralium.util.world.FakePlayerProxy
 import java.util.function.BiConsumer
 import java.util.function.Consumer
@@ -29,7 +29,7 @@ interface IPeripheralOwner {
     val facing: Direction
     val owner: Player?
     val dataStorage: CompoundTag
-    val storage: SlottedStorage?
+    val storage: SlottedItemStorage?
 
     fun markDataStorageDirty()
 

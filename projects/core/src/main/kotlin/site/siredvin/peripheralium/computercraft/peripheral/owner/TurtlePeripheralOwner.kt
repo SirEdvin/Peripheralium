@@ -8,11 +8,11 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import site.siredvin.peripheralium.api.storage.ContainerUtils
-import site.siredvin.peripheralium.api.storage.SlottedStorage
-import site.siredvin.peripheralium.api.storage.TargetableContainer
 import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
 import site.siredvin.peripheralium.computercraft.peripheral.ability.TurtleFuelAbility
+import site.siredvin.peripheralium.storages.ContainerUtils
+import site.siredvin.peripheralium.storages.ContainerWrapper
+import site.siredvin.peripheralium.storages.item.SlottedItemStorage
 import site.siredvin.peripheralium.util.DataStorageUtil
 import site.siredvin.peripheralium.util.world.FakePlayerProviderTurtle
 import site.siredvin.peripheralium.util.world.FakePlayerProxy
@@ -35,8 +35,8 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
     override val dataStorage: CompoundTag
         get() = DataStorageUtil.getDataStorage(turtle, side)
 
-    override val storage: SlottedStorage
-        get() = TargetableContainer(turtle.inventory)
+    override val storage: SlottedItemStorage
+        get() = ContainerWrapper(turtle.inventory)
 
     override fun markDataStorageDirty() {
         turtle.updateUpgradeNBTData(side)

@@ -7,15 +7,15 @@ import dan200.computercraft.api.peripheral.IPeripheral
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
-import site.siredvin.peripheralium.api.storage.ExtractorProxy
-import site.siredvin.peripheralium.api.storage.Storage
+import site.siredvin.peripheralium.storages.item.ItemStorage
+import site.siredvin.peripheralium.storages.item.ItemStorageExtractor
 import site.siredvin.peripheralium.util.representation.LuaRepresentation
 import java.util.*
 import java.util.function.Predicate
 import kotlin.math.min
 
 abstract class AbstractItemStoragePlugin : IPeripheralPlugin {
-    abstract val storage: Storage
+    abstract val storage: ItemStorage
     abstract val level: Level
     abstract val itemStorageTransferLimit: Int
 
@@ -42,7 +42,7 @@ abstract class AbstractItemStoragePlugin : IPeripheralPlugin {
         val location: IPeripheral = computer.getAvailablePeripheral(toName)
             ?: throw LuaException("Target '$toName' does not exist")
 
-        val toStorage = ExtractorProxy.extractTargetableStorageFromUnknown(level, location.target)
+        val toStorage = ItemStorageExtractor.extractItemSinkFromUnknown(level, location.target)
             ?: throw LuaException("Target '$toName' is not an targetable storage")
 
         val predicate: Predicate<ItemStack> = PeripheralPluginUtils.itemQueryToPredicate(itemQuery)
@@ -55,7 +55,7 @@ abstract class AbstractItemStoragePlugin : IPeripheralPlugin {
         val location: IPeripheral = computer.getAvailablePeripheral(fromName)
             ?: throw LuaException("Target '$fromName' does not exist")
 
-        val fromStorage = ExtractorProxy.extractStorageFromUnknown(level, location.target)
+        val fromStorage = ItemStorageExtractor.extractStorageFromUnknown(level, location.target)
             ?: throw LuaException("Target '$fromName' is not an storage")
 
         val predicate: Predicate<ItemStack> = PeripheralPluginUtils.itemQueryToPredicate(itemQuery)

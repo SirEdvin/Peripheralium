@@ -26,8 +26,8 @@ import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import site.siredvin.peripheralium.PeripheraliumCore
-import site.siredvin.peripheralium.api.storage.ContainerUtils
 import site.siredvin.peripheralium.ext.toBlockPos
+import site.siredvin.peripheralium.storages.ContainerUtils
 import site.siredvin.peripheralium.util.Pair
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.*

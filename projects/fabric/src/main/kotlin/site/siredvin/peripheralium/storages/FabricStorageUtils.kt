@@ -1,4 +1,4 @@
-package site.siredvin.peripheralium.storage
+package site.siredvin.peripheralium.storages
 
 import dan200.computercraft.api.lua.LuaException
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
@@ -10,8 +10,8 @@ import net.minecraft.core.BlockPos
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
-import site.siredvin.peripheralium.api.storage.*
 import site.siredvin.peripheralium.storages.fluid.FabricFluidStorage
+import site.siredvin.peripheralium.storages.item.*
 import java.util.function.Predicate
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage as FabricStorage
 
@@ -32,7 +32,7 @@ object FabricStorageUtils {
     /**
      * Generic move to any targetable storage, should be used only after make sure that to is not fabric one related!
      */
-    fun moveToTargetable(storage: FabricStorage<ItemVariant>, to: TargetableStorage, limit: Int, toSlot: Int, takePredicate: Predicate<ItemStack>): Int {
+    fun moveToTargetable(storage: FabricStorage<ItemVariant>, to: ItemSink, limit: Int, toSlot: Int, takePredicate: Predicate<ItemStack>): Int {
         assert(to.movableType != MOVABLE_TYPE)
 
         val transaction = Transaction.openOuter()
@@ -48,7 +48,7 @@ object FabricStorageUtils {
             val remainder = if (toSlot < 0) {
                 to.storeItem(insertionStack)
             } else {
-                (to as TargetableSlottedStorage).storeItem(insertionStack, toSlot, toSlot)
+                (to as SlottedItemSink).storeItem(insertionStack, toSlot, toSlot)
             }
             val insertedCount = extractedAmount - remainder.count
             if (!remainder.isEmpty) {
@@ -62,13 +62,13 @@ object FabricStorageUtils {
     /**
      * Generic move from any targetable storage, should be used only after make sure that to is not fabric one related!
      */
-    fun moveFromTargetable(from: Storage, to: FabricStorage<ItemVariant>, limit: Int, fromSlot: Int, takePredicate: Predicate<ItemStack>): Int {
+    fun moveFromTargetable(from: site.siredvin.peripheralium.storages.item.ItemStorage, to: FabricStorage<ItemVariant>, limit: Int, fromSlot: Int, takePredicate: Predicate<ItemStack>): Int {
         assert(from.movableType != MOVABLE_TYPE)
 
         val insertionStack = if (fromSlot < 0) {
             from.takeItems(takePredicate, limit)
         } else {
-            if (from !is SlottedStorage) {
+            if (from !is SlottedItemStorage) {
                 throw LuaException("From doesn't support slotting")
             }
             from.takeItems(limit, fromSlot, fromSlot, takePredicate)
@@ -84,7 +84,7 @@ object FabricStorageUtils {
             val remainCount = insertionStack.count - insertedAmount
             if (remainCount > 0) {
                 if (fromSlot > -1) {
-                    (from as SlottedStorage).storeItem(insertionStack.copyWithCount(remainCount.toInt()), fromSlot, fromSlot)
+                    (from as SlottedItemStorage).storeItem(insertionStack.copyWithCount(remainCount.toInt()), fromSlot, fromSlot)
                 } else {
                     from.storeItem(insertionStack.copyWithCount(remainCount.toInt()))
                 }
@@ -94,7 +94,7 @@ object FabricStorageUtils {
         }
     }
 
-    fun extractStorage(level: Level, pos: BlockPos, blockEntity: BlockEntity?): Storage? {
+    fun extractStorage(level: Level, pos: BlockPos, blockEntity: BlockEntity?): site.siredvin.peripheralium.storages.item.ItemStorage? {
         val itemStorage = ItemStorage.SIDED.find(level, pos, null) ?: return null
 
         return if (itemStorage is net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage) {
@@ -106,7 +106,6 @@ object FabricStorageUtils {
 
     fun extractFluidStorage(level: Level, pos: BlockPos, blockEntity: BlockEntity?): site.siredvin.peripheralium.storages.fluid.FluidStorage? {
         val fluidStorage = FluidStorage.SIDED.find(level, pos, null) ?: return null
-
         return FabricFluidStorage(fluidStorage)
     }
 }

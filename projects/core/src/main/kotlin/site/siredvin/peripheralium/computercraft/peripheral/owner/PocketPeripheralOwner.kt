@@ -7,11 +7,11 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import site.siredvin.peripheralium.api.storage.ContainerUtils
-import site.siredvin.peripheralium.api.storage.SlottedStorage
-import site.siredvin.peripheralium.api.storage.TargetableContainer
 import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
 import site.siredvin.peripheralium.computercraft.peripheral.ability.PocketFuelAbility
+import site.siredvin.peripheralium.storages.ContainerUtils
+import site.siredvin.peripheralium.storages.ContainerWrapper
+import site.siredvin.peripheralium.storages.item.SlottedItemStorage
 import site.siredvin.peripheralium.util.DataStorageUtil
 import site.siredvin.peripheralium.util.world.FakePlayerProviderPocket
 import site.siredvin.peripheralium.util.world.FakePlayerProxy
@@ -38,8 +38,8 @@ class PocketPeripheralOwner(val pocket: IPocketAccess) : BasePeripheralOwner() {
     override val dataStorage: CompoundTag
         get() = pocket.let { DataStorageUtil.getDataStorage(it) }
 
-    override val storage: SlottedStorage?
-        get() = owner?.inventory?.let { TargetableContainer(it) }
+    override val storage: SlottedItemStorage?
+        get() = owner?.inventory?.let { ContainerWrapper(it) }
 
     override fun markDataStorageDirty() {
         pocket.updateUpgradeNBTData()
