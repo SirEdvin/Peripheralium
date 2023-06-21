@@ -1,6 +1,8 @@
 package site.siredvin.peripheralium.tests
 
 import net.minecraft.world.item.ItemStack
+import site.siredvin.peripheralium.storages.fluid.FluidStack
+import site.siredvin.peripheralium.storages.fluid.FluidStorage
 import site.siredvin.peripheralium.storages.item.ItemStorage
 import site.siredvin.peripheralium.storages.item.SlottedItemStorage
 import java.util.*
@@ -21,11 +23,34 @@ object StorageTestHelpers {
         }
     }
 
+    fun assertNoOverlap(vararg storages: FluidStorage) {
+        val stacks = Collections.newSetFromMap(IdentityHashMap<FluidStack, Boolean>())
+        for (storage in storages) {
+            storage.getFluids().forEach {
+                if (it != FluidStack.EMPTY) {
+                    if (!stacks.add(it)) {
+                        throw AssertionError("Duplicate item in inventories")
+                    }
+                }
+            }
+        }
+    }
+
     fun assertStorage(storage: ItemStorage, expected: List<Int>, name: String) {
         val notFoundExpected = expected.toMutableList()
         storage.getItems().forEach {
             if (!it.isEmpty) {
                 assertTrue(notFoundExpected.remove(it.count), "In $name storage found stack with unexpected count ${it.count}")
+            }
+        }
+        assertTrue(notFoundExpected.isEmpty(), "Cannot find stack with this sizes: $notFoundExpected in $name storage")
+    }
+
+    fun assertFluidStorage(storage: FluidStorage, expected: List<Long>, name: String) {
+        val notFoundExpected = expected.toMutableList()
+        storage.getFluids().forEach {
+            if (!it.isEmpty) {
+                assertTrue(notFoundExpected.remove(it.amount), "In $name storage found stack with unexpected count ${it.amount}")
             }
         }
         assertTrue(notFoundExpected.isEmpty(), "Cannot find stack with this sizes: $notFoundExpected in $name storage")

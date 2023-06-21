@@ -4,9 +4,9 @@ import java.util.function.Predicate
 
 interface FluidStorage : FluidSink {
     fun getFluids(): Iterator<FluidStack>
-    fun takeFluid(predicate: Predicate<FluidStack>, limit: Int): FluidStack
+    fun takeFluid(predicate: Predicate<FluidStack>, limit: Long): FluidStack
 
-    fun moveTo(to: FluidSink, limit: Int, takePredicate: Predicate<FluidStack>): Long {
+    fun moveTo(to: FluidSink, limit: Long, takePredicate: Predicate<FluidStack>): Long {
         if (movableType != null) {
             throw IllegalStateException("With movable type you should redefine this function")
         }

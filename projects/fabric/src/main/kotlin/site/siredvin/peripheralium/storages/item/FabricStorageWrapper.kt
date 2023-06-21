@@ -39,19 +39,19 @@ open class FabricStorageWrapper(internal val storage: FabricStorage<ItemVariant>
                 return StorageUtil.move(
                     slotStorage,
                     storage,
-                    FabricStorageUtils.wrap(takePredicate),
+                    FabricStorageUtils.wrapItem(takePredicate),
                     limit.toLong(),
                     null,
                 ).toInt()
             }
-            return StorageUtil.move(from.storage, storage, FabricStorageUtils.wrap(takePredicate), limit.toLong(), null).toInt()
+            return StorageUtil.move(from.storage, storage, FabricStorageUtils.wrapItem(takePredicate), limit.toLong(), null).toInt()
             // TODO: catch this case with testing!
         }
         if (from is FabricStorageWrapper) {
             if (fromSlot > -1) {
                 throw LuaException("From storage doesn't support slotting")
             }
-            return StorageUtil.move(from.storage, storage, FabricStorageUtils.wrap(takePredicate), limit.toLong(), null).toInt()
+            return StorageUtil.move(from.storage, storage, FabricStorageUtils.wrapItem(takePredicate), limit.toLong(), null).toInt()
         }
         return FabricStorageUtils.moveFromTargetable(from, storage, limit, fromSlot, takePredicate)
     }
@@ -65,7 +65,7 @@ open class FabricStorageWrapper(internal val storage: FabricStorage<ItemVariant>
 
     override fun takeItems(predicate: Predicate<ItemStack>, limit: Int): ItemStack {
         Transaction.openOuter().use {
-            val extractionTarget = StorageUtil.findExtractableContent(storage, FabricStorageUtils.wrap(predicate), it)
+            val extractionTarget = StorageUtil.findExtractableContent(storage, FabricStorageUtils.wrapItem(predicate), it)
                 ?: return ItemStack.EMPTY
             if (extractionTarget.amount == 0L) {
                 return ItemStack.EMPTY

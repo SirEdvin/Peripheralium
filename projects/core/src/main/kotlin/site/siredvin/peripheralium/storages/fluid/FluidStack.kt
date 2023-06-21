@@ -3,6 +3,7 @@ package site.siredvin.peripheralium.storages.fluid
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.level.material.Fluid
 import net.minecraft.world.level.material.Fluids
+import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 
 data class FluidStack(val fluid: Fluid, var amount: Long, var tag: CompoundTag? = null) {
     companion object {
@@ -20,6 +21,9 @@ data class FluidStack(val fluid: Fluid, var amount: Long, var tag: CompoundTag? 
     }
     val isEmpty: Boolean
         get() = fluid.isSame(Fluids.EMPTY)
+
+    val platformAmount: Long
+        get() = (this.amount * PeripheraliumPlatform.fluidCompactDivider).toLong()
 
     fun copy(): FluidStack {
         return FluidStack(fluid, amount, tag?.copy())

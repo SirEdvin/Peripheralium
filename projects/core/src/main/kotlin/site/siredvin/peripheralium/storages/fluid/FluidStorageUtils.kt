@@ -7,7 +7,7 @@ object FluidStorageUtils {
 
     val ALWAYS: Predicate<FluidStack> = Predicate { true }
 
-    fun naiveMove(from: FluidStorage, to: FluidSink, limit: Int, takePredicate: Predicate<FluidStack>): Long {
+    fun naiveMove(from: FluidStorage, to: FluidSink, limit: Long, takePredicate: Predicate<FluidStack>): Long {
         // Get stack to move
         val stack = from.takeFluid(takePredicate, limit)
         if (stack.isEmpty) {
@@ -47,10 +47,10 @@ object FluidStorageUtils {
      * Merge second item stack into first one and returns remains
      */
     fun inplaceMerge(first: FluidStack, second: FluidStack, mergeLimit: Long = Long.MAX_VALUE): FluidStack {
-        if (!canMerge(first, second)) {
+        if (!canMerge(first, second, mergeLimit)) {
             return second
         }
-        val mergeSize = minOf(second.amount, mergeLimit)
+        val mergeSize = minOf(second.amount, mergeLimit - first.amount)
         first.grow(mergeSize)
         second.shrink(mergeSize)
         if (second.isEmpty) {

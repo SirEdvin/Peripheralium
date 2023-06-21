@@ -74,7 +74,7 @@ object ItemStorageUtils {
      * Merge second item stack into first one and returns remains
      */
     fun inplaceMerge(first: ItemStack, second: ItemStack, mergeLimit: Int = Int.MAX_VALUE): ItemStack {
-        if (!canMerge(first, second)) {
+        if (!canMerge(first, second, mergeLimit)) {
             return second
         }
         val mergeSize = minOf(second.count, first.maxStackSize - first.count, mergeLimit)

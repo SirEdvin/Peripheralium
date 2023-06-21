@@ -90,8 +90,8 @@ object ForgePeripheraliumPlatform : PeripheraliumPlatform {
         }
     }
 
-    override val fluidCompactDivider: Double
-        get() = 1.0
+    override val fluidCompactDivider: Int
+        get() = 1
 
     override fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T> {
         return ForgeRegistryWrapper(registry.location(), RegistryManager.ACTIVE.getRegistry(registry))

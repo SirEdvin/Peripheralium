@@ -54,7 +54,7 @@ class FluidStoragePlugin(private val level: Level, private val storage: FluidSto
             Predicate { it.fluid.isSame(fluid) }
         }
         val realLimit = minOf(fluidStorageTransferLimit.toLong(), limit.map { it * PeripheraliumPlatform.fluidCompactDivider.toLong() }.orElse(Long.MAX_VALUE))
-        return storage.moveTo(toStorage, realLimit.toInt(), predicate).toDouble()
+        return storage.moveTo(toStorage, realLimit, predicate).toDouble()
     }
 
     @LuaFunction(mainThread = true)
@@ -75,6 +75,6 @@ class FluidStoragePlugin(private val level: Level, private val storage: FluidSto
             Predicate { it.fluid.isSame(fluid) }
         }
         val realLimit = minOf(fluidStorageTransferLimit.toLong(), limit.map { it * PeripheraliumPlatform.fluidCompactDivider.toLong() }.orElse(Long.MAX_VALUE))
-        return storage.moveFrom(fromStorage, realLimit.toInt(), predicate).toDouble()
+        return storage.moveFrom(fromStorage, realLimit, predicate).toDouble()
     }
 }

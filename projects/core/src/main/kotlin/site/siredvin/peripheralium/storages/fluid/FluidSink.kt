@@ -3,7 +3,7 @@ package site.siredvin.peripheralium.storages.fluid
 import java.util.function.Predicate
 
 interface FluidSink {
-    fun moveFrom(from: FluidStorage, limit: Int, takePredicate: Predicate<FluidStack>): Long {
+    fun moveFrom(from: FluidStorage, limit: Long, takePredicate: Predicate<FluidStack>): Long {
         if (movableType != null) {
             throw IllegalStateException("With movable type you should redefine this function")
         }

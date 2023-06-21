@@ -2,6 +2,7 @@ package site.siredvin.peripheralium.storages
 
 import dan200.computercraft.api.lua.LuaException
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
@@ -10,8 +11,9 @@ import net.minecraft.core.BlockPos
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
-import site.siredvin.peripheralium.storages.fluid.FabricFluidStorage
+import site.siredvin.peripheralium.storages.fluid.*
 import site.siredvin.peripheralium.storages.item.*
+import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.function.Predicate
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage as FabricStorage
 
@@ -25,8 +27,12 @@ object FabricStorageUtils {
         }
     }
 
-    fun wrap(predicate: Predicate<ItemStack>): Predicate<ItemVariant> {
+    fun wrapItem(predicate: Predicate<ItemStack>): Predicate<ItemVariant> {
         return PredicateWrapper(predicate)
+    }
+
+    fun wrapFluid(predicate: Predicate<FluidStack>): Predicate<FluidVariant> {
+        return Predicate<FluidVariant> { predicate.test(it.toVanilla()) }
     }
 
     /**
@@ -38,7 +44,7 @@ object FabricStorageUtils {
         val transaction = Transaction.openOuter()
         transaction.use {
             val resource =
-                StorageUtil.findExtractableResource(storage, wrap(takePredicate), it)
+                StorageUtil.findExtractableResource(storage, wrapItem(takePredicate), it)
                     ?: return 0
             val extractedAmount = storage.extract(resource, limit.toLong(), it).toInt()
             if (extractedAmount == 0) {
@@ -91,6 +97,54 @@ object FabricStorageUtils {
             }
             it.commit()
             return insertedAmount.toInt()
+        }
+    }
+
+    fun moveToTargetable(storage: FabricStorage<FluidVariant>, to: FluidSink, limit: Long, takePredicate: Predicate<FluidStack>): Long {
+        assert(to.movableType != MOVABLE_TYPE)
+
+        val platformLimit = limit * PeripheraliumPlatform.fluidCompactDivider
+
+        val transaction = Transaction.openOuter()
+        transaction.use {
+            val resource =
+                StorageUtil.findExtractableResource(storage, wrapFluid(takePredicate), it)
+                    ?: return 0
+            val extractedAmount = storage.extract(resource, platformLimit, it)
+            if (extractedAmount == 0L) {
+                return 0L
+            }
+            val insertionStack = resource.toVanilla(extractedAmount)
+            val remainder = to.storeFluid(insertionStack)
+            val insertedCount = extractedAmount - remainder.platformAmount
+            if (!remainder.isEmpty) {
+                storage.insert(resource, remainder.platformAmount, it)
+            }
+            it.commit()
+            return insertedCount / PeripheraliumPlatform.fluidCompactDivider
+        }
+    }
+
+    fun moveFromTargetable(from: site.siredvin.peripheralium.storages.fluid.FluidStorage, to: FabricStorage<FluidVariant>, limit: Long, takePredicate: Predicate<FluidStack>): Long {
+        assert(from.movableType != MOVABLE_TYPE)
+
+        val platformLimit = limit * PeripheraliumPlatform.fluidCompactDivider
+
+        val insertionStack = from.takeFluid(takePredicate, limit)
+        if (insertionStack.isEmpty) {
+            return 0
+        }
+
+        val transaction = Transaction.openOuter()
+        transaction.use {
+            val insertedAmount = to.insert(insertionStack.toVariant(), insertionStack.platformAmount, it)
+
+            val remainCount = insertionStack.platformAmount - insertedAmount
+            if (remainCount > 0) {
+                from.storeFluid(insertionStack.copyWithCount(remainCount / PeripheraliumPlatform.fluidCompactDivider))
+            }
+            it.commit()
+            return insertedAmount / PeripheraliumPlatform.fluidCompactDivider
         }
     }
 

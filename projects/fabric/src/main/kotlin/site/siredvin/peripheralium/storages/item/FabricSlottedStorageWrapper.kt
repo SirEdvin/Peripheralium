@@ -53,7 +53,7 @@ class FabricSlottedStorageWrapper(internal val storage: net.fabricmc.fabric.api.
                 return StorageUtil.move(
                     slotStorage,
                     operableStorage,
-                    FabricStorageUtils.wrap(takePredicate),
+                    FabricStorageUtils.wrapItem(takePredicate),
                     limit.toLong(),
                     null,
                 ).toInt()
@@ -61,7 +61,7 @@ class FabricSlottedStorageWrapper(internal val storage: net.fabricmc.fabric.api.
                 return StorageUtil.move(
                     from.storage,
                     operableStorage,
-                    FabricStorageUtils.wrap(takePredicate),
+                    FabricStorageUtils.wrapItem(takePredicate),
                     limit.toLong(),
                     null,
                 ).toInt()
@@ -74,7 +74,7 @@ class FabricSlottedStorageWrapper(internal val storage: net.fabricmc.fabric.api.
             return StorageUtil.move(
                 from.storage,
                 operableStorage,
-                FabricStorageUtils.wrap(takePredicate),
+                FabricStorageUtils.wrapItem(takePredicate),
                 limit.toLong(),
                 null,
             ).toInt()
@@ -90,7 +90,7 @@ class FabricSlottedStorageWrapper(internal val storage: net.fabricmc.fabric.api.
                 val slotStorage = getSingleSlot(currentSlot)
                 val extractionTarget = StorageUtil.findExtractableContent(
                     slotStorage,
-                    FabricStorageUtils.wrap(predicate),
+                    FabricStorageUtils.wrapItem(predicate),
                     it,
                 )
                     ?: continue

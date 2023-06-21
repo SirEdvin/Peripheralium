@@ -51,7 +51,7 @@ import java.util.function.Function
 import java.util.function.Predicate
 
 object FabricPeripheraliumPlatform : PeripheraliumPlatform {
-    const val FORGE_COMPACT_DEVIDER = 81.0
+    const val FORGE_COMPACT_DEVIDER = 81
 
     private class FabricRegistryWrapper<T>(private val name: ResourceLocation, private val registry: Registry<T>) : RegistryWrapper<T> {
         override fun getId(something: T): Int {
@@ -89,7 +89,7 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
         }
     }
 
-    override val fluidCompactDivider: Double
+    override val fluidCompactDivider: Int
         get() = FORGE_COMPACT_DEVIDER
 
     override fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T> {

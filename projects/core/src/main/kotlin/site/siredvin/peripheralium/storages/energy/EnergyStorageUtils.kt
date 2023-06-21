@@ -44,10 +44,10 @@ object EnergyStorageUtils {
      * Merge second item stack into first one and returns remains
      */
     fun inplaceMerge(first: EnergyStack, second: EnergyStack, mergeLimit: Long = Long.MAX_VALUE): EnergyStack {
-        if (!canMerge(first, second)) {
+        if (!canMerge(first, second, mergeLimit)) {
             return second
         }
-        val mergeSize = minOf(second.amount, mergeLimit)
+        val mergeSize = minOf(second.amount, mergeLimit - first.amount)
         first.grow(mergeSize)
         second.shrink(mergeSize)
         if (second.isEmpty) {

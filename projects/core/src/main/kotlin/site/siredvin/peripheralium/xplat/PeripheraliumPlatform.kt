@@ -49,7 +49,7 @@ interface PeripheraliumPlatform {
             return _IMPL!!
         }
 
-        val fluidCompactDivider: Double
+        val fluidCompactDivider: Int
             get() = get().fluidCompactDivider
 
         fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T> {
@@ -138,7 +138,7 @@ interface PeripheraliumPlatform {
         }
     }
 
-    val fluidCompactDivider: Double
+    val fluidCompactDivider: Int
 
     fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T>
 
