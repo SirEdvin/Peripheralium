@@ -7,7 +7,7 @@ object EnergyStorageUtils {
 
     val ALWAYS: Predicate<EnergyStack> = Predicate { true }
 
-    fun naiveMove(from: EnergyStorage, to: EnergySink, limit: Int, takePredicate: Predicate<EnergyStack>): Long {
+    fun naiveMove(from: EnergyStorage, to: EnergySink, limit: Long, takePredicate: Predicate<EnergyStack>): Long {
         // Get stack to move
         val stack = from.takeEnergy(takePredicate, limit)
         if (stack.isEmpty) {

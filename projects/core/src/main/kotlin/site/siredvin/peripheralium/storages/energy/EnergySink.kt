@@ -3,7 +3,7 @@ package site.siredvin.peripheralium.storages.energy
 import java.util.function.Predicate
 
 interface EnergySink {
-    fun moveFrom(from: EnergyStorage, limit: Int, takePredicate: Predicate<EnergyStack>): Long {
+    fun moveFrom(from: EnergyStorage, limit: Long, takePredicate: Predicate<EnergyStack>): Long {
         if (movableType != null) {
             throw IllegalStateException("With movable type you should redefine this function")
         }

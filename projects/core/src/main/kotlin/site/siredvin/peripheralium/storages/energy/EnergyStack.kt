@@ -37,4 +37,14 @@ data class EnergyStack(val unit: EnergyUnit, var amount: Long) {
     fun shrink(amount: Long) {
         this.amount -= amount
     }
+
+    fun split(amount: Long): EnergyStack {
+        if (this.amount <= amount) {
+            val fullStack = this.copy()
+            this.amount = 0
+            return fullStack
+        }
+        this.shrink(amount)
+        return this.copyWithCount(amount)
+    }
 }

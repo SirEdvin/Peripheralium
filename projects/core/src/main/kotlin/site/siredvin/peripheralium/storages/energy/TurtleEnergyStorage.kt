@@ -11,11 +11,11 @@ class TurtleEnergyStorage(private val turtle: ITurtleAccess) : EnergyStorage {
     override val capacity: Long
         get() = turtle.fuelLimit.toLong()
 
-    override fun takeEnergy(predicate: Predicate<EnergyStack>, limit: Int): EnergyStack {
+    override fun takeEnergy(predicate: Predicate<EnergyStack>, limit: Long): EnergyStack {
         if (!predicate.test(energy)) return EnergyStack.EMPTY
-        val extractedEnergy = minOf(limit, turtle.fuelLevel)
-        turtle.addFuel(-extractedEnergy)
-        return EnergyStack(Energies.TURTLE_FUEL, extractedEnergy.toLong())
+        val extractedEnergy = minOf(limit, turtle.fuelLevel.toLong())
+        turtle.addFuel(-extractedEnergy.toInt())
+        return EnergyStack(Energies.TURTLE_FUEL, extractedEnergy)
     }
 
     override fun storeEnergy(stack: EnergyStack): EnergyStack {

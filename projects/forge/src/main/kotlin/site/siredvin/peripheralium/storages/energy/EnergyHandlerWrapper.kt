@@ -9,9 +9,9 @@ class EnergyHandlerWrapper(private val handler: IEnergyStorage) : EnergyStorage 
     override val capacity: Long
         get() = handler.maxEnergyStored.toLong()
 
-    override fun takeEnergy(predicate: Predicate<EnergyStack>, limit: Int): EnergyStack {
+    override fun takeEnergy(predicate: Predicate<EnergyStack>, limit: Long): EnergyStack {
         if (!predicate.test(energy)) return EnergyStack.EMPTY
-        val extractedEnergy = handler.extractEnergy(limit, false)
+        val extractedEnergy = handler.extractEnergy(limit.toInt(), false)
         return EnergyStack(ForgeEnergies.FORGE, extractedEnergy.toLong())
     }
 
