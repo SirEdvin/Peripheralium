@@ -2,6 +2,7 @@ package site.siredvin.peripheralium.storages
 
 import net.minecraft.core.BlockPos
 import net.minecraft.world.Container
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraftforge.common.capabilities.ForgeCapabilities
@@ -61,7 +62,12 @@ object ForgeStorageUtils {
 
     fun extractEnergyStorageFromBlock(level: Level, pos: BlockPos, blockEntity: BlockEntity?): EnergyStorage? {
         if (blockEntity == null) return null
-        val fluidHandler = extractEnergyStorage(blockEntity) ?: return null
-        return EnergyHandlerWrapper(fluidHandler)
+        val energyStorage = extractEnergyStorage(blockEntity) ?: return null
+        return EnergyHandlerWrapper(energyStorage)
+    }
+
+    fun extractEnergyStorageFromItem(level: Level, stack: ItemStack): EnergyStorage? {
+        val energyStorage = extractEnergyStorage(stack) ?: return null
+        return EnergyHandlerWrapper(energyStorage)
     }
 }

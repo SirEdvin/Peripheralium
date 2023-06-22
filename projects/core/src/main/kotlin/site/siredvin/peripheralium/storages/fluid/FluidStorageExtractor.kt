@@ -2,6 +2,7 @@ package site.siredvin.peripheralium.storages.fluid
 
 import net.minecraft.core.BlockPos
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 
@@ -22,11 +23,22 @@ object FluidStorageExtractor {
         fun extract(level: Level, entity: Entity): FluidStorage?
     }
 
+    fun interface FluidStorageItemExtractor {
+        fun extract(level: Level, stack: ItemStack): FluidStorage?
+    }
+
+    fun interface FluidSinkItemExtractor {
+        fun extract(level: Level, stack: ItemStack): FluidSink?
+    }
+
     private val FLUID_SINK_EXTRACTORS: MutableList<FluidSinkExtractor> = mutableListOf()
     private val FLUID_STORAGE_EXTRACTORS: MutableList<FluidStorageExtractor> = mutableListOf()
 
     private val FLUID_SINK_ENTITY_EXTRACTORS: MutableList<FluidSinkEntityExtractor> = mutableListOf()
     private val FLUID_STORAGE_ENTITY_EXTRACTORS: MutableList<FluidStorageEntityExtractor> = mutableListOf()
+
+    private val FLUID_SINK_ITEM_EXTRACTORS: MutableList<FluidSinkItemExtractor> = mutableListOf()
+    private val FLUID_STORAGE_ITEM_EXTRACTORS: MutableList<FluidStorageItemExtractor> = mutableListOf()
 
     fun addFluidSinkExtractor(extractor: FluidSinkExtractor) {
         FLUID_SINK_EXTRACTORS.add(extractor)
@@ -42,6 +54,14 @@ object FluidStorageExtractor {
 
     fun addFluidStorageExtractor(extractor: FluidStorageEntityExtractor) {
         FLUID_STORAGE_ENTITY_EXTRACTORS.add(extractor)
+    }
+
+    fun addFluidSinkExtractor(extractor: FluidSinkItemExtractor) {
+        FLUID_SINK_ITEM_EXTRACTORS.add(extractor)
+    }
+
+    fun addFluidStorageExtractor(extractor: FluidStorageItemExtractor) {
+        FLUID_STORAGE_ITEM_EXTRACTORS.add(extractor)
     }
 
     fun extractFluidStorage(level: Level, pos: BlockPos, blockEntity: BlockEntity?): FluidStorage? {
@@ -64,6 +84,16 @@ object FluidStorageExtractor {
         return null
     }
 
+    fun extractFluidStorage(level: Level, stack: ItemStack): FluidStorage? {
+        for (extractor in FLUID_STORAGE_ITEM_EXTRACTORS) {
+            val result = extractor.extract(level, stack)
+            if (result != null) {
+                return result
+            }
+        }
+        return null
+    }
+
     fun extractFluidStorageFromUnknown(level: Level, obj: Any?): FluidStorage? {
         if (obj == null) {
             return null
@@ -75,6 +105,9 @@ object FluidStorageExtractor {
             return extractFluidStorage(level, obj.blockPos, obj)
         }
         if (obj is Entity) {
+            return extractFluidStorage(level, obj)
+        }
+        if (obj is ItemStack) {
             return extractFluidStorage(level, obj)
         }
         throw IllegalArgumentException("Cannot extract storage for $obj")
@@ -109,6 +142,20 @@ object FluidStorageExtractor {
         return null
     }
 
+    fun extractFluidSink(level: Level, stack: ItemStack): FluidSink? {
+        val storage = extractFluidStorage(level, stack)
+        if (storage != null) {
+            return storage
+        }
+        for (extractor in FLUID_SINK_ITEM_EXTRACTORS) {
+            val result = extractor.extract(level, stack)
+            if (result != null) {
+                return result
+            }
+        }
+        return null
+    }
+
     fun extractFluidSinkFromUnknown(level: Level, obj: Any?): FluidSink? {
         if (obj == null) {
             return null
@@ -120,6 +167,9 @@ object FluidStorageExtractor {
             return extractFluidSink(level, obj.blockPos, obj)
         }
         if (obj is Entity) {
+            return extractFluidSink(level, obj)
+        }
+        if (obj is ItemStack) {
             return extractFluidSink(level, obj)
         }
         throw IllegalArgumentException("Cannot extract storage for $obj")

@@ -35,6 +35,7 @@ object ForgePeripheralium {
         ItemStorageExtractor.addStorageExtractor(ForgeStorageUtils::extractStorageFromBlock)
         FluidStorageExtractor.addFluidStorageExtractor(ForgeStorageUtils::extractFluidStorageFromBlock)
         EnergyStorageExtractor.addEnergyStorageExtractor(ForgeStorageUtils::extractEnergyStorageFromBlock)
+        EnergyStorageExtractor.addEnergyStorageExtractor(ForgeStorageUtils::extractEnergyStorageFromItem)
         val eventBus = MOD_CONTEXT.getKEventBus()
         LibCommonHooks.onRegister()
         blocksRegistry.register(eventBus)

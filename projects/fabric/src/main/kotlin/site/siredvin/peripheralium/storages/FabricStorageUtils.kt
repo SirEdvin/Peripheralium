@@ -1,6 +1,7 @@
 package site.siredvin.peripheralium.storages
 
 import dan200.computercraft.api.lua.LuaException
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage
@@ -160,6 +161,11 @@ object FabricStorageUtils {
 
     fun extractFluidStorage(level: Level, pos: BlockPos, blockEntity: BlockEntity?): site.siredvin.peripheralium.storages.fluid.FluidStorage? {
         val fluidStorage = FluidStorage.SIDED.find(level, pos, null) ?: return null
+        return FabricFluidStorage(fluidStorage)
+    }
+
+    fun extractFluidStorageFromItem(level: Level, stack: ItemStack): site.siredvin.peripheralium.storages.fluid.FluidStorage? {
+        val fluidStorage = FluidStorage.ITEM.find(stack, ContainerItemContext.withConstant(stack)) ?: return null
         return FabricFluidStorage(fluidStorage)
     }
 }

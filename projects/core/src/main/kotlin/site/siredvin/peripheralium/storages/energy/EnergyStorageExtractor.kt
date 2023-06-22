@@ -2,6 +2,7 @@ package site.siredvin.peripheralium.storages.energy
 
 import net.minecraft.core.BlockPos
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
@@ -23,11 +24,22 @@ object EnergyStorageExtractor {
         fun extract(level: Level, entity: Entity): EnergyStorage?
     }
 
+    fun interface EnergyStorageItemExtractor {
+        fun extract(level: Level, stack: ItemStack): EnergyStorage?
+    }
+
+    fun interface EnergySinkItemExtractor {
+        fun extract(level: Level, stack: ItemStack): EnergyStorage?
+    }
+
     private val ENERGY_SINK_EXTRACTORS: MutableList<EnergySinkExtractor> = mutableListOf()
     private val ENERGY_STORAGE_EXTRACTORS: MutableList<EnergyStorageExtractor> = mutableListOf()
 
     private val ENERGY_SINK_ENTITY_EXTRACTORS: MutableList<EnergySinkEntityExtractor> = mutableListOf()
     private val ENERGY_STORAGE_ENTITY_EXTRACTORS: MutableList<EnergyStorageEntityExtractor> = mutableListOf()
+
+    private val ENERGY_SINK_ITEM_EXTRACTORS: MutableList<EnergySinkItemExtractor> = mutableListOf()
+    private val ENERGY_STORAGE_ITEM_EXTRACTORS: MutableList<EnergyStorageItemExtractor> = mutableListOf()
 
     fun addEnergySinkExtractor(extractor: EnergySinkExtractor) {
         ENERGY_SINK_EXTRACTORS.add(extractor)
@@ -43,6 +55,14 @@ object EnergyStorageExtractor {
 
     fun addEnergyStorageExtractor(extractor: EnergyStorageEntityExtractor) {
         ENERGY_STORAGE_ENTITY_EXTRACTORS.add(extractor)
+    }
+
+    fun addEnergySinkExtractor(extractor: EnergySinkItemExtractor) {
+        ENERGY_SINK_ITEM_EXTRACTORS.add(extractor)
+    }
+
+    fun addEnergyStorageExtractor(extractor: EnergyStorageItemExtractor) {
+        ENERGY_STORAGE_ITEM_EXTRACTORS.add(extractor)
     }
 
     fun extractEnergyStorage(level: Level, pos: BlockPos, blockEntity: BlockEntity?): EnergyStorage? {
@@ -71,6 +91,16 @@ object EnergyStorageExtractor {
         return null
     }
 
+    fun extractEnergyStorage(level: Level, stack: ItemStack): EnergyStorage? {
+        for (extractor in ENERGY_STORAGE_ITEM_EXTRACTORS) {
+            val result = extractor.extract(level, stack)
+            if (result != null) {
+                return result
+            }
+        }
+        return null
+    }
+
     fun extractEnergyStorageFromUnknown(level: Level, obj: Any?): EnergyStorage? {
         if (obj == null) {
             return null
@@ -82,6 +112,9 @@ object EnergyStorageExtractor {
             return extractEnergyStorage(level, obj.blockPos, obj)
         }
         if (obj is Entity) {
+            return extractEnergyStorage(level, obj)
+        }
+        if (obj is ItemStack) {
             return extractEnergyStorage(level, obj)
         }
         throw IllegalArgumentException("Cannot extract storage for $obj")
@@ -116,6 +149,20 @@ object EnergyStorageExtractor {
         return null
     }
 
+    fun extractEnergySink(level: Level, stack: ItemStack): EnergySink? {
+        val storage = extractEnergyStorage(level, stack)
+        if (storage != null) {
+            return storage
+        }
+        for (extractor in ENERGY_SINK_ITEM_EXTRACTORS) {
+            val result = extractor.extract(level, stack)
+            if (result != null) {
+                return result
+            }
+        }
+        return null
+    }
+
     fun extractEnergySinkFromUnknown(level: Level, obj: Any?): EnergySink? {
         if (obj == null) {
             return null
@@ -127,6 +174,9 @@ object EnergyStorageExtractor {
             return extractEnergySink(level, obj.blockPos, obj)
         }
         if (obj is Entity) {
+            return extractEnergySink(level, obj)
+        }
+        if (obj is ItemStack) {
             return extractEnergySink(level, obj)
         }
         throw IllegalArgumentException("Cannot extract storage for $obj")

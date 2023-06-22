@@ -16,6 +16,7 @@ object FabricPeripheralium : ModInitializer {
         // Register extract storages
         ItemStorageExtractor.addStorageExtractor(FabricStorageUtils::extractStorage)
         FluidStorageExtractor.addFluidStorageExtractor(FabricStorageUtils::extractFluidStorage)
+        FluidStorageExtractor.addFluidStorageExtractor(FabricStorageUtils::extractFluidStorageFromItem)
     }
 
     fun sayHi() {}
