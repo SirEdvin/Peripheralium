@@ -86,7 +86,7 @@ object ItemStorageUtils {
         return second
     }
 
-    fun toInventoryOrToWorld(output: ItemStack, inventory: SlottedItemSink, outputPos: BlockPos, level: Level) {
+    fun toInventoryOrToWorld(output: ItemStack, inventory: ItemSink, outputPos: BlockPos, level: Level) {
         val rest = inventory.storeItem(output)
         if (!rest.isEmpty) {
             Containers.dropItemStack(level, outputPos.x.toDouble(), outputPos.y.toDouble(), outputPos.z.toDouble(), rest)
