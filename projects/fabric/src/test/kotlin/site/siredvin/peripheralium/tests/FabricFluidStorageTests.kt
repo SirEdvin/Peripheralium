@@ -54,3 +54,27 @@ internal class FabricDummyFluidStorageTests : FluidStorageTests() {
         )
     }
 }
+
+@WithMinecraft
+internal class FabricReverseDummyFluidStorageTests : FluidStorageTests() {
+
+    override fun createStorage(fluids: List<FluidStack>, secondary: Boolean): FluidStorage {
+        if (!secondary) {
+            return DummyFluidStorage(fluids.size, fluids)
+        }
+        return FabricFluidStorage(
+            CombinedStorage(
+                fluids.map { stack ->
+                    val storage = SingleFluidStorage.withFixedCapacity(1000L * PeripheraliumPlatform.fluidCompactDivider.toLong()) {}
+                    if (!stack.isEmpty) {
+                        Transaction.openOuter().use {
+                            storage.insert(stack.toVariant(), stack.platformAmount, it)
+                            it.commit()
+                        }
+                    }
+                    return@map storage
+                },
+            ),
+        )
+    }
+}
