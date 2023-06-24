@@ -17,5 +17,8 @@ class LibUALanguageProvider(
         add(Blocks.PERIPHERALIUM_BLOCK.get(), "Блок перифераліуму")
         add(LibText.CREATIVE_TAB, "Перифераліум")
         add(LibText.PRESS_FOR_DESCRIPTION, "[§3Left shift§r] показити опис")
+        add(LibText.EMPTY_ENERGY, "Порожня енергія (якого біса?)")
+        add(LibText.TURTLE_FUEL_ENERGY, "Паливо для черепах")
+        add(LibText.FORGE_ENERGY, "Forge-енергія")
     }
 }

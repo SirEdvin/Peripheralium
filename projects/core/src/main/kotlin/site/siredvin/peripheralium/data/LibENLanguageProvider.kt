@@ -17,5 +17,8 @@ class LibENLanguageProvider(
         add(Items.PERIPHERALIUM_UPGRADE_TEMPLATE.get(), "Peripheralium upgrade template")
         add(LibText.CREATIVE_TAB, "Peripheralium")
         add(LibText.PRESS_FOR_DESCRIPTION, "[§3Left shift§r] show description")
+        add(LibText.EMPTY_ENERGY, "Empty energy (like, what?)")
+        add(LibText.TURTLE_FUEL_ENERGY, "Turtle fuel")
+        add(LibText.FORGE_ENERGY, "Forge energy")
     }
 }
