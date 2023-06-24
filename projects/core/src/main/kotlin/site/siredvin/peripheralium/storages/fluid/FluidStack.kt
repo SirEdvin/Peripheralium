@@ -23,7 +23,7 @@ data class FluidStack(val fluid: Fluid, var amount: Long, var tag: CompoundTag? 
         get() = fluid.isSame(Fluids.EMPTY)
 
     val platformAmount: Long
-        get() = (this.amount * PeripheraliumPlatform.fluidCompactDivider).toLong()
+        get() = this.amount * PeripheraliumPlatform.fluidCompactDivider
 
     fun copy(): FluidStack {
         return FluidStack(fluid, amount, tag?.copy())

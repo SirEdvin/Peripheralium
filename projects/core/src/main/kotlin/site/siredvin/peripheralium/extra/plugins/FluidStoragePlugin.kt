@@ -16,15 +16,19 @@ import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.util.*
 import java.util.function.Predicate
 
-class FluidStoragePlugin(private val level: Level, private val storage: FluidStorage, private val fluidStorageTransferLimit: Int) : IPeripheralPlugin {
+open class FluidStoragePlugin(private val level: Level, private val storage: FluidStorage, private val fluidStorageTransferLimit: Int) : IPeripheralPlugin {
     override val additionalType: String
         get() = PeripheralPluginUtils.Type.FLUID_STORAGE
 
-    protected open fun fluidInformation(fluid: FluidStack): MutableMap<String, Any> {
-        return mutableMapOf(
+    protected open fun fluidInformation(fluid: FluidStack): MutableMap<String, Any?> {
+        val baseInformation = mutableMapOf<String, Any?>(
             "name" to XplatRegistries.FLUIDS.getKey(fluid.fluid).toString(),
-            "amount" to fluid.amount / PeripheraliumPlatform.fluidCompactDivider,
+            "amount" to fluid.amount,
         )
+        if (fluid.tag != null) {
+            baseInformation["nbt"] = PeripheraliumPlatform.nbtHash(fluid.tag!!)
+        }
+        return baseInformation
     }
 
     @LuaFunction(mainThread = true)
@@ -53,7 +57,7 @@ class FluidStoragePlugin(private val level: Level, private val storage: FluidSto
             }
             Predicate { it.fluid.isSame(fluid) }
         }
-        val realLimit = minOf(fluidStorageTransferLimit.toLong(), limit.map { it * PeripheraliumPlatform.fluidCompactDivider.toLong() }.orElse(Long.MAX_VALUE))
+        val realLimit = minOf(fluidStorageTransferLimit.toLong(), limit.orElse(Long.MAX_VALUE))
         return storage.moveTo(toStorage, realLimit, predicate).toDouble()
     }
 
@@ -74,7 +78,7 @@ class FluidStoragePlugin(private val level: Level, private val storage: FluidSto
             }
             Predicate { it.fluid.isSame(fluid) }
         }
-        val realLimit = minOf(fluidStorageTransferLimit.toLong(), limit.map { it * PeripheraliumPlatform.fluidCompactDivider.toLong() }.orElse(Long.MAX_VALUE))
+        val realLimit = minOf(fluidStorageTransferLimit.toLong(), limit.orElse(Long.MAX_VALUE))
         return storage.moveFrom(fromStorage, realLimit, predicate).toDouble()
     }
 }
