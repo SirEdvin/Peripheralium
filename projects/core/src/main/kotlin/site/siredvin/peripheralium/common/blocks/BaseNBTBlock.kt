@@ -21,6 +21,19 @@ abstract class BaseNBTBlock<T>(
 ) : BaseTileEntityBlock<T>(belongToTickingEntity, properties) where T : BlockEntity, T : ISyncingBlockEntity {
     abstract fun createItemStack(): ItemStack
 
+    open fun prepareItemStack(blockEntity: ISyncingBlockEntity, state: BlockState): ItemStack {
+        val stack: ItemStack = createItemStack()
+        val internalData = blockEntity.saveInternalData(CompoundTag())
+        if (!internalData.isEmpty) {
+            stack.addTagElement(INTERNAL_DATA_TAG, internalData)
+        }
+        val savableProperties: List<Property<*>> = savableProperties
+        if (savableProperties.isNotEmpty() && !defaultBlockState().equals(state)) {
+            stack.addTagElement(BLOCK_STATE_TAG, NbtUtils.writeBlockState(state))
+        }
+        return stack
+    }
+
     open val savableProperties: List<Property<*>>
         get() = emptyList()
 
@@ -28,21 +41,13 @@ abstract class BaseNBTBlock<T>(
         val blockEntity = level.getBlockEntity(pos)
         if (blockEntity is ISyncingBlockEntity) {
             if (!level.isClientSide && !player.isCreative) {
-                val itemstack: ItemStack = createItemStack()
-                val internalData = blockEntity.saveInternalData(CompoundTag())
-                if (!internalData.isEmpty) {
-                    itemstack.addTagElement(INTERNAL_DATA_TAG, internalData)
-                }
-                val savableProperties: List<Property<*>> = savableProperties
-                if (savableProperties.isNotEmpty() && !defaultBlockState().equals(state)) {
-                    itemstack.addTagElement(BLOCK_STATE_TAG, NbtUtils.writeBlockState(state))
-                }
+                val stack = prepareItemStack(blockEntity, state)
                 val itemDrop = ItemEntity(
                     level,
                     pos.x.toDouble() + 0.5,
                     pos.y.toDouble() + 0.5,
                     pos.z.toDouble() + 0.5,
-                    itemstack,
+                    stack,
                 )
                 itemDrop.setDefaultPickUpDelay()
                 level.addFreshEntity(itemDrop)
@@ -51,6 +56,7 @@ abstract class BaseNBTBlock<T>(
         super.playerWillDestroy(level, pos, state, player)
     }
 
+    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun setPlacedBy(level: Level, pos: BlockPos, initialState: BlockState, entity: LivingEntity?, stack: ItemStack) {
         var state = initialState
         super.setPlacedBy(level, pos, state, entity, stack)
@@ -62,6 +68,7 @@ abstract class BaseNBTBlock<T>(
                     if (data.contains(BLOCK_STATE_TAG)) {
                         val savedState: BlockState = NbtUtils.readBlockState(XplatRegistries.BLOCKS, data.getCompound(BLOCK_STATE_TAG))
                         for (property in savableProperties) {
+                            @Suppress("UNCHECKED_CAST")
                             property as Property<Comparable<Any>>
                             state = state.setValue(property, savedState.getValue(property) as Comparable<Any>)
                         }
