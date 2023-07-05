@@ -5,6 +5,7 @@ import dan200.computercraft.api.pocket.PocketUpgradeSerialiser
 import dan200.computercraft.api.turtle.ITurtleUpgrade
 import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import java.util.function.Supplier
@@ -19,9 +20,9 @@ interface ModInformationHolder {
 
 interface TextRecord {
     val textID: String
-    val text: Component
+    val text: MutableComponent
         get() = Component.translatable(textID)
-    fun format(vararg args: Any): Component {
+    fun format(vararg args: Any): MutableComponent {
         return Component.translatable(textID, *args)
     }
 }
