@@ -10,10 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Ability to customize item created from BaseNBTBlock
 - `keySet` method for registries
+- `isSubSet` method for NBTUtil
 
 ### Changed
 
 - TextRecord now required to be mutable
+- Fluid and FluidStack now LuaRepresentable
 
 ## [0.6.3] - 2023-06-24
 

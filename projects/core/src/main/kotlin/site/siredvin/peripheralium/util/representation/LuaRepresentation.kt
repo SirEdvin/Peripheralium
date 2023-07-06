@@ -18,8 +18,11 @@ import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.item.trading.Merchant
 import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.material.Fluid
 import site.siredvin.peripheralium.ext.toRelative
+import site.siredvin.peripheralium.storages.fluid.FluidStack
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
+import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.util.stream.Collectors
 import java.util.stream.Stream
 
@@ -107,6 +110,21 @@ object LuaRepresentation {
         map["name"] = item.descriptionId
         map["displayName"] = item.description.string
         return map
+    }
+
+    fun forFluidStack(fluid: FluidStack): MutableMap<String, Any?> {
+        val baseInformation = forFluid(fluid.fluid)
+        baseInformation["amount"] = fluid.amount
+        if (fluid.tag != null) {
+            baseInformation["nbt"] = PeripheraliumPlatform.nbtHash(fluid.tag!!)
+        }
+        return baseInformation
+    }
+
+    fun forFluid(fluid: Fluid): MutableMap<String, Any?> {
+        return mutableMapOf(
+            "name" to XplatRegistries.FLUIDS.getKey(fluid).toString(),
+        )
     }
 
     fun forMobEffect(effect: MobEffect): MutableMap<String, Any> {

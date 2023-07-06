@@ -82,4 +82,18 @@ object NBTUtil {
     fun chunkPosFromNBT(nbt: CompoundTag): ChunkPos {
         return ChunkPos(nbt.getInt("x"), nbt.getInt("z"))
     }
+
+    fun isSubSet(set: CompoundTag, subset: CompoundTag): Boolean {
+        for (key in subset.allKeys) {
+            if (!set.contains(key)) return false
+            val original = subset.get(key)
+            val setData = set.get(key)
+            if (original is CompoundTag) {
+                if (setData !is CompoundTag) return false
+                if (!isSubSet(setData, original)) return false
+            }
+            if (original != null && original != setData) return false
+        }
+        return true
+    }
 }

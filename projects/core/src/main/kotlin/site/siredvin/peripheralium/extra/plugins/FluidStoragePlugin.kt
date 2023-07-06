@@ -11,7 +11,7 @@ import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 import site.siredvin.peripheralium.storages.fluid.FluidStack
 import site.siredvin.peripheralium.storages.fluid.FluidStorage
 import site.siredvin.peripheralium.storages.fluid.FluidStorageExtractor
-import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
+import site.siredvin.peripheralium.util.representation.LuaRepresentation
 import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.util.*
 import java.util.function.Predicate
@@ -21,14 +21,7 @@ open class FluidStoragePlugin(private val level: Level, private val storage: Flu
         get() = PeripheralPluginUtils.Type.FLUID_STORAGE
 
     protected open fun fluidInformation(fluid: FluidStack): MutableMap<String, Any?> {
-        val baseInformation = mutableMapOf<String, Any?>(
-            "name" to XplatRegistries.FLUIDS.getKey(fluid.fluid).toString(),
-            "amount" to fluid.amount,
-        )
-        if (fluid.tag != null) {
-            baseInformation["nbt"] = PeripheraliumPlatform.nbtHash(fluid.tag!!)
-        }
-        return baseInformation
+        return LuaRepresentation.forFluidStack(fluid)
     }
 
     @LuaFunction(mainThread = true)
