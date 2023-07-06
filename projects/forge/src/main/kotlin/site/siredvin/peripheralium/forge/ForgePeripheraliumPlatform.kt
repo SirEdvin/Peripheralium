@@ -88,6 +88,10 @@ object ForgePeripheraliumPlatform : PeripheraliumPlatform {
         override fun iterator(): Iterator<T> {
             return registry.iterator()
         }
+
+        override fun keySet(): Set<ResourceLocation> {
+            return registry.keys
+        }
     }
 
     override val fluidCompactDivider: Int

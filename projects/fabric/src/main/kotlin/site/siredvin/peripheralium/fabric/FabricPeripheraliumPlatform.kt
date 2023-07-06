@@ -87,6 +87,10 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
         override fun iterator(): Iterator<T> {
             return registry.iterator()
         }
+
+        override fun keySet(): Set<ResourceLocation> {
+            return registry.keySet()
+        }
     }
 
     override val fluidCompactDivider: Int

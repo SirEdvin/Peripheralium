@@ -11,4 +11,5 @@ object XplatRegistries {
     val ENTITY_TYPES by lazy { PeripheraliumPlatform.wrap(Registries.ENTITY_TYPE) }
     val TURTLE_SERIALIZERS by lazy { PeripheraliumPlatform.wrap(TurtleUpgradeSerialiser.registryId()) }
     val POCKET_SERIALIZERS by lazy { PeripheraliumPlatform.wrap(PocketUpgradeSerialiser.registryId()) }
+    val RECIPE_TYPES by lazy { PeripheraliumPlatform.wrap(Registries.RECIPE_TYPE) }
 }
