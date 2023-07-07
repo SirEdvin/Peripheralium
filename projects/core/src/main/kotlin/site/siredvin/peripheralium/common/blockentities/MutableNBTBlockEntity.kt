@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
+import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import site.siredvin.peripheralium.api.blockentities.ISyncingBlockEntity
@@ -15,6 +16,9 @@ abstract class MutableNBTBlockEntity<T : IOwnedPeripheral<*>>(
     blockPos: BlockPos,
     blockState: BlockState,
 ) : PeripheralBlockEntity<T>(blockEntityType, blockPos, blockState), ISyncingBlockEntity {
+
+    open val updateFlag: Int
+        get() = Block.UPDATE_ALL
 
     // Client-server sync logic
 
@@ -50,7 +54,7 @@ abstract class MutableNBTBlockEntity<T : IOwnedPeripheral<*>>(
         if (!level.isClientSide) {
             setChanged()
             level.setBlockAndUpdate(blockPos, realState)
-            level.sendBlockUpdated(blockPos, realState, realState, 3)
+            level.sendBlockUpdated(blockPos, realState, realState, updateFlag)
         }
     }
 
