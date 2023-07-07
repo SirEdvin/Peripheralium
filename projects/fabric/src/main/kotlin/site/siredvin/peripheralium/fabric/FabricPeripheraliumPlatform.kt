@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricEntityTypeBuilder
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags
+import net.minecraft.client.Minecraft
 import net.minecraft.core.*
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
@@ -215,5 +216,14 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
 
     override fun isOre(block: BlockState): Boolean {
         return block.`is`(ConventionalBlockTags.ORES)
+    }
+
+    override fun triggerRenderUpdate(blockEntity: BlockEntity) {
+        val level = blockEntity.level!!
+        if (level.isClientSide) {
+            val pos = blockEntity.blockPos
+            // Basically, just world.setBlocksDirty with bypass model block state check
+            Minecraft.getInstance().levelRenderer.setBlocksDirty(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z)
+        }
     }
 }

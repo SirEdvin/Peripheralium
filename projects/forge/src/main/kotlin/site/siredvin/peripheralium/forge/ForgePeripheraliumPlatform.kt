@@ -11,6 +11,7 @@ import dan200.computercraft.impl.TurtleUpgrades
 import dan200.computercraft.shared.ModRegistry
 import dan200.computercraft.shared.turtle.blocks.TurtleBlockEntity
 import dan200.computercraft.shared.util.NBTUtil
+import net.minecraft.client.Minecraft
 import net.minecraft.core.*
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
@@ -239,5 +240,15 @@ object ForgePeripheraliumPlatform : PeripheraliumPlatform {
 
     override fun isOre(block: BlockState): Boolean {
         return block.`is`(Tags.Blocks.ORES)
+    }
+
+    override fun triggerRenderUpdate(blockEntity: BlockEntity) {
+        val level = blockEntity.level!!
+        if (level.isClientSide) {
+            val pos = blockEntity.blockPos
+            // Basically, just world.setBlocksDirty with bypass model block state check
+            Minecraft.getInstance().levelRenderer.setBlocksDirty(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z)
+            blockEntity.requestModelDataUpdate()
+        }
     }
 }

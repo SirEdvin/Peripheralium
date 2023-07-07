@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `keySet` method for registries
 - `isSubSet` method for NBTUtil
 - Ability to change update flag for `pushToClient` method
+- `triggerRender` now is more cross-plat than before
 
 ### Changed
 

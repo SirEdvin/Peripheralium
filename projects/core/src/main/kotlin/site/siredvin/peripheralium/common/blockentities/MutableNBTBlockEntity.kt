@@ -1,6 +1,5 @@
 package site.siredvin.peripheralium.common.blockentities
 
-import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
@@ -9,6 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import site.siredvin.peripheralium.api.blockentities.ISyncingBlockEntity
 import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
+import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.*
 
 abstract class MutableNBTBlockEntity<T : IOwnedPeripheral<*>>(
@@ -61,11 +61,6 @@ abstract class MutableNBTBlockEntity<T : IOwnedPeripheral<*>>(
     // Render tricks
 
     override fun triggerRenderUpdate() {
-        val level = getLevel()!!
-        if (level.isClientSide) {
-            val pos = blockPos
-            // Basically, just world.setBlocksDirty with bypass model block state check
-            Minecraft.getInstance().levelRenderer.setBlocksDirty(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z)
-        }
+        PeripheraliumPlatform.triggerRenderUpdate(this)
     }
 }
