@@ -15,7 +15,6 @@ import site.siredvin.peripheralium.util.turtleAdjective
 
 abstract class StatefulPeripheralTurtleUpgrade<T : IOwnedPeripheral<*>> : BaseTurtleUpgrade<T> {
     companion object {
-        val STORED_DATA_TAG = "storedData"
         fun <T : IOwnedPeripheral<*>> dynamic(item: Item, constructor: TurtlePeripheralBuildFunction<T>, idBuilder: TurtleIDBuildFunction): StatefulPeripheralTurtleUpgrade<T> {
             return Dynamic(idBuilder.get(item), item.defaultInstance, constructor)
         }
@@ -49,9 +48,8 @@ abstract class StatefulPeripheralTurtleUpgrade<T : IOwnedPeripheral<*>> : BaseTu
     }
 
     override fun getUpgradeItem(upgradeData: CompoundTag): ItemStack {
-        if (upgradeData.isEmpty) return craftingItem
         val base = craftingItem.copy()
-        base.addTagElement(StatefulPeripheralPocketUpgrade.STORED_DATA_TAG, upgradeData)
+        if (!upgradeData.isEmpty) base.addTagElement(StatefulPeripheralPocketUpgrade.STORED_DATA_TAG, upgradeData)
         return base
     }
 

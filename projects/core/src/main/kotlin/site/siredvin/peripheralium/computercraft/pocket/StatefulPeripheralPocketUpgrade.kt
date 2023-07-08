@@ -41,9 +41,8 @@ class StatefulPeripheralPocketUpgrade<T : IOwnedPeripheral<*>> : BasePocketUpgra
     }
 
     override fun getUpgradeItem(upgradeData: CompoundTag): ItemStack {
-        if (upgradeData.isEmpty) return craftingItem
         val base = craftingItem.copy()
-        base.addTagElement(STORED_DATA_TAG, upgradeData)
+        if (!upgradeData.isEmpty) base.addTagElement(STORED_DATA_TAG, upgradeData)
         return base
     }
 
