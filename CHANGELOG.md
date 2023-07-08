@@ -14,11 +14,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ability to change update flag for `pushToClient` method
 - `triggerRender` now is more cross-plat than before
 - CC:T 1.106.1 port
+- Stateful turtle and pocket upgrades
 
 ### Changed
 
 - TextRecord now required to be mutable
 - Fluid and FluidStack now LuaRepresentable
+
+### Removed
+
+- concept of initial operation cooldown which is no longer relevant (finally!)
 
 ## [0.6.3] - 2023-06-24
 

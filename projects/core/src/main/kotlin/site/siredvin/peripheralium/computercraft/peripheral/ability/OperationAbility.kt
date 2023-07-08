@@ -39,10 +39,6 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
 
     fun registerOperation(operation: IPeripheralOperation<*>) {
         allowedOperations[operation.settingsName()] = operation
-        if (config.isInitialCooldownEnabled) {
-            val initialCooldown = operation.initialCooldown
-            if (initialCooldown >= config.initialCooldownSensetiveLevel) setCooldown(operation, initialCooldown)
-        }
     }
 
     @Throws(LuaException::class)
@@ -121,6 +117,6 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
     }
 
     companion object {
-        private const val COOLDOWNS_TAG = "cooldowns"
+        const val COOLDOWNS_TAG = "cooldowns"
     }
 }
