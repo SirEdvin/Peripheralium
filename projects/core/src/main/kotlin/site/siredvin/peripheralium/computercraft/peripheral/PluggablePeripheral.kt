@@ -8,11 +8,13 @@ import dan200.computercraft.api.peripheral.IComputerAccess
 import dan200.computercraft.api.peripheral.IDynamicPeripheral
 import dan200.computercraft.api.peripheral.IPeripheral
 import kotlinx.atomicfu.locks.withLock
+import net.minecraft.server.MinecraftServer
 import site.siredvin.peripheralium.api.peripheral.IObservingPeripheralPlugin
 import site.siredvin.peripheralium.api.peripheral.IPeripheralOperation
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 import site.siredvin.peripheralium.api.peripheral.IPluggablePeripheral
 import site.siredvin.peripheralium.extra.plugins.PeripheralPluginUtils
+import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import java.util.function.Consumer
@@ -43,18 +45,18 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
         }
     }
 
-    protected open fun connectPlugin(plugin: IPeripheralPlugin) {
-        pluggedMethods.addAll(plugin.methods)
+    protected open fun connectPlugin(server: MinecraftServer, plugin: IPeripheralPlugin) {
+        pluggedMethods.addAll(plugin.getMethods(server))
         addAdditionalType(plugin.additionalType)
         plugin.connectedPeripheral = this
     }
 
-    protected open fun collectPluginMethods() {
-        if (plugins != null) plugins!!.forEach(Consumer { connectPlugin(it) })
+    protected open fun collectPluginMethods(server: MinecraftServer) {
+        if (plugins != null) plugins!!.forEach(Consumer { connectPlugin(server, it) })
     }
 
     protected open fun buildPlugins() {
-        if (!initialized) {
+        if (!initialized && PeripheraliumPlatform.minecraftServer != null) {
             initialized = true
             pluggedMethods.clear()
             if (additionalTypeStorage == null) {
@@ -62,7 +64,7 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
             } else {
                 additionalTypeStorage?.clear()
             }
-            collectPluginMethods()
+            collectPluginMethods(PeripheraliumPlatform.minecraftServer!!)
             _methodNames = pluggedMethods.stream().map { obj: BoundMethod -> obj.name }.toArray { size -> Array(size) { "" } }
         }
     }

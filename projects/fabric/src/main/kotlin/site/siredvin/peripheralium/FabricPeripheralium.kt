@@ -1,6 +1,7 @@
 package site.siredvin.peripheralium
 
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents
 import site.siredvin.peripheralium.fabric.FabricIngredients
 import site.siredvin.peripheralium.fabric.FabricLibPlatform
 import site.siredvin.peripheralium.fabric.FabricPeripheraliumPlatform
@@ -17,6 +18,11 @@ object FabricPeripheralium : ModInitializer {
         ItemStorageExtractor.addStorageExtractor(FabricStorageUtils::extractStorage)
         FluidStorageExtractor.addFluidStorageExtractor(FabricStorageUtils::extractFluidStorage)
         FluidStorageExtractor.addFluidStorageExtractor(FabricStorageUtils::extractFluidStorageFromItem)
+        ServerWorldEvents.LOAD.register(
+            ServerWorldEvents.Load { server, _ ->
+                FabricPeripheraliumPlatform.minecraftServer = server
+            },
+        )
     }
 
     fun sayHi() {}

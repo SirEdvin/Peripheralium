@@ -38,7 +38,9 @@ sourceSets {
 dependencies {
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.cccommon)
+    implementation(libs.bundles.onlycore)
     api(libs.bundles.apicommon)
+    compileOnly(libs.mixin)
 
     add(sourceSets["testFixtures"].compileOnlyConfigurationName, kotlin("test"))
     add(sourceSets["testFixtures"].compileOnlyConfigurationName, libs.bundles.test)

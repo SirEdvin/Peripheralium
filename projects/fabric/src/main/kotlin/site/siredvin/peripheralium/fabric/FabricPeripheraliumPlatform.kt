@@ -6,6 +6,7 @@ import dan200.computercraft.api.peripheral.PeripheralLookup
 import dan200.computercraft.api.pocket.IPocketUpgrade
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.ITurtleUpgrade
+import dan200.computercraft.api.upgrades.UpgradeData
 import dan200.computercraft.impl.PocketUpgrades
 import dan200.computercraft.impl.TurtleUpgrades
 import dan200.computercraft.shared.ModRegistry
@@ -25,6 +26,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.tags.TagKey
@@ -53,6 +55,7 @@ import java.util.function.Predicate
 
 object FabricPeripheraliumPlatform : PeripheraliumPlatform {
     const val FORGE_COMPACT_DEVIDER = 81
+    private var minecraftServerCache: MinecraftServer? = null
 
     private class FabricRegistryWrapper<T>(private val name: ResourceLocation, private val registry: Registry<T>) : RegistryWrapper<T> {
         override fun getId(something: T): Int {
@@ -96,6 +99,12 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
 
     override val fluidCompactDivider: Int
         get() = FORGE_COMPACT_DEVIDER
+
+    override var minecraftServer: MinecraftServer?
+        get() = minecraftServerCache
+        set(value) {
+            minecraftServerCache = value
+        }
 
     override fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T> {
         val targetRegistry: Registry<T> = (BuiltInRegistries.REGISTRY.get(registry.location()) ?: throw IllegalArgumentException("Cannot find registry $registry")) as Registry<T>
@@ -160,11 +169,11 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
         return NBTUtil.getNBTHash(tag)
     }
 
-    override fun getTurtleUpgrade(stack: ItemStack): ITurtleUpgrade? {
+    override fun getTurtleUpgrade(stack: ItemStack): UpgradeData<ITurtleUpgrade>? {
         return TurtleUpgrades.instance().get(stack)
     }
 
-    override fun getPocketUpgrade(stack: ItemStack): IPocketUpgrade? {
+    override fun getPocketUpgrade(stack: ItemStack): UpgradeData<IPocketUpgrade>? {
         return PocketUpgrades.instance().get(stack)
     }
 
@@ -200,14 +209,14 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
         return FabricItemGroup.builder()
     }
 
-    override fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack> {
+    override fun createTurtlesWithUpgrade(upgrade: UpgradeData<ITurtleUpgrade>): List<ItemStack> {
         return listOf(
             ModRegistry.Items.TURTLE_NORMAL.get().create(-1, null, -1, null, upgrade, 0, null),
             ModRegistry.Items.TURTLE_ADVANCED.get().create(-1, null, -1, null, upgrade, 0, null),
         )
     }
 
-    override fun createPocketsWithUpgrade(upgrade: IPocketUpgrade): List<ItemStack> {
+    override fun createPocketsWithUpgrade(upgrade: UpgradeData<IPocketUpgrade>): List<ItemStack> {
         return listOf(
             ModRegistry.Items.POCKET_COMPUTER_NORMAL.get().create(-1, null, -1, upgrade),
             ModRegistry.Items.POCKET_COMPUTER_ADVANCED.get().create(-1, null, -1, upgrade),

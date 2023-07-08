@@ -1,19 +1,19 @@
 package site.siredvin.peripheralium.api.peripheral
 
-import dan200.computercraft.core.asm.NamedMethod
-import dan200.computercraft.core.asm.PeripheralMethod
+import dan200.computercraft.shared.computer.core.ServerContext
+import net.minecraft.server.MinecraftServer
 import site.siredvin.peripheralium.computercraft.peripheral.BoundMethod
-import java.util.stream.Collectors
 
 interface IPeripheralPlugin {
     var connectedPeripheral: IPluggablePeripheral?
         get() = null
         set(value) {}
 
-    val methods: List<BoundMethod>
-        get() = PeripheralMethod.GENERATOR.getMethods(this.javaClass).stream()
-            .map { named: NamedMethod<PeripheralMethod> -> BoundMethod(this, named) }
-            .collect(Collectors.toList())
+    fun getMethods(server: MinecraftServer): List<BoundMethod> {
+        return ServerContext.get(server).peripheralMethods().getSelfMethods(this).map {
+            BoundMethod(this, it.key, it.value)
+        }
+    }
 
     val operations: List<IPeripheralOperation<*>>
         get() = emptyList()

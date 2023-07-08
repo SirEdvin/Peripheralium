@@ -11,8 +11,11 @@ forgegradle = "6.+"
 spotless = "6.19.0"
 
 # Core mod dependencies
-cc-tweaked = "1.105.0"
+cc-tweaked = "1.106.1"
 mixin = "0.8.5"
+
+# Only core mod dependenceis
+asm = "9.3"
 
 # Fabric dependencies
 fabric-api = "0.83.1+1.20.1"
@@ -49,10 +52,14 @@ kotlin-plugin = {module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.r
 spotless-plugin = {module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref="spotless"}
 
 # Core mod dependencies
-cc-tweaked-common = {module = "cc.tweaked:cc-tweaked-1.20.1-common-api", version.ref = "cc-tweaked"}
+cc-tweaked-common = {module = "cc.tweaked:common", version.ref = "cc-tweaked"}
+cc-tweaked-common-api = {module = "cc.tweaked:cc-tweaked-1.20.1-common-api", version.ref = "cc-tweaked"}
 cc-tweaked-core = {module = "cc.tweaked:cc-tweaked-1.20.1-core", version.ref = "cc-tweaked"}
 common-config = {module = "fuzs.forgeconfigapiport:forgeconfigapiport-common", version.ref = "forgeconfigapirt"}
 mixin = { module = "org.spongepowered:mixin", version.ref = "mixin" }
+
+# Only core dependencies
+asm = { module = "org.ow2.asm:asm", version.ref = "asm" }
 
 # Fabric mod dependencies
 fabric-loader = {module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader"}
@@ -88,7 +95,8 @@ spotless = {id = "com.diffplug.spotless", version.ref="spotless"}
 
 [bundles]
 kotlin = ["kotlin-stdlib", "kotlin-coroutines", "kotlin-atomicfu"]
-cccommon = ["cc-tweaked-common", "cc-tweaked-core"]
+cccommon = ["cc-tweaked-common", "cc-tweaked-core", "cc-tweaked-common-api"]
+onlycore = ["asm"]
 apicommon = ["common-config"]
 ccfabric-api = ["cc-tweaked-fabric-api", "cc-tweaked-core"]
 ccfabric = ["cc-tweaked-fabric", "cc-tweaked-core"]

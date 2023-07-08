@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `isSubSet` method for NBTUtil
 - Ability to change update flag for `pushToClient` method
 - `triggerRender` now is more cross-plat than before
+- CC:T 1.106.1 port
 
 ### Changed
 

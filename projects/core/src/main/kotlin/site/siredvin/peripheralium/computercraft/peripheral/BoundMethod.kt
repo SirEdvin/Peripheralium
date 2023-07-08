@@ -5,18 +5,10 @@ import dan200.computercraft.api.lua.ILuaContext
 import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.MethodResult
 import dan200.computercraft.api.peripheral.IComputerAccess
-import dan200.computercraft.core.asm.NamedMethod
-import dan200.computercraft.core.asm.PeripheralMethod
+import dan200.computercraft.core.methods.PeripheralMethod
 import java.util.*
 
-class BoundMethod(private val target: Any, method: NamedMethod<PeripheralMethod>) {
-    val name: String
-    private val method: PeripheralMethod
-
-    init {
-        name = method.name
-        this.method = method.method
-    }
+class BoundMethod(private val target: Any, val name: String, private val method: PeripheralMethod) {
 
     @Throws(LuaException::class)
     fun apply(

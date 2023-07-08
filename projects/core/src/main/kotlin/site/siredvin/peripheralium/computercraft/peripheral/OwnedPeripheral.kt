@@ -4,6 +4,7 @@ import dan200.computercraft.api.lua.*
 import dan200.computercraft.api.peripheral.IDynamicPeripheral
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.server.MinecraftServer
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.peripheral.*
 import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
@@ -37,11 +38,11 @@ abstract class OwnedPeripheral<O : IPeripheralOwner>(peripheralType: String, fin
         }
     }
 
-    override fun collectPluginMethods() {
-        super.collectPluginMethods()
+    override fun collectPluginMethods(server: MinecraftServer) {
+        super.collectPluginMethods(server)
         peripheralOwner.abilities.forEach {
             if (it is IPeripheralPlugin) {
-                connectPlugin(it)
+                connectPlugin(server, it)
             }
         }
     }

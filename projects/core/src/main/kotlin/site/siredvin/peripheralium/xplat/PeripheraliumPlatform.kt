@@ -5,6 +5,7 @@ import dan200.computercraft.api.peripheral.IPeripheral
 import dan200.computercraft.api.pocket.IPocketUpgrade
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.ITurtleUpgrade
+import dan200.computercraft.api.upgrades.UpgradeData
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.Registry
@@ -12,6 +13,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
@@ -52,6 +54,9 @@ interface PeripheraliumPlatform {
         val fluidCompactDivider: Int
             get() = get().fluidCompactDivider
 
+        val minecraftServer: MinecraftServer?
+            get() = get().minecraftServer
+
         fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T> {
             return get().wrap(registry)
         }
@@ -88,11 +93,11 @@ interface PeripheraliumPlatform {
             return get().nbtHash(tag)
         }
 
-        fun getTurtleUpgrade(stack: ItemStack): ITurtleUpgrade? {
+        fun getTurtleUpgrade(stack: ItemStack): UpgradeData<ITurtleUpgrade>? {
             return get().getTurtleUpgrade(stack)
         }
 
-        fun getPocketUpgrade(stack: ItemStack): IPocketUpgrade? {
+        fun getPocketUpgrade(stack: ItemStack): UpgradeData<IPocketUpgrade>? {
             return get().getPocketUpgrade(stack)
         }
 
@@ -126,10 +131,10 @@ interface PeripheraliumPlatform {
             return get().createTabBuilder()
         }
 
-        fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack> {
+        fun createTurtlesWithUpgrade(upgrade: UpgradeData<ITurtleUpgrade>): List<ItemStack> {
             return get().createTurtlesWithUpgrade(upgrade)
         }
-        fun createPocketsWithUpgrade(upgrade: IPocketUpgrade): List<ItemStack> {
+        fun createPocketsWithUpgrade(upgrade: UpgradeData<IPocketUpgrade>): List<ItemStack> {
             return get().createPocketsWithUpgrade(upgrade)
         }
 
@@ -143,6 +148,7 @@ interface PeripheraliumPlatform {
     }
 
     val fluidCompactDivider: Int
+    val minecraftServer: MinecraftServer?
 
     fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T>
 
@@ -162,9 +168,9 @@ interface PeripheraliumPlatform {
 
     fun nbtHash(tag: CompoundTag?): String?
 
-    fun getTurtleUpgrade(stack: ItemStack): ITurtleUpgrade?
+    fun getTurtleUpgrade(stack: ItemStack): UpgradeData<ITurtleUpgrade>?
 
-    fun getPocketUpgrade(stack: ItemStack): IPocketUpgrade?
+    fun getPocketUpgrade(stack: ItemStack): UpgradeData<IPocketUpgrade>?
 
     fun getTurtleUpgrade(key: String): ITurtleUpgrade?
 
@@ -184,8 +190,8 @@ interface PeripheraliumPlatform {
 
     fun createTabBuilder(): CreativeModeTab.Builder
 
-    fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack>
-    fun createPocketsWithUpgrade(upgrade: IPocketUpgrade): List<ItemStack>
+    fun createTurtlesWithUpgrade(upgrade: UpgradeData<ITurtleUpgrade>): List<ItemStack>
+    fun createPocketsWithUpgrade(upgrade: UpgradeData<IPocketUpgrade>): List<ItemStack>
     fun isOre(block: BlockState): Boolean
 
     fun triggerRenderUpdate(blockEntity: BlockEntity)
