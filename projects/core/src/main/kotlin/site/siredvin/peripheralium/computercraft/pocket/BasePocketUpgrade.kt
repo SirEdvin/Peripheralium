@@ -9,22 +9,12 @@ import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
 import site.siredvin.peripheralium.computercraft.peripheral.DisabledPeripheral
 import site.siredvin.peripheralium.util.pocketAdjective
 
-abstract class BasePocketUpgrade<T : IOwnedPeripheral<*>> : AbstractPocketUpgrade {
+abstract class BasePocketUpgrade<T : IOwnedPeripheral<*>>(
+    id: ResourceLocation,
+    adjective: String = pocketAdjective(id),
+    stack: ItemStack,
+) : AbstractPocketUpgrade(id, adjective, stack) {
     protected var peripheral: T? = null
-
-    constructor(id: ResourceLocation, adjective: String, stack: ItemStack) : super(
-        id,
-        adjective,
-        stack,
-    ) {
-    }
-
-    constructor(id: ResourceLocation, stack: ItemStack) : super(
-        id,
-        pocketAdjective(id),
-        stack,
-    ) {
-    }
 
     protected abstract fun getPeripheral(access: IPocketAccess): T
     override fun createPeripheral(access: IPocketAccess): IPeripheral? {
