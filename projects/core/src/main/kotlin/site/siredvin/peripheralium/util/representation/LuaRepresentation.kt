@@ -31,7 +31,7 @@ object LuaRepresentation {
 
     fun forBlockState(state: BlockState): MutableMap<String, Any> {
         val data: MutableMap<String, Any> = HashMap()
-        data["name"] = XplatRegistries.BLOCKS.getKey(state.block)
+        data["name"] = XplatRegistries.BLOCKS.getKey(state.block).toString()
         data["displayName"] = state.block.name.string
         data["tags"] = tagsToList(state.tags)
         return data
