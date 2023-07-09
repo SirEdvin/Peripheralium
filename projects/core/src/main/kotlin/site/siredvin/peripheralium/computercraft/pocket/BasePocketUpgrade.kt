@@ -16,6 +16,12 @@ abstract class BasePocketUpgrade<T : IOwnedPeripheral<*>>(
 ) : AbstractPocketUpgrade(id, adjective, stack) {
     protected var peripheral: T? = null
 
+    constructor(id: ResourceLocation, stack: ItemStack) : this(
+        id,
+        pocketAdjective(id),
+        stack,
+    )
+
     protected abstract fun getPeripheral(access: IPocketAccess): T
     override fun createPeripheral(access: IPocketAccess): IPeripheral? {
         peripheral = getPeripheral(access)

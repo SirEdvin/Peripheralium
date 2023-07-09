@@ -9,7 +9,6 @@ import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.TurtleIDBuildFunction
 import site.siredvin.peripheralium.api.TurtlePeripheralBuildFunction
 import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
-import site.siredvin.peripheralium.util.turtleAdjective
 
 abstract class StatefulPeripheralTurtleUpgrade<T : IOwnedPeripheral<*>> : StatefulTurtleUpgrade<T> {
     companion object {
@@ -27,7 +26,6 @@ abstract class StatefulPeripheralTurtleUpgrade<T : IOwnedPeripheral<*>> : Statef
     constructor(id: ResourceLocation, item: ItemStack) : super(
         id,
         TurtleUpgradeType.PERIPHERAL,
-        turtleAdjective(id),
         item,
     )
 

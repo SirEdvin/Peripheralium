@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
 import site.siredvin.peripheralium.computercraft.peripheral.DisabledPeripheral
+import site.siredvin.peripheralium.util.turtleAdjective
 
 abstract class BaseTurtleUpgrade<T : IOwnedPeripheral<*>>(
     id: ResourceLocation,
@@ -18,6 +19,13 @@ abstract class BaseTurtleUpgrade<T : IOwnedPeripheral<*>>(
 ) : AbstractTurtleUpgrade(id, type, adjective, stack) {
 
     protected abstract fun buildPeripheral(turtle: ITurtleAccess, side: TurtleSide): T
+
+    constructor(id: ResourceLocation, type: TurtleUpgradeType, stack: ItemStack) : this(
+        id,
+        type,
+        turtleAdjective(id),
+        stack,
+    )
 
     override fun createPeripheral(turtle: ITurtleAccess, side: TurtleSide): IPeripheral? {
         val peripheral = buildPeripheral(turtle, side)
