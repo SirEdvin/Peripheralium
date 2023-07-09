@@ -31,18 +31,19 @@ object LuaRepresentation {
 
     fun forBlockState(state: BlockState): MutableMap<String, Any> {
         val data: MutableMap<String, Any> = HashMap()
-        data["name"] = state.block.name.string
+        data["name"] = XplatRegistries.BLOCKS.getKey(state.block)
+        data["displayName"] = state.block.name.string
         data["tags"] = tagsToList(state.tags)
         return data
     }
 
     fun forEntity(entity: Entity): MutableMap<String, Any> {
         val data: MutableMap<String, Any> = HashMap()
-        data["id"] = entity.id
+        data["name"] = entity.id
         data["uuid"] = entity.stringUUID
         data["category"] = entity.type.category.name
         data["type"] = entity.type.description.string
-        data["name"] = entity.name.string
+        data["displayName"] = entity.name.string
         data["tags"] = entity.tags
         return data
     }
