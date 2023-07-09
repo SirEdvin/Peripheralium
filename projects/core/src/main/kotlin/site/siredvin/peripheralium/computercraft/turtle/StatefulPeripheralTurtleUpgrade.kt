@@ -44,12 +44,13 @@ abstract class StatefulPeripheralTurtleUpgrade<T : IOwnedPeripheral<*>> : BaseTu
     }
 
     override fun getUpgradeData(stack: ItemStack): CompoundTag {
-        return stack.getOrCreateTagElement(StatefulPeripheralPocketUpgrade.STORED_DATA_TAG)
+        return stack.getTagElement(StatefulPeripheralPocketUpgrade.STORED_DATA_TAG) ?: return CompoundTag()
     }
 
     override fun getUpgradeItem(upgradeData: CompoundTag): ItemStack {
+        if (upgradeData.isEmpty) return craftingItem
         val base = craftingItem.copy()
-        if (!upgradeData.isEmpty) base.addTagElement(StatefulPeripheralPocketUpgrade.STORED_DATA_TAG, upgradeData)
+        base.addTagElement(StatefulPeripheralPocketUpgrade.STORED_DATA_TAG, upgradeData)
         return base
     }
 
