@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
 import site.siredvin.peripheralium.computercraft.pocket.StatefulPocketUpgrade
+import site.siredvin.peripheralium.util.turtleAdjective
 
 abstract class StatefulTurtleUpgrade<T : IOwnedPeripheral<*>>(
     id: ResourceLocation,
@@ -16,6 +17,14 @@ abstract class StatefulTurtleUpgrade<T : IOwnedPeripheral<*>>(
     companion object {
         const val STORED_DATA_TAG = StatefulPocketUpgrade.STORED_DATA_TAG
     }
+
+    constructor(id: ResourceLocation, type: TurtleUpgradeType, stack: ItemStack) : this(
+        id,
+        type,
+        turtleAdjective(id),
+        stack,
+    )
+
     override fun getUpgradeData(stack: ItemStack): CompoundTag {
         return stack.getTagElement(STORED_DATA_TAG) ?: return CompoundTag()
     }

@@ -9,10 +9,18 @@ import site.siredvin.peripheralium.util.pocketAdjective
 
 class StatefulPeripheralPocketUpgrade<T : IOwnedPeripheral<*>>(
     id: ResourceLocation,
-    adjective: String = pocketAdjective(id),
+    adjective: String,
     stack: ItemStack,
     private val constructor: PocketPeripheralBuildFunction<T>,
 ) : StatefulPocketUpgrade<T>(id, adjective, stack) {
+
+    constructor(id: ResourceLocation, stack: ItemStack, constructor: PocketPeripheralBuildFunction<T>) : this(
+        id,
+        pocketAdjective(id),
+        stack,
+        constructor,
+    )
+
     override fun getPeripheral(access: IPocketAccess): T {
         return constructor.build(access)
     }

@@ -8,13 +8,19 @@ import site.siredvin.peripheralium.util.pocketAdjective
 
 abstract class StatefulPocketUpgrade<T : IOwnedPeripheral<*>>(
     id: ResourceLocation,
-    adjective: String = pocketAdjective(id),
+    adjective: String,
     stack: ItemStack,
 ) : BasePocketUpgrade<T>(id, adjective, stack) {
 
     companion object {
         const val STORED_DATA_TAG = "storedData"
     }
+
+    constructor(id: ResourceLocation, stack: ItemStack) : this(
+        id,
+        pocketAdjective(id),
+        stack,
+    )
 
     override fun getUpgradeData(stack: ItemStack): CompoundTag {
         return stack.getTagElement(STORED_DATA_TAG) ?: return CompoundTag()
