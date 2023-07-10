@@ -5,6 +5,7 @@ import net.minecraft.world.Container
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.animal.horse.AbstractChestedHorse
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.vehicle.AbstractMinecartContainer
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.ChestBlock
 import net.minecraft.world.level.block.entity.BlockEntity
@@ -95,6 +96,8 @@ object ItemStorageExtractor {
     }
 
     fun extractStorage(level: Level, entity: Entity): ItemStorage? {
+        if (entity.isRemoved) return null
+
         for (extractor in ADDITIONAL_STORAGE_ENTITY_EXTRACTORS) {
             val result = extractor.extract(level, entity)
             if (result != null) {
@@ -106,6 +109,9 @@ object ItemStorageExtractor {
         }
         if (entity is AbstractChestedHorse && entity.hasChest()) {
             return ContainerWrapper(LimitedInventory(entity.inventory, IntArray(entity.inventory.containerSize - 2) { i -> i + 2 }))
+        }
+        if (entity is AbstractMinecartContainer) {
+            return ContainerWrapper(entity)
         }
         return null
     }

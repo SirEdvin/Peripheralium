@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Minecart support for `extractStorage`
+
 ## [0.6.4] - 2023-07-09
 
 ### Added
