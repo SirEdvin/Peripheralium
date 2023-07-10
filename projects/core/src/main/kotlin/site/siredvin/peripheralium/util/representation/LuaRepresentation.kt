@@ -197,6 +197,8 @@ object LuaRepresentation {
         base["foodLevel"] = player.foodData.foodLevel
         base["saturationLevel"] = player.foodData.saturationLevel
         base["isCreative"] = player.isCreative
+        base["yRot"] = player.yRot
+        base["xRot"] = player.xRot
         return base
     }
 
