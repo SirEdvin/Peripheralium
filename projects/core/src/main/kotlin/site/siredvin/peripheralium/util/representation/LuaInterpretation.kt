@@ -1,10 +1,14 @@
 package site.siredvin.peripheralium.util.representation
 
 import dan200.computercraft.api.lua.LuaException
+import net.minecraft.ResourceLocationException
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Rotation
 import site.siredvin.peripheralium.ext.toRelative
+import site.siredvin.peripheralium.xplat.XplatRegistries
 
 object LuaInterpretation {
     // BlockPos tricks
@@ -38,5 +42,31 @@ object LuaInterpretation {
             val allValues = Rotation.values().joinToString(", ") { it.name.lowercase() }
             throw LuaException("Rotation should be one of: $allValues")
         }
+    }
+
+    @Throws(LuaException::class)
+    fun asID(id: String): ResourceLocation {
+        return try {
+            ResourceLocation(id)
+        } catch (e: ResourceLocationException) {
+            throw LuaException(e.message)
+        }
+    }
+
+    @Throws(LuaException::class)
+    fun asItemStack(obj: Any?): ItemStack {
+        if (obj is String) {
+            val candidate = XplatRegistries.ITEMS.get(asID(obj)).defaultInstance
+            if (candidate.isEmpty) throw LuaException("Cannot find item with id $obj")
+            return candidate
+        }
+        if (obj is Map<*, *>) {
+            val id = obj["item"] as? String ?: throw LuaException("Item stack table should contains item field with item id")
+            val count = obj.getOrDefault("count", 1) as? Number ?: throw LuaException("Count field should be a number")
+            val candidate = XplatRegistries.ITEMS.get(asID(id)).defaultInstance
+            if (candidate.isEmpty) throw LuaException("Cannot find item with id $obj")
+            return candidate.copyWithCount(count.toInt())
+        }
+        throw LuaException("Item stack should be item id or table with item id and count")
     }
 }

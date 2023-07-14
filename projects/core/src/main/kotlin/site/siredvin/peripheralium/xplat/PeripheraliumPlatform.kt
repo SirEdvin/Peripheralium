@@ -145,6 +145,14 @@ interface PeripheraliumPlatform {
         fun triggerRenderUpdate(blockEntity: BlockEntity) {
             get().triggerRenderUpdate(blockEntity)
         }
+
+        fun tintConvert(tint: Int): Int {
+            return get().tintConvert(tint)
+        }
+
+        fun reverseTintConvert(tint: Int): Int {
+            return get().reverseTintConvert(tint)
+        }
     }
 
     val fluidCompactDivider: Int
@@ -193,6 +201,7 @@ interface PeripheraliumPlatform {
     fun createTurtlesWithUpgrade(upgrade: UpgradeData<ITurtleUpgrade>): List<ItemStack>
     fun createPocketsWithUpgrade(upgrade: UpgradeData<IPocketUpgrade>): List<ItemStack>
     fun isOre(block: BlockState): Boolean
-
     fun triggerRenderUpdate(blockEntity: BlockEntity)
+    fun tintConvert(tint: Int): Int = tint
+    fun reverseTintConvert(tint: Int): Int = tintConvert(tint)
 }

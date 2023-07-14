@@ -8,7 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Minecart support for `extractStorage`
+- Minecart entity support for `extractStorage`
+- `tint` handling logic
+- `AABB` and `IArgument` extension methods
+- ItemStack lua formatting
 
 ## [0.6.4] - 2023-07-09
 

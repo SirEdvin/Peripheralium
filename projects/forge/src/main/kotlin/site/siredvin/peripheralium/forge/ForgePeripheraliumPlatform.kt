@@ -49,6 +49,7 @@ import net.minecraftforge.registries.RegistryManager
 import net.minecraftforge.server.ServerLifecycleHooks
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.RegistryWrapper
+import java.awt.Color
 import java.util.*
 import java.util.function.BiFunction
 import java.util.function.Function
@@ -256,5 +257,11 @@ object ForgePeripheraliumPlatform : PeripheraliumPlatform {
             Minecraft.getInstance().levelRenderer.setBlocksDirty(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z)
             blockEntity.requestModelDataUpdate()
         }
+    }
+
+    override fun tintConvert(tint: Int): Int {
+        // For some unknown reason forge tint should be in bgr
+        val color = Color(tint)
+        return Color(color.blue, color.green, color.red).rgb
     }
 }
