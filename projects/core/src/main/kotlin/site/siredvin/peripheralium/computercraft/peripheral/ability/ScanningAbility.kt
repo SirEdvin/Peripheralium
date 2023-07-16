@@ -43,7 +43,7 @@ class ScanningAbility<T : IPeripheralOwner>(val owner: T, val maxRadius: Int) : 
                 ability.owner.level!!,
                 ability.owner.pos,
                 min(radius, ability.maxRadius),
-                { state, pos -> blockStateConverter(state, pos, ability.owner.facing, ability.owner.pos) },
+                { state, pos -> result.add(blockStateConverter(state, pos, ability.owner.facing, ability.owner.pos)) },
                 relativePosition = false,
             )
             return MethodResult.of(result)

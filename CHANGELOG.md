@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Scanning method names [UnlimitedPeripheralWorks#22](https://github.com/SirEdvin/UnlimitedPeripheralWorks/issues/22)
 - Issue with block tooltip generations
+- `block` scan always being empty [UnlimitedPeripheralWorks#22](https://github.com/SirEdvin/UnlimitedPeripheralWorks/issues/22)
 
 ### Changed
 
