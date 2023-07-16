@@ -61,7 +61,7 @@ abstract class LanguageProvider(
     fun add(block: Block, text: String, tooltip: String? = null) {
         add(block.descriptionId, text)
         if (tooltip != null) {
-            add(block.descriptionId.replace("block", "item") + ".tooltip", tooltip)
+            add(block.descriptionId + ".tooltip", tooltip)
         }
     }
 

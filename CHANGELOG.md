@@ -14,13 +14,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ItemStack lua formatting
 - Interfaces for upgrade that contains other upgrades. Useful for different render tricks and other staff
 
-### Changed
-
-- Some turtle and pocket interfaces location
-
 ### Fixed
 
 - Scanning method names [UnlimitedPeripheralWorks#22](https://github.com/SirEdvin/UnlimitedPeripheralWorks/issues/22)
+- Issue with block tooltip generations
+
+### Changed
+
+- Some turtle and pocket interfaces location
 
 ## [0.6.4] - 2023-07-09
 
