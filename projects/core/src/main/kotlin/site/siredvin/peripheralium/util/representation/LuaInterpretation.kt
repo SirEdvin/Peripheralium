@@ -115,7 +115,7 @@ object LuaInterpretation {
     }
 
     @Throws(LuaException::class)
-    fun asBlockState(table: Map<*, *>): BlockState? {
+    fun asBlockState(table: Map<*, *>): BlockState {
         if (table.containsKey("block")) {
             val blockID = table["block"].toString()
             val block = XplatRegistries.BLOCKS.get(ResourceLocation(blockID))
@@ -129,6 +129,6 @@ object LuaInterpretation {
             }
             return targetState
         }
-        return null
+        throw LuaException("Table should contains at least block field")
     }
 }
