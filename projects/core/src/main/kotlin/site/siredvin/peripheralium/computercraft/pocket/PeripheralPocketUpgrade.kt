@@ -3,8 +3,8 @@ package site.siredvin.peripheralium.computercraft.pocket
 import dan200.computercraft.api.pocket.IPocketAccess
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
-import site.siredvin.peripheralium.api.PocketPeripheralBuildFunction
 import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
+import site.siredvin.peripheralium.api.pocket.PocketPeripheralBuildFunction
 import site.siredvin.peripheralium.util.pocketAdjective
 
 class PeripheralPocketUpgrade<T : IOwnedPeripheral<*>> : BasePocketUpgrade<T> {

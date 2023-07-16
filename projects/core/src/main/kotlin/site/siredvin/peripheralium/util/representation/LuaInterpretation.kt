@@ -7,6 +7,11 @@ import net.minecraft.core.Direction
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Rotation
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.properties.BooleanProperty
+import net.minecraft.world.level.block.state.properties.EnumProperty
+import net.minecraft.world.level.block.state.properties.IntegerProperty
+import net.minecraft.world.level.block.state.properties.Property
 import site.siredvin.peripheralium.ext.toRelative
 import site.siredvin.peripheralium.xplat.XplatRegistries
 
@@ -68,5 +73,62 @@ object LuaInterpretation {
             return candidate.copyWithCount(count.toInt())
         }
         throw LuaException("Item stack should be item id or table with item id and count")
+    }
+
+    @Throws(LuaException::class)
+    fun asBlockStateAttrs(state: BlockState, blockAttrs: Map<*, *>): BlockState {
+        var changeableState: BlockState = state
+        blockAttrs.forEach { attr ->
+            val property = state.properties.find { it.name.equals(attr.key) }
+                ?: throw LuaException(String.format("Unknown property name %s", attr.key))
+            when (property) {
+                is EnumProperty -> {
+                    val value = attr.value.toString().lowercase()
+                    val targetValue = property.getPossibleValues().find { it.toString().lowercase() == value }
+                        ?: throw LuaException(
+                            java.lang.String.format(
+                                "Incorrect value %s, only %s is allowed",
+                                attr.key,
+                                property.getPossibleValues().joinToString(", "),
+                            ),
+                        )
+                    val trickedProperty = property as Property<Comparable<Any>>
+                    changeableState = changeableState.setValue(trickedProperty, targetValue as Comparable<Any>)
+                }
+
+                is BooleanProperty -> {
+                    if (attr.value !is Boolean) {
+                        throw LuaException(String.format("Incorrect value %s, should be boolean", attr.key))
+                    }
+                    changeableState = changeableState.setValue(property, attr.value as Boolean)
+                }
+
+                is IntegerProperty -> {
+                    if (attr.value !is Number) {
+                        throw LuaException(String.format("Incorrect value %s, should be boolean", attr.key))
+                    }
+                    changeableState = changeableState.setValue(property, (attr.value as Number).toInt())
+                }
+            }
+        }
+        return changeableState
+    }
+
+    @Throws(LuaException::class)
+    fun asBlockState(table: Map<*, *>): BlockState? {
+        if (table.containsKey("block")) {
+            val blockID = table["block"].toString()
+            val block = XplatRegistries.BLOCKS.get(ResourceLocation(blockID))
+            if (block == net.minecraft.world.level.block.Blocks.AIR) {
+                throw LuaException(String.format("Cannot find block %s", table["block"]))
+            }
+            var targetState = block.defaultBlockState()
+            if (table.containsKey("attrs")) {
+                val blockAttrs = table["attrs"] as? Map<*, *> ?: throw LuaException("attrs should be a table")
+                targetState = asBlockStateAttrs(targetState, blockAttrs)
+            }
+            return targetState
+        }
+        return null
     }
 }

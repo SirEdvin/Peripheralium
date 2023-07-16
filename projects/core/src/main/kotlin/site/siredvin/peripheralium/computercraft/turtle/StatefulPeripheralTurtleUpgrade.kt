@@ -6,9 +6,9 @@ import dan200.computercraft.api.turtle.TurtleUpgradeType
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import site.siredvin.peripheralium.api.TurtleIDBuildFunction
-import site.siredvin.peripheralium.api.TurtlePeripheralBuildFunction
 import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
+import site.siredvin.peripheralium.api.turtle.TurtleIDBuildFunction
+import site.siredvin.peripheralium.api.turtle.TurtlePeripheralBuildFunction
 
 abstract class StatefulPeripheralTurtleUpgrade<T : IOwnedPeripheral<*>> : StatefulTurtleUpgrade<T> {
     companion object {

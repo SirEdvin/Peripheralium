@@ -1,4 +1,4 @@
-package site.siredvin.peripheralium.api
+package site.siredvin.peripheralium.api.turtle
 
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item

@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `tint` handling logic
 - `AABB` and `IArgument` extension methods
 - ItemStack lua formatting
+- Interfaces for upgrade that contains other upgrades. Useful for different render tricks and other staff
+
+### Changed
+
+- Some turtle and pocket interfaces location
 
 ### Fixed
 
