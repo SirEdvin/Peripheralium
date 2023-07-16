@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `AABB` and `IArgument` extension methods
 - ItemStack lua formatting
 
+### Fixed
+
+- Scanning method names [UnlimitedPeripheralWorks#22](https://github.com/SirEdvin/UnlimitedPeripheralWorks/issues/22)
+
 ## [0.6.4] - 2023-07-09
 
 ### Added

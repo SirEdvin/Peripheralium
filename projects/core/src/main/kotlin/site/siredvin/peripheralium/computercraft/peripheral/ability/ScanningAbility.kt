@@ -87,7 +87,7 @@ class ScanningAbility<T : IPeripheralOwner>(val owner: T, val maxRadius: Int) : 
     class ItemEntityScanningMethod<T : IPeripheralOwner>(
         operation: IPeripheralOperation<SphereOperationContext>,
         private val enriches: Array<out BiConsumer<ItemStack, MutableMap<String, Any>>>,
-    ) : EntityScanningMethod<T, ItemEntity>("entity", operation, ItemEntity::class.java) {
+    ) : EntityScanningMethod<T, ItemEntity>("item", operation, ItemEntity::class.java) {
         override fun convert(entity: ItemEntity, ability: ScanningAbility<T>): Map<String, Any> {
             val base = LuaRepresentation.withPos(entity, ability.owner.facing, ability.owner.pos) { LuaRepresentation.forItemStack(it.item) }
             enriches.forEach { it.accept(entity.item, base) }
@@ -108,7 +108,7 @@ class ScanningAbility<T : IPeripheralOwner>(val owner: T, val maxRadius: Int) : 
         operation: IPeripheralOperation<SphereOperationContext>,
         private val enriches: Array<out BiConsumer<LivingEntity, MutableMap<String, Any>>>,
         predicate: Predicate<LivingEntity>,
-    ) : EntityScanningMethod<T, LivingEntity>("item", operation, LivingEntity::class.java, predicate.and { it !is Player }) {
+    ) : EntityScanningMethod<T, LivingEntity>("entity", operation, LivingEntity::class.java, predicate.and { it !is Player }) {
         override fun convert(entity: LivingEntity, ability: ScanningAbility<T>): Map<String, Any> {
             val base = LuaRepresentation.withPos(entity, ability.owner.facing, ability.owner.pos, LuaRepresentation::forLivingEntity)
             enriches.forEach { it.accept(entity, base) }
