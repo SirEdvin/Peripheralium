@@ -4,6 +4,7 @@ import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
 import dan200.computercraft.api.lua.MethodResult
 import net.minecraft.core.BlockPos
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.ExperienceOrb
 import net.minecraft.world.entity.player.Player
@@ -19,6 +20,10 @@ class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadi
     IPeripheralPlugin {
     companion object {
         private const val COLLECTED_XP_AMOUNT = "CollectedXPAmount"
+
+        fun getStoredXP(dataStorage: CompoundTag): Double {
+            return dataStorage.getDouble(COLLECTED_XP_AMOUNT)
+        }
     }
 
     override val operations: List<IPeripheralOperation<*>>
@@ -29,7 +34,7 @@ class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadi
     }
 
     fun getStoredXP(): Double {
-        return owner.dataStorage.getDouble(COLLECTED_XP_AMOUNT)
+        return getStoredXP(owner.dataStorage)
     }
 
     fun adjustStoredXP(amount: Double) {
