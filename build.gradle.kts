@@ -16,7 +16,6 @@ subprojects {
 
 githubShaking {
     modBranch.set("1.20")
-    dryRun.set(true)
     shake()
 }
 
