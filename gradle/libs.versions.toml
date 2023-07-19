@@ -22,6 +22,7 @@ fabric-api = "0.85.0+1.20.1"
 fabric-loader = "0.14.21"
 fabric-kotlin = "1.10.0+kotlin.1.9.0"
 forgeconfigapirt = "8.0.0"
+modmenu = "7.2.1"
 
 # Forge dependencies
 forge = "47.1.0"
@@ -69,6 +70,7 @@ fabric-kotlin = {module = "net.fabricmc:fabric-language-kotlin", version.ref = "
 fabric-config = {module = "fuzs.forgeconfigapiport:forgeconfigapiport-fabric", version.ref = "forgeconfigapirt"}
 cc-tweaked-fabric-api = {module = "cc.tweaked:cc-tweaked-1.20.1-fabric-api", version.ref = "cc-tweaked"}
 cc-tweaked-fabric = {module = "cc.tweaked:cc-tweaked-1.20.1-fabric", version.ref = "cc-tweaked"}
+modmenu = {module = "com.terraformersmc:modmenu", version.ref="modmenu"}
 
 # Forge mod dependencies
 cc-tweaked-forge =  {module = "cc.tweaked:cc-tweaked-1.20.1-forge", version.ref="cc-tweaked"}
@@ -112,7 +114,7 @@ forge-base = ["cc-tweaked-forge"]
 externalMods-forge-runtime = ["jei-forge"]
 #externalMods-fabric = ["nightConfig-core", "nightConfig-toml"]
 #externalMods-fabric-compile = ["iris", "jei-api", "rei-api", "rei-builtin"]
-externalMods-fabric-runtime = ["rei-fabric"]
+externalMods-fabric-runtime = ["rei-fabric", "modmenu"]
 #
 ## Testing
 test = ["junit-jupiter-api", "junit-jupiter-params", "hamcrest", "jqwik-api"]

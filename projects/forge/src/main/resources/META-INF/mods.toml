@@ -13,8 +13,9 @@ displayName="Peripheralium"
 displayURL="https://github.com/SirEdvin/Peripheralium"
 
 credits=""
-authors=""
+authors="SirEdvin"
 description='''
+A library for all of my peripheral mods, actually
 '''
 
 [[dependencies.peripheralium]]
