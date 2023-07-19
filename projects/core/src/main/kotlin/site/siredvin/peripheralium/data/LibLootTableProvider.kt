@@ -7,6 +7,7 @@ import net.minecraft.world.level.storage.loot.LootTable
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import site.siredvin.peripheralium.common.setup.Blocks
 import site.siredvin.peripheralium.data.blocks.LootTableHelper
+import site.siredvin.peripheralium.xplat.LibPlatform
 import java.util.function.BiConsumer
 
 object LibLootTableProvider {
@@ -21,6 +22,8 @@ object LibLootTableProvider {
     }
 
     fun registerBlocks(consumer: BiConsumer<ResourceLocation, LootTable.Builder>) {
-        LootTableHelper.dropSelf(consumer, Blocks.PERIPHERALIUM_BLOCK)
+        val helper = LootTableHelper(LibPlatform.holder)
+        helper.dropSelf(consumer, Blocks.PERIPHERALIUM_BLOCK)
+        helper.validate()
     }
 }

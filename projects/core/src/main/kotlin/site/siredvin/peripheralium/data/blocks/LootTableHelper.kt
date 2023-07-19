@@ -10,10 +10,13 @@ import net.minecraft.world.level.storage.loot.functions.CopyNameFunction
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue
+import site.siredvin.peripheralium.data.language.ModInformationHolder
 import java.util.function.BiConsumer
 import java.util.function.Supplier
 
-object LootTableHelper {
+class LootTableHelper(private val informationHolder: ModInformationHolder) {
+    private val registeredBlocks: MutableSet<Block> = mutableSetOf()
+
     fun dropSelf(consumer: BiConsumer<ResourceLocation, LootTable.Builder>, wrapper: Supplier<out Block>) {
         dropBlock(consumer, wrapper, LootItem.lootTableItem(wrapper.get()), ExplosionCondition.survivesExplosion())
     }
@@ -40,5 +43,21 @@ object LootTableHelper {
                 LootPool.lootPool().setRolls(ConstantValue.exactly(1f)).add(drop).`when`(condition),
             ),
         )
+        registeredBlocks.add(block)
+    }
+
+    /**
+     * Method that used to notify validation, that block will take care of drop logic by himself
+     */
+    fun computedDrop(wrapper: Supplier<out Block>) {
+        registeredBlocks.add(wrapper.get())
+    }
+
+    fun validate() {
+        informationHolder.blocks.forEach {
+            if (!registeredBlocks.contains(it.get())) {
+                throw Exception("${it.get().descriptionId} doesn't have registered drop")
+            }
+        }
     }
 }

@@ -13,6 +13,7 @@ val modBaseName: String by extra
 
 baseShaking {
     projectPart.set("fabric")
+    integrationRepositories.set(true)
     shake()
 }
 
@@ -100,7 +101,7 @@ publishingShaking {
             named<MavenPublication>("maven") {
                 mavenDependencies {
                     exclude(project.dependencies.create("site.siredvin:"))
-                    exclude(libs.jei.fabric.get())
+                    exclude(libs.rei.fabric.get())
                 }
             }
         }
