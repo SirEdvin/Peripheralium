@@ -52,5 +52,6 @@ class RMLParser {
     fun injectDefault() {
         addLexeme(Translate.Companion)
         addLexeme(Rotation.Companion)
+        addLexeme(Scale.Companion)
     }
 }

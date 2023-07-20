@@ -76,3 +76,20 @@ data class Rotation(val axis: Axis, val angle: Float, val x: Float, val y: Float
         return transformation
     }
 }
+
+data class Scale(val x: Float, val y: Float, val z: Float) : RenderInstruction {
+    companion object : RMLLexeme {
+        override val name: String
+            get() = "s"
+
+        override fun build(arguments: String): RenderInstruction {
+            val parsed = ArgumentParsingToolkit.asFloats(arguments, 3)
+            return Scale(parsed[0], parsed[1], parsed[2])
+        }
+    }
+
+    override fun process(transformation: PoseStack): PoseStack {
+        transformation.scale(x, y, z)
+        return transformation
+    }
+}
