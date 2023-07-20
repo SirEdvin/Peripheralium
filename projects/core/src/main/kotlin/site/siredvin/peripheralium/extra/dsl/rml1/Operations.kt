@@ -13,6 +13,8 @@ interface RMLLexeme {
     fun build(arguments: String): RenderInstruction
 }
 
+val limitingRange = -4f..4f
+
 data class Translate(val x: Float, val y: Float, val z: Float) : RenderInstruction {
     companion object : RMLLexeme {
         override val name: String
@@ -25,7 +27,7 @@ data class Translate(val x: Float, val y: Float, val z: Float) : RenderInstructi
     }
 
     override fun process(transformation: PoseStack): PoseStack {
-        transformation.translate(x, y, z)
+        transformation.translate(x.coerceIn(limitingRange), y.coerceIn(limitingRange), z.coerceIn(limitingRange))
         return transformation
     }
 }
@@ -72,7 +74,7 @@ data class Rotation(val axis: Axis, val angle: Float, val x: Float, val y: Float
     }
 
     override fun process(transformation: PoseStack): PoseStack {
-        transformation.rotateAround(axis.rotationDegrees(angle), x, y, z)
+        transformation.rotateAround(axis.rotationDegrees(angle), x.coerceIn(limitingRange), y.coerceIn(limitingRange), z.coerceIn(limitingRange))
         return transformation
     }
 }
@@ -89,7 +91,7 @@ data class Scale(val x: Float, val y: Float, val z: Float) : RenderInstruction {
     }
 
     override fun process(transformation: PoseStack): PoseStack {
-        transformation.scale(x, y, z)
+        transformation.scale(x.coerceIn(limitingRange), y.coerceIn(limitingRange), z.coerceIn(limitingRange))
         return transformation
     }
 }
