@@ -5,10 +5,7 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import site.siredvin.peripheralium.common.setup.Items
 import site.siredvin.peripheralium.data.LibText
-import site.siredvin.peripheralium.xplat.LibPlatform
-import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
-import site.siredvin.peripheralium.xplat.RecipeIngredients
-import site.siredvin.peripheralium.xplat.XplatTags
+import site.siredvin.peripheralium.xplat.*
 
 object PeripheraliumCore {
     const val MOD_ID = "peripheralium"
@@ -28,7 +25,7 @@ object PeripheraliumCore {
             }
     }
 
-    fun configure(libPlatform: LibPlatform, platform: PeripheraliumPlatform, ingredients: RecipeIngredients, tags: XplatTags) {
+    fun configure(libPlatform: BaseInnerPlatform, platform: PeripheraliumPlatform, ingredients: RecipeIngredients, tags: XplatTags) {
         LibPlatform.configure(libPlatform)
         PeripheraliumPlatform.configure(platform)
         RecipeIngredients.configure(ingredients)
