@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Validation for custom stats
+
+### Changed
+
+- Now for xplat tags it is better to use `XplatTags` singleton
+
 ## [0.6.5] - 2023-07-20
 
 ### Added

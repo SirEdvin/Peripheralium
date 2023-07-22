@@ -24,9 +24,11 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.tags.TagKey
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.MenuProvider
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
@@ -40,15 +42,16 @@ import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraftforge.common.ForgeHooks
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.common.Tags
 import net.minecraftforge.common.world.ForgeChunkManager
 import net.minecraftforge.event.level.BlockEvent.BreakEvent
 import net.minecraftforge.eventbus.api.Event
+import net.minecraftforge.network.NetworkHooks
 import net.minecraftforge.registries.ForgeRegistry
 import net.minecraftforge.registries.RegistryManager
 import net.minecraftforge.server.ServerLifecycleHooks
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.RegistryWrapper
+import site.siredvin.peripheralium.xplat.SavingFunction
 import java.awt.Color
 import java.util.*
 import java.util.function.BiFunction
@@ -245,10 +248,6 @@ object ForgePeripheraliumPlatform : PeripheraliumPlatform {
         )
     }
 
-    override fun isOre(block: BlockState): Boolean {
-        return block.`is`(Tags.Blocks.ORES)
-    }
-
     override fun triggerRenderUpdate(blockEntity: BlockEntity) {
         val level = blockEntity.level!!
         if (level.isClientSide) {
@@ -263,5 +262,9 @@ object ForgePeripheraliumPlatform : PeripheraliumPlatform {
         // For some unknown reason forge tint should be in bgr
         val color = Color(tint)
         return Color(color.blue, color.green, color.red).rgb
+    }
+
+    override fun openMenu(player: Player, owner: MenuProvider, savingFunction: SavingFunction) {
+        NetworkHooks.openScreen(player as ServerPlayer, owner, savingFunction::toBytes)
     }
 }

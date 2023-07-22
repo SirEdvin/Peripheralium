@@ -8,6 +8,7 @@ import site.siredvin.peripheralium.data.LibText
 import site.siredvin.peripheralium.xplat.LibPlatform
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.RecipeIngredients
+import site.siredvin.peripheralium.xplat.XplatTags
 
 object PeripheraliumCore {
     const val MOD_ID = "peripheralium"
@@ -27,9 +28,10 @@ object PeripheraliumCore {
             }
     }
 
-    fun configure(libPlatform: LibPlatform, platform: PeripheraliumPlatform, ingredients: RecipeIngredients) {
+    fun configure(libPlatform: LibPlatform, platform: PeripheraliumPlatform, ingredients: RecipeIngredients, tags: XplatTags) {
         LibPlatform.configure(libPlatform)
         PeripheraliumPlatform.configure(platform)
         RecipeIngredients.configure(ingredients)
+        XplatTags.configure(tags)
     }
 }

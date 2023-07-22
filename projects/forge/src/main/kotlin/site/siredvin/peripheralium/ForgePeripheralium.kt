@@ -11,6 +11,7 @@ import net.minecraftforge.registries.ForgeRegistries
 import site.siredvin.peripheralium.forge.ForgeIngredients
 import site.siredvin.peripheralium.forge.ForgeLibPlatform
 import site.siredvin.peripheralium.forge.ForgePeripheraliumPlatform
+import site.siredvin.peripheralium.forge.ForgeXplatTags
 import site.siredvin.peripheralium.storages.ForgeStorageUtils
 import site.siredvin.peripheralium.storages.energy.EnergyStorageExtractor
 import site.siredvin.peripheralium.storages.fluid.FluidStorageExtractor
@@ -30,7 +31,7 @@ object ForgePeripheralium {
         DeferredRegister.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), PeripheraliumCore.MOD_ID)
 
     init {
-        PeripheraliumCore.configure(ForgeLibPlatform, ForgePeripheraliumPlatform, ForgeIngredients)
+        PeripheraliumCore.configure(ForgeLibPlatform, ForgePeripheraliumPlatform, ForgeIngredients, ForgeXplatTags)
         // Register extract storages
         ItemStorageExtractor.addStorageExtractor(ForgeStorageUtils::extractStorageFromBlock)
         FluidStorageExtractor.addFluidStorageExtractor(ForgeStorageUtils::extractFluidStorageFromBlock)

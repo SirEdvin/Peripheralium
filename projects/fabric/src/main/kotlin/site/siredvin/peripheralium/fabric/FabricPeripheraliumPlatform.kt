@@ -18,12 +18,14 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricEntityTypeBuilder
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.minecraft.client.Minecraft
 import net.minecraft.core.*
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
+import net.minecraft.network.FriendlyByteBuf
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
@@ -32,9 +34,13 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.tags.TagKey
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.MenuProvider
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
@@ -48,6 +54,7 @@ import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.RegistryWrapper
+import site.siredvin.peripheralium.xplat.SavingFunction
 import java.util.*
 import java.util.function.BiFunction
 import java.util.function.Function
@@ -223,16 +230,32 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
         )
     }
 
-    override fun isOre(block: BlockState): Boolean {
-        return block.`is`(ConventionalBlockTags.ORES)
-    }
-
     override fun triggerRenderUpdate(blockEntity: BlockEntity) {
         val level = blockEntity.level!!
         if (level.isClientSide) {
             val pos = blockEntity.blockPos
             // Basically, just world.setBlocksDirty with bypass model block state check
             Minecraft.getInstance().levelRenderer.setBlocksDirty(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z)
+        }
+    }
+
+    override fun openMenu(player: Player, owner: MenuProvider, savingFunction: SavingFunction) {
+        player.openMenu(WrappedMenuProvider(owner, savingFunction))
+    }
+
+    @JvmRecord
+    private data class WrappedMenuProvider(val owner: MenuProvider, val savingFunction: SavingFunction) :
+        ExtendedScreenHandlerFactory {
+        override fun createMenu(id: Int, inventory: Inventory, player: Player): AbstractContainerMenu? {
+            return owner.createMenu(id, inventory, player)
+        }
+
+        override fun getDisplayName(): Component {
+            return owner.displayName
+        }
+
+        override fun writeScreenOpeningData(player: ServerPlayer, buf: FriendlyByteBuf) {
+            savingFunction.toBytes(buf)
         }
     }
 }

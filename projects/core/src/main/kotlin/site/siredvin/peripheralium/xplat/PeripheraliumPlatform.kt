@@ -18,8 +18,10 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.MenuProvider
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.ChunkPos
@@ -36,7 +38,6 @@ import java.util.function.Function
 import java.util.function.Predicate
 
 interface PeripheraliumPlatform {
-
     companion object {
         private var _IMPL: PeripheraliumPlatform? = null
 
@@ -138,6 +139,14 @@ interface PeripheraliumPlatform {
             return get().createPocketsWithUpgrade(upgrade)
         }
 
+        @Deprecated(
+            level = DeprecationLevel.WARNING,
+            message = "Use XplatTags now",
+            replaceWith = ReplaceWith(
+                "get().isOre(block)",
+                "site.siredvin.peripheralium.xplat.PeripheraliumPlatform.Companion.get",
+            ),
+        )
         fun isOre(block: BlockState): Boolean {
             return get().isOre(block)
         }
@@ -152,6 +161,10 @@ interface PeripheraliumPlatform {
 
         fun reverseTintConvert(tint: Int): Int {
             return get().reverseTintConvert(tint)
+        }
+
+        fun openMenu(player: Player, owner: MenuProvider, savingFunction: SavingFunction) {
+            return get().openMenu(player, owner, savingFunction)
         }
     }
 
@@ -200,8 +213,18 @@ interface PeripheraliumPlatform {
 
     fun createTurtlesWithUpgrade(upgrade: UpgradeData<ITurtleUpgrade>): List<ItemStack>
     fun createPocketsWithUpgrade(upgrade: UpgradeData<IPocketUpgrade>): List<ItemStack>
-    fun isOre(block: BlockState): Boolean
+
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "Use XplatTags now",
+        replaceWith = ReplaceWith("XplatTags.isOre(block)"),
+    )
+    fun isOre(block: BlockState): Boolean {
+        return XplatTags.isOre(block)
+    }
     fun triggerRenderUpdate(blockEntity: BlockEntity)
     fun tintConvert(tint: Int): Int = tint
     fun reverseTintConvert(tint: Int): Int = tintConvert(tint)
+
+    fun openMenu(player: Player, owner: MenuProvider, savingFunction: SavingFunction)
 }

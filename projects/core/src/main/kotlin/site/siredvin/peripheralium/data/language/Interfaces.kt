@@ -6,16 +6,22 @@ import dan200.computercraft.api.turtle.ITurtleUpgrade
 import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import java.util.function.Supplier
 
 interface ModInformationHolder {
-
     val items: List<Supplier<out Item>>
+        get() = emptyList()
     val blocks: List<Supplier<out Block>>
+        get() = emptyList()
     val turtleSerializers: List<Supplier<TurtleUpgradeSerialiser<out ITurtleUpgrade>>>
+        get() = emptyList()
     val pocketSerializers: List<Supplier<PocketUpgradeSerialiser<out IPocketUpgrade>>>
+        get() = emptyList()
+    val customStats: List<Supplier<ResourceLocation>>
+        get() = emptyList()
 }
 
 interface TextRecord {

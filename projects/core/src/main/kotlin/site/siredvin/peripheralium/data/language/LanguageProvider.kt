@@ -39,6 +39,7 @@ abstract class LanguageProvider(
         return Stream.of(
             informationHolder.blocks.stream().map { it.get().descriptionId },
             informationHolder.items.stream().map { it.get().descriptionId },
+            informationHolder.customStats.stream().map { "stat.${it.get().namespace}.${it.get().path}" },
             informationHolder.turtleSerializers.stream().map { XplatRegistries.TURTLE_SERIALIZERS.getKey(it.get()).toTurtleTranslationKey() },
             informationHolder.pocketSerializers.stream().map { XplatRegistries.POCKET_SERIALIZERS.getKey(it.get()).toPocketTranslationKey() },
             textRecords.map { it.textID }.stream(),
