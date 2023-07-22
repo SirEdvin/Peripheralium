@@ -18,23 +18,16 @@ import site.siredvin.peripheralium.common.items.DescriptiveBlockItem
 import site.siredvin.peripheralium.data.language.ModInformationHolder
 import java.util.function.Supplier
 
-interface BasePlatform : ModInformationHolder {
-    companion object {
-        private val ITEMS: MutableList<Supplier<out Item>> = mutableListOf()
-        private val BLOCKS: MutableList<Supplier<out Block>> = mutableListOf()
-        private val POCKET_UPGRADES: MutableList<Supplier<PocketUpgradeSerialiser<out IPocketUpgrade>>> = mutableListOf()
-        private val TURTLE_UPGRADES: MutableList<Supplier<TurtleUpgradeSerialiser<out ITurtleUpgrade>>> = mutableListOf()
-        private val CUSTOM_STATS: MutableList<Supplier<ResourceLocation>> = mutableListOf()
-    }
-
+interface BasePlatform {
     val baseInnerPlatform: BaseInnerPlatform
+    val modInformationTracker: ModInformationTracker
 
     val holder: ModInformationHolder
-        get() = this
+        get() = modInformationTracker
 
     fun <T : Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T> {
         val registeredItem = baseInnerPlatform.registerItem(key, item)
-        ITEMS.add(registeredItem)
+        modInformationTracker.ITEMS.add(registeredItem)
         return registeredItem
     }
 
@@ -49,7 +42,7 @@ interface BasePlatform : ModInformationHolder {
     fun <T : Block> registerBlock(name: String, block: Supplier<T>, itemFactory: (T) -> (Item) = { block -> DescriptiveBlockItem(block, Item.Properties()) }): Supplier<T> {
         val registeredBlock = baseInnerPlatform
             .registerBlock(ResourceLocation(baseInnerPlatform.modID, name), block, itemFactory)
-        BLOCKS.add(registeredBlock)
+        modInformationTracker.BLOCKS.add(registeredBlock)
         return registeredBlock
     }
 
@@ -90,7 +83,7 @@ interface BasePlatform : ModInformationHolder {
         serializer: TurtleUpgradeSerialiser<V>,
     ): Supplier<TurtleUpgradeSerialiser<V>> {
         val registered = baseInnerPlatform.registerTurtleUpgrade(key, serializer)
-        TURTLE_UPGRADES.add(registered as Supplier<TurtleUpgradeSerialiser<out ITurtleUpgrade>>)
+        modInformationTracker.TURTLE_UPGRADES.add(registered as Supplier<TurtleUpgradeSerialiser<out ITurtleUpgrade>>)
         return registered
     }
 
@@ -106,26 +99,11 @@ interface BasePlatform : ModInformationHolder {
         serializer: PocketUpgradeSerialiser<V>,
     ): Supplier<PocketUpgradeSerialiser<V>> {
         val registered = baseInnerPlatform.registerPocketUpgrade(key, serializer)
-        POCKET_UPGRADES.add(registered as Supplier<PocketUpgradeSerialiser<out IPocketUpgrade>>)
+        modInformationTracker.POCKET_UPGRADES.add(registered as Supplier<PocketUpgradeSerialiser<out IPocketUpgrade>>)
         return registered
     }
 
     fun registerCustomStat(id: ResourceLocation, formatter: StatFormatter = StatFormatter.DEFAULT): Supplier<Stat<*>> {
         return baseInnerPlatform.registerCustomStat(id, formatter)
     }
-
-    override val blocks: List<Supplier<out Block>>
-        get() = BLOCKS
-
-    override val items: List<Supplier<out Item>>
-        get() = ITEMS
-
-    override val turtleSerializers: List<Supplier<TurtleUpgradeSerialiser<out ITurtleUpgrade>>>
-        get() = TURTLE_UPGRADES
-
-    override val pocketSerializers: List<Supplier<PocketUpgradeSerialiser<out IPocketUpgrade>>>
-        get() = POCKET_UPGRADES
-
-    override val customStats: List<Supplier<ResourceLocation>>
-        get() = CUSTOM_STATS
 }
