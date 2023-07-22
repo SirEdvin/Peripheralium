@@ -88,7 +88,7 @@ abstract class ForgeBaseInnerPlatform : BaseInnerPlatform {
         return pocketSerializers!!.register(key.path) { serializer }
     }
 
-    override fun registerCustomStat(id: ResourceLocation, formatter: StatFormatter): Supplier<Stat<*>> {
+    override fun registerCustomStat(id: ResourceLocation, formatter: StatFormatter): Supplier<Stat<ResourceLocation>> {
         val registeredStat = customStats!!.register(id.path) { id }
         return Supplier { Stats.CUSTOM.get(registeredStat.get(), formatter) }
     }

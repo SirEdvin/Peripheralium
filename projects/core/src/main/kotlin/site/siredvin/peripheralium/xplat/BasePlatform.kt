@@ -103,7 +103,9 @@ interface BasePlatform {
         return registered
     }
 
-    fun registerCustomStat(id: ResourceLocation, formatter: StatFormatter = StatFormatter.DEFAULT): Supplier<Stat<*>> {
-        return baseInnerPlatform.registerCustomStat(id, formatter)
+    fun registerCustomStat(id: ResourceLocation, formatter: StatFormatter = StatFormatter.DEFAULT): Supplier<Stat<ResourceLocation>> {
+        val registered = baseInnerPlatform.registerCustomStat(id, formatter)
+        modInformationTracker.CUSTOM_STATS.add(registered)
+        return registered
     }
 }

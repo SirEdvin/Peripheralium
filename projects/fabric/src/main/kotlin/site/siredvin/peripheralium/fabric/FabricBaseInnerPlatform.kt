@@ -84,7 +84,7 @@ abstract class FabricBaseInnerPlatform : BaseInnerPlatform {
         return Supplier { registered }
     }
 
-    override fun registerCustomStat(id: ResourceLocation, formatter: StatFormatter): Supplier<Stat<*>> {
+    override fun registerCustomStat(id: ResourceLocation, formatter: StatFormatter): Supplier<Stat<ResourceLocation>> {
         val registeredStat = Registry.register(BuiltInRegistries.CUSTOM_STAT, id, id)
         return Supplier { Stats.CUSTOM.get(registeredStat, formatter) }
     }

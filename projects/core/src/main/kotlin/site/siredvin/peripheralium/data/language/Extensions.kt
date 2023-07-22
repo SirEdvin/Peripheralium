@@ -9,3 +9,7 @@ fun ResourceLocation.toTurtleTranslationKey(): String {
 fun ResourceLocation.toPocketTranslationKey(): String {
     return "pocket.${this.toString().replace(":", ".")}"
 }
+
+fun ResourceLocation.toStatTranslationKey(): String {
+    return "stat.${this.namespace}.${this.path}"
+}

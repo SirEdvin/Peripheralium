@@ -7,6 +7,7 @@ import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.stats.Stat
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import java.util.function.Supplier
@@ -20,7 +21,7 @@ interface ModInformationHolder {
         get() = emptyList()
     val pocketSerializers: List<Supplier<PocketUpgradeSerialiser<out IPocketUpgrade>>>
         get() = emptyList()
-    val customStats: List<Supplier<ResourceLocation>>
+    val customStats: List<Supplier<Stat<ResourceLocation>>>
         get() = emptyList()
 }
 
