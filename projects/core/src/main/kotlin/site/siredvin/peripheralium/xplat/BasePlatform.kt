@@ -7,10 +7,13 @@ import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.stats.Stat
 import net.minecraft.stats.StatFormatter
+import net.minecraft.world.Container
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.crafting.Recipe
+import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -109,5 +112,9 @@ interface BasePlatform {
         val registered = baseInnerPlatform.registerCustomStat(id, formatter)
         modInformationTracker.CUSTOM_STATS.add(registered)
         return registered
+    }
+
+    fun <C : Container, T : Recipe<C>> registerRecipeSerializer(key: ResourceLocation, serializer: RecipeSerializer<T>): Supplier<RecipeSerializer<T>> {
+        return baseInnerPlatform.registerRecipeSerializer(key, serializer)
     }
 }

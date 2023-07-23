@@ -45,8 +45,8 @@ class GenericBlockEntityBlock<T : BlockEntity>(
 
     @Deprecated("Deprecated in Java")
     override fun mirror(state: BlockState, mirrorIn: Mirror): BlockState {
-        @Suppress("KotlinRedundantDiagnosticSuppress")
-        return if (isRotatable) @Suppress("DEPRECATION") state.rotate(mirrorIn.getRotation(state.getValue(FACING))) else state
+        @Suppress("KotlinRedundantDiagnosticSuppress", "DEPRECATION")
+        return if (isRotatable) state.rotate(mirrorIn.getRotation(state.getValue(FACING))) else state
     }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {

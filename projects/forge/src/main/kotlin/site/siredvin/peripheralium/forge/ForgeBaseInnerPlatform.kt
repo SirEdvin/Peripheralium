@@ -8,10 +8,13 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.stats.Stat
 import net.minecraft.stats.StatFormatter
 import net.minecraft.stats.Stats
+import net.minecraft.world.Container
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.crafting.Recipe
+import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -37,6 +40,9 @@ abstract class ForgeBaseInnerPlatform : BaseInnerPlatform {
     open val menuTypes: DeferredRegister<MenuType<*>>?
         get() = null
     open val customStats: DeferredRegister<ResourceLocation>?
+        get() = null
+
+    open val recipeSerializers: DeferredRegister<RecipeSerializer<*>>?
         get() = null
 
     override fun <T : Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T> {
@@ -91,5 +97,12 @@ abstract class ForgeBaseInnerPlatform : BaseInnerPlatform {
     override fun registerCustomStat(id: ResourceLocation, formatter: StatFormatter): Supplier<Stat<ResourceLocation>> {
         val registeredStat = customStats!!.register(id.path) { id }
         return Supplier { Stats.CUSTOM.get(registeredStat.get(), formatter) }
+    }
+
+    override fun <C : Container, T : Recipe<C>> registerRecipeSerializer(
+        key: ResourceLocation,
+        serializer: RecipeSerializer<T>,
+    ): Supplier<RecipeSerializer<T>> {
+        return recipeSerializers!!.register(key.path) { serializer }
     }
 }

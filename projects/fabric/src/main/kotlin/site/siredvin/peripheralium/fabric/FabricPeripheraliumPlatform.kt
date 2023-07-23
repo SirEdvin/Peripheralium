@@ -114,7 +114,8 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
         }
 
     override fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T> {
-        @Suppress("UNCHECKED_CAST") val targetRegistry: Registry<T> = (BuiltInRegistries.REGISTRY.get(registry.location()) ?: throw IllegalArgumentException("Cannot find registry $registry")) as Registry<T>
+        @Suppress("UNCHECKED_CAST")
+        val targetRegistry: Registry<T> = (BuiltInRegistries.REGISTRY.get(registry.location()) ?: throw IllegalArgumentException("Cannot find registry $registry")) as Registry<T>
         return FabricRegistryWrapper(registry.location(), targetRegistry)
     }
 

@@ -38,7 +38,6 @@ interface XplatTags {
         fun isShearable(entity: Entity, targetItem: ItemStack): Pair<Boolean, Boolean> {
             return get().isShearable(entity, targetItem)
         }
-
     }
     fun isOre(state: BlockState): Boolean
 

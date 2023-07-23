@@ -93,7 +93,9 @@ class FakePlayerProxy(val fakePlayer: ServerPlayer, private val range: Int = 4) 
         val traceContext = ClipContext(origin, target, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, fakePlayer)
         val directionVec = traceContext.from.subtract(traceContext.to)
         val traceDirection = Direction.getNearest(directionVec.x, directionVec.y, directionVec.z)
-        @Suppress("UNNECESSARY_NOT_NULL_ASSERTION") val blockHit: HitResult = if (skipBlock) {
+
+        @Suppress("UNNECESSARY_NOT_NULL_ASSERTION")
+        val blockHit: HitResult = if (skipBlock) {
             BlockHitResult.miss(traceContext.to, traceDirection, traceContext.to.toBlockPos())
         } else {
             BlockGetter.traverseBlocks(

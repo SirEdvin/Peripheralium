@@ -11,10 +11,13 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.stats.Stat
 import net.minecraft.stats.StatFormatter
 import net.minecraft.stats.Stats
+import net.minecraft.world.Container
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.crafting.Recipe
+import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -64,7 +67,8 @@ abstract class FabricBaseInnerPlatform : BaseInnerPlatform {
         key: ResourceLocation,
         serializer: TurtleUpgradeSerialiser<V>,
     ): Supplier<TurtleUpgradeSerialiser<V>> {
-        @Suppress("UNCHECKED_CAST") val registry: Registry<TurtleUpgradeSerialiser<*>> = (
+        @Suppress("UNCHECKED_CAST")
+        val registry: Registry<TurtleUpgradeSerialiser<*>> = (
             BuiltInRegistries.REGISTRY.get(TurtleUpgradeSerialiser.registryId().location())
                 ?: throw IllegalStateException("Something is not correct with turtle registry")
             ) as Registry<TurtleUpgradeSerialiser<*>>
@@ -76,7 +80,8 @@ abstract class FabricBaseInnerPlatform : BaseInnerPlatform {
         key: ResourceLocation,
         serializer: PocketUpgradeSerialiser<V>,
     ): Supplier<PocketUpgradeSerialiser<V>> {
-        @Suppress("UNCHECKED_CAST") val registry: Registry<PocketUpgradeSerialiser<*>> = (
+        @Suppress("UNCHECKED_CAST")
+        val registry: Registry<PocketUpgradeSerialiser<*>> = (
             BuiltInRegistries.REGISTRY.get(PocketUpgradeSerialiser.registryId().location())
                 ?: throw IllegalStateException("Something is not correct with turtle registry")
             ) as Registry<PocketUpgradeSerialiser<*>>
@@ -87,5 +92,13 @@ abstract class FabricBaseInnerPlatform : BaseInnerPlatform {
     override fun registerCustomStat(id: ResourceLocation, formatter: StatFormatter): Supplier<Stat<ResourceLocation>> {
         val registeredStat = Registry.register(BuiltInRegistries.CUSTOM_STAT, id, id)
         return Supplier { Stats.CUSTOM.get(registeredStat, formatter) }
+    }
+
+    override fun <C : Container, T : Recipe<C>> registerRecipeSerializer(
+        key: ResourceLocation,
+        serializer: RecipeSerializer<T>,
+    ): Supplier<RecipeSerializer<T>> {
+        val registeredRecipe = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, key, serializer)
+        return Supplier { registeredRecipe }
     }
 }

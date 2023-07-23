@@ -26,8 +26,9 @@ object FabricXplatTags : XplatTags {
     }
 
     override fun isShearable(entity: Entity, targetItem: ItemStack): Pair<Boolean, Boolean> {
-        if (entity !is Shearable)
+        if (entity !is Shearable) {
             return Pair(false, false)
+        }
         return Pair(true, entity.readyForShearing())
     }
 }

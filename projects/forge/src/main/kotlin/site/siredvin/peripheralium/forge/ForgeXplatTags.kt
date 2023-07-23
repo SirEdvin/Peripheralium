@@ -25,8 +25,9 @@ object ForgeXplatTags : XplatTags {
     }
 
     override fun isShearable(entity: Entity, targetItem: ItemStack): Pair<Boolean, Boolean> {
-        if (entity is IForgeShearable)
+        if (entity is IForgeShearable) {
             return Pair(true, entity.isShearable(targetItem, entity.level(), entity.blockPosition()))
+        }
         return Pair(false, false)
     }
 }
