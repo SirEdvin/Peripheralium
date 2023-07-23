@@ -58,7 +58,7 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
     }
 
     override fun destroyUpgrade() {
-        turtle.setUpgrade(side, null)
+        turtle.setUpgradeWithData(side, null)
     }
 
     override fun isMovementPossible(level: Level, pos: BlockPos): Boolean {

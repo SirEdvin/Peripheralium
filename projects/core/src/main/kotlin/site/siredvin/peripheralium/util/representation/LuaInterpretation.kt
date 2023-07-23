@@ -92,7 +92,8 @@ object LuaInterpretation {
                                 property.getPossibleValues().joinToString(", "),
                             ),
                         )
-                    val trickedProperty = property as Property<Comparable<Any>>
+                    @Suppress("UNCHECKED_CAST") val trickedProperty = property as Property<Comparable<Any>>
+                    @Suppress("UNCHECKED_CAST")
                     changeableState = changeableState.setValue(trickedProperty, targetValue as Comparable<Any>)
                 }
 

@@ -46,6 +46,7 @@ object ForgeStorageUtils {
         return something as? IItemHandler ?: (something as? Container)?.let { InvWrapper(it) }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun extractStorageFromBlock(level: Level, pos: BlockPos, blockEntity: BlockEntity?): SlottedItemStorage? {
         if (blockEntity == null) {
             return null
@@ -54,18 +55,21 @@ object ForgeStorageUtils {
         return ItemHandlerWrapper(itemHandler)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun extractFluidStorageFromBlock(level: Level, pos: BlockPos, blockEntity: BlockEntity?): FluidStorage? {
         if (blockEntity == null) return null
         val fluidHandler = extractFluidHandler(blockEntity) ?: return null
         return ForgeFluidStorage(fluidHandler)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun extractEnergyStorageFromBlock(level: Level, pos: BlockPos, blockEntity: BlockEntity?): EnergyStorage? {
         if (blockEntity == null) return null
         val energyStorage = extractEnergyStorage(blockEntity) ?: return null
         return EnergyHandlerWrapper(energyStorage)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun extractEnergyStorageFromItem(level: Level, stack: ItemStack): EnergyStorage? {
         val energyStorage = extractEnergyStorage(stack) ?: return null
         return EnergyHandlerWrapper(energyStorage)

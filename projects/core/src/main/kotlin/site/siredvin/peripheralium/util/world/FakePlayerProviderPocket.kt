@@ -79,7 +79,6 @@ object FakePlayerProviderPocket {
         if (!skipInventory) {
             val realPlayerInventory = realPlayer.inventory
             val size: Int = realPlayerInventory.containerSize
-            val largerSize = playerInventory.containerSize
             playerInventory.selected = realPlayer.score
             for (i in 0 until size) {
                 realPlayerInventory.setItem(i, playerInventory.getItem(i))

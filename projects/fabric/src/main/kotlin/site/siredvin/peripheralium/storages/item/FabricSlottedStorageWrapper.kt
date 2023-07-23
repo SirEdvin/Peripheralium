@@ -126,8 +126,8 @@ class FabricSlottedStorageWrapper(internal val storage: net.fabricmc.fabric.api.
     }
 
     override fun getItem(slot: Int): ItemStack {
-        val slot = storage.getSlot(slot)
-        return slot.resource.toStack(slot.amount.toInt())
+        val slotStorage = storage.getSlot(slot)
+        return slotStorage.resource.toStack(slotStorage.amount.toInt())
     }
 
     fun getSingleSlot(slot: Int): SingleSlotStorage<ItemVariant> {

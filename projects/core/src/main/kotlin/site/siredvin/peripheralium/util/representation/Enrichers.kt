@@ -4,15 +4,16 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.Shearable
 import net.minecraft.world.entity.animal.Animal
 import net.minecraft.world.entity.npc.Villager
+import net.minecraft.world.item.Items
 import net.minecraft.world.item.trading.Merchant
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.IntegerProperty
 import site.siredvin.peripheralium.xplat.XplatRegistries
+import site.siredvin.peripheralium.xplat.XplatTags
 import java.util.function.BiConsumer
 
 val animalData = BiConsumer<Entity, MutableMap<String, Any>> { entity, data ->
@@ -20,8 +21,9 @@ val animalData = BiConsumer<Entity, MutableMap<String, Any>> { entity, data ->
         data["baby"] = entity.isBaby
         data["inLove"] = entity.isInLove
         data["aggressive"] = entity.isAggressive
-        if (entity is Shearable) {
-            data["shareable"] = entity.readyForShearing()
+        val isShearable = XplatTags.isShearable(entity, Items.SHEARS.defaultInstance)
+        if (isShearable.first) {
+            data["shareable"] = isShearable.second
         }
     }
 }

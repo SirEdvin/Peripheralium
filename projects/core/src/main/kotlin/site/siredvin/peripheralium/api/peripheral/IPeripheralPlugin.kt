@@ -7,7 +7,7 @@ import site.siredvin.peripheralium.computercraft.peripheral.BoundMethod
 interface IPeripheralPlugin {
     var connectedPeripheral: IPluggablePeripheral?
         get() = null
-        set(value) {}
+        set(@Suppress("UNUSED_PARAMETER") value) {}
 
     fun getMethods(server: MinecraftServer): List<BoundMethod> {
         return ServerContext.get(server).peripheralMethods().getSelfMethods(this).map {

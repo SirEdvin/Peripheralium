@@ -39,7 +39,7 @@ interface BasePlatform {
         return baseInnerPlatform.registerBlock(key, block, itemFactory)
     }
 
-    fun <T : Block> registerBlock(name: String, block: Supplier<T>, itemFactory: (T) -> (Item) = { block -> DescriptiveBlockItem(block, Item.Properties()) }): Supplier<T> {
+    fun <T : Block> registerBlock(name: String, block: Supplier<T>, itemFactory: (T) -> (Item) = { DescriptiveBlockItem(it, Item.Properties()) }): Supplier<T> {
         val registeredBlock = baseInnerPlatform
             .registerBlock(ResourceLocation(baseInnerPlatform.modID, name), block, itemFactory)
         modInformationTracker.BLOCKS.add(registeredBlock)
@@ -83,6 +83,7 @@ interface BasePlatform {
         serializer: TurtleUpgradeSerialiser<V>,
     ): Supplier<TurtleUpgradeSerialiser<V>> {
         val registered = baseInnerPlatform.registerTurtleUpgrade(key, serializer)
+        @Suppress("UNCHECKED_CAST")
         modInformationTracker.TURTLE_UPGRADES.add(registered as Supplier<TurtleUpgradeSerialiser<out ITurtleUpgrade>>)
         return registered
     }
@@ -99,6 +100,7 @@ interface BasePlatform {
         serializer: PocketUpgradeSerialiser<V>,
     ): Supplier<PocketUpgradeSerialiser<V>> {
         val registered = baseInnerPlatform.registerPocketUpgrade(key, serializer)
+        @Suppress("UNCHECKED_CAST")
         modInformationTracker.POCKET_UPGRADES.add(registered as Supplier<PocketUpgradeSerialiser<out IPocketUpgrade>>)
         return registered
     }

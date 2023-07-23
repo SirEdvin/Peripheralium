@@ -131,7 +131,7 @@ object FabricStorageUtils {
 
         val platformLimit = limit * PeripheraliumPlatform.fluidCompactDivider
 
-        val insertionStack = from.takeFluid(takePredicate, limit)
+        val insertionStack = from.takeFluid(takePredicate, platformLimit)
         if (insertionStack.isEmpty) {
             return 0
         }
@@ -149,7 +149,7 @@ object FabricStorageUtils {
         }
     }
 
-    fun extractStorage(level: Level, pos: BlockPos, blockEntity: BlockEntity?): site.siredvin.peripheralium.storages.item.ItemStorage? {
+    fun extractStorage(level: Level, pos: BlockPos, @Suppress("UNUSED_PARAMETER") blockEntity: BlockEntity?): site.siredvin.peripheralium.storages.item.ItemStorage? {
         val itemStorage = ItemStorage.SIDED.find(level, pos, null) ?: return null
 
         return if (itemStorage is net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage) {
@@ -159,12 +159,12 @@ object FabricStorageUtils {
         }
     }
 
-    fun extractFluidStorage(level: Level, pos: BlockPos, blockEntity: BlockEntity?): site.siredvin.peripheralium.storages.fluid.FluidStorage? {
+    fun extractFluidStorage(level: Level, pos: BlockPos, @Suppress("UNUSED_PARAMETER") blockEntity: BlockEntity?): site.siredvin.peripheralium.storages.fluid.FluidStorage? {
         val fluidStorage = FluidStorage.SIDED.find(level, pos, null) ?: return null
         return FabricFluidStorage(fluidStorage)
     }
 
-    fun extractFluidStorageFromItem(level: Level, stack: ItemStack): site.siredvin.peripheralium.storages.fluid.FluidStorage? {
+    fun extractFluidStorageFromItem(@Suppress("UNUSED_PARAMETER") level: Level, stack: ItemStack): site.siredvin.peripheralium.storages.fluid.FluidStorage? {
         val fluidStorage = FluidStorage.ITEM.find(stack, ContainerItemContext.withConstant(stack)) ?: return null
         return FabricFluidStorage(fluidStorage)
     }

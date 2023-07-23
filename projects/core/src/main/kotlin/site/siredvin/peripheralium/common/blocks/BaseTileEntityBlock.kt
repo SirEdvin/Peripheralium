@@ -43,6 +43,7 @@ abstract class BaseTileEntityBlock<T : BlockEntity>(
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun neighborChanged(
         blockState: BlockState,
         level: Level,
@@ -51,6 +52,7 @@ abstract class BaseTileEntityBlock<T : BlockEntity>(
         neighbourPos: BlockPos,
         bl: Boolean,
     ) {
+        @Suppress("DEPRECATION")
         super.neighborChanged(blockState, level, blockPos, neighbourBlock, neighbourPos, bl)
         val tile = level.getBlockEntity(blockPos)
         if (tile is IObservingBlockEntity) {
@@ -58,7 +60,9 @@ abstract class BaseTileEntityBlock<T : BlockEntity>(
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun tick(blockState: BlockState, serverLevel: ServerLevel, blockPos: BlockPos, random: RandomSource) {
+        @Suppress("DEPRECATION")
         super.tick(blockState, serverLevel, blockPos, random)
         val tile = serverLevel.getBlockEntity(blockPos)
         if (tile is IObservingBlockEntity) {
@@ -66,6 +70,7 @@ abstract class BaseTileEntityBlock<T : BlockEntity>(
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onPlace(
         blockState: BlockState,
         level: Level,
@@ -73,6 +78,7 @@ abstract class BaseTileEntityBlock<T : BlockEntity>(
         newState: BlockState,
         bl: Boolean,
     ) {
+        @Suppress("DEPRECATION")
         super.onPlace(blockState, level, blockPos, newState, bl)
         if (newState.block === this) {
             val tile = level.getBlockEntity(blockPos)
@@ -93,6 +99,7 @@ abstract class BaseTileEntityBlock<T : BlockEntity>(
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRemove(
         blockState: BlockState,
         level: Level,
@@ -104,6 +111,7 @@ abstract class BaseTileEntityBlock<T : BlockEntity>(
             return
         }
         val tile = level.getBlockEntity(blockPos)
+        @Suppress("DEPRECATION")
         super.onRemove(blockState, level, blockPos, replace, bl)
         if (tile is IObservingBlockEntity) {
             tile.destroy()

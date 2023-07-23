@@ -1,5 +1,6 @@
 package site.siredvin.peripheralium.xplat
 
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.state.BlockState
 
@@ -33,6 +34,11 @@ interface XplatTags {
         fun isBookshelf(stack: ItemStack): Boolean {
             return get().isBookshelf(stack)
         }
+
+        fun isShearable(entity: Entity, targetItem: ItemStack): Pair<Boolean, Boolean> {
+            return get().isShearable(entity, targetItem)
+        }
+
     }
     fun isOre(state: BlockState): Boolean
 
@@ -41,4 +47,11 @@ interface XplatTags {
     fun isBookshelf(state: BlockState): Boolean
 
     fun isBookshelf(stack: ItemStack): Boolean
+
+    /**
+     * Check if entity is shearable and is sherable now
+     *
+     * @return Pair of "is shearable" and "is shearable now" flags
+     */
+    fun isShearable(entity: Entity, targetItem: ItemStack): Pair<Boolean, Boolean>
 }

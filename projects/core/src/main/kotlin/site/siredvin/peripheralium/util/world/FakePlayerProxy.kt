@@ -93,7 +93,7 @@ class FakePlayerProxy(val fakePlayer: ServerPlayer, private val range: Int = 4) 
         val traceContext = ClipContext(origin, target, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, fakePlayer)
         val directionVec = traceContext.from.subtract(traceContext.to)
         val traceDirection = Direction.getNearest(directionVec.x, directionVec.y, directionVec.z)
-        val blockHit: HitResult = if (skipBlock) {
+        @Suppress("UNNECESSARY_NOT_NULL_ASSERTION") val blockHit: HitResult = if (skipBlock) {
             BlockHitResult.miss(traceContext.to, traceDirection, traceContext.to.toBlockPos())
         } else {
             BlockGetter.traverseBlocks(
@@ -225,6 +225,7 @@ class FakePlayerProxy(val fakePlayer: ServerPlayer, private val range: Int = 4) 
         if (block != digBlock || pos != digPosition) {
             setState(block, pos)
         }
+        @Suppress("DEPRECATION")
         if (!level.isEmptyBlock(pos) && !state.liquid()) {
             if (PeripheraliumPlatform.isBlockProtected(pos, state, fakePlayer)) {
                 return Pair.of(false, "Cannot break protected block")

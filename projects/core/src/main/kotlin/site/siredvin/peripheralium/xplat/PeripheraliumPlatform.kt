@@ -148,7 +148,7 @@ interface PeripheraliumPlatform {
             ),
         )
         fun isOre(block: BlockState): Boolean {
-            return get().isOre(block)
+            return XplatTags.isOre(block)
         }
 
         fun triggerRenderUpdate(blockEntity: BlockEntity) {

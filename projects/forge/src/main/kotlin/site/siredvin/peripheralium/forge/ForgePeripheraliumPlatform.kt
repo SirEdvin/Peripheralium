@@ -215,6 +215,7 @@ object ForgePeripheraliumPlatform : PeripheraliumPlatform {
         factory: BiFunction<BlockPos, BlockState, T>,
         block: Block,
     ): BlockEntityType<T> {
+        @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
         return BlockEntityType.Builder.of({ t: BlockPos?, u: BlockState? ->
             factory.apply(
                 t!!,

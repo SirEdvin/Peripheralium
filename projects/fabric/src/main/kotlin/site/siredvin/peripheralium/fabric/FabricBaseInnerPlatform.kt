@@ -64,7 +64,7 @@ abstract class FabricBaseInnerPlatform : BaseInnerPlatform {
         key: ResourceLocation,
         serializer: TurtleUpgradeSerialiser<V>,
     ): Supplier<TurtleUpgradeSerialiser<V>> {
-        val registry: Registry<TurtleUpgradeSerialiser<*>> = (
+        @Suppress("UNCHECKED_CAST") val registry: Registry<TurtleUpgradeSerialiser<*>> = (
             BuiltInRegistries.REGISTRY.get(TurtleUpgradeSerialiser.registryId().location())
                 ?: throw IllegalStateException("Something is not correct with turtle registry")
             ) as Registry<TurtleUpgradeSerialiser<*>>
@@ -76,7 +76,7 @@ abstract class FabricBaseInnerPlatform : BaseInnerPlatform {
         key: ResourceLocation,
         serializer: PocketUpgradeSerialiser<V>,
     ): Supplier<PocketUpgradeSerialiser<V>> {
-        val registry: Registry<PocketUpgradeSerialiser<*>> = (
+        @Suppress("UNCHECKED_CAST") val registry: Registry<PocketUpgradeSerialiser<*>> = (
             BuiltInRegistries.REGISTRY.get(PocketUpgradeSerialiser.registryId().location())
                 ?: throw IllegalStateException("Something is not correct with turtle registry")
             ) as Registry<PocketUpgradeSerialiser<*>>
