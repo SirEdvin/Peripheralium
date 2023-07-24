@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.properties.DirectionProperty
 import site.siredvin.peripheralium.api.blockentities.IOwnedBlockEntity
 import site.siredvin.peripheralium.api.peripheral.IPeripheralTileEntity
-import site.siredvin.peripheralium.common.blocks.GenericBlockEntityBlock
+import site.siredvin.peripheralium.common.blocks.FacingBlockEntityBlock
 import site.siredvin.peripheralium.storages.item.ItemStorageExtractor
 import site.siredvin.peripheralium.storages.item.SlottedItemStorage
 import site.siredvin.peripheralium.util.DataStorageUtil
@@ -18,7 +18,7 @@ import site.siredvin.peripheralium.util.world.FakePlayerProviderBlockEntity
 import site.siredvin.peripheralium.util.world.FakePlayerProxy
 import java.util.*
 
-class BlockEntityPeripheralOwner<T>(private val tileEntity: T, private val facingProperty: DirectionProperty = GenericBlockEntityBlock.FACING) :
+class BlockEntityPeripheralOwner<T>(private val tileEntity: T, private val facingProperty: DirectionProperty = FacingBlockEntityBlock.FACING) :
     BasePeripheralOwner() where T : BlockEntity, T : IPeripheralTileEntity {
 
     override val level: Level?
