@@ -9,6 +9,8 @@ import net.minecraft.stats.Stat
 import net.minecraft.stats.StatFormatter
 import net.minecraft.stats.Stats
 import net.minecraft.world.Container
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntityType
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.item.CreativeModeTab
@@ -43,6 +45,9 @@ abstract class ForgeBaseInnerPlatform : BaseInnerPlatform {
         get() = null
 
     open val recipeSerializers: DeferredRegister<RecipeSerializer<*>>?
+        get() = null
+
+    open val entityTypesRegistry: DeferredRegister<EntityType<*>>?
         get() = null
 
     override fun <T : Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T> {
@@ -104,5 +109,12 @@ abstract class ForgeBaseInnerPlatform : BaseInnerPlatform {
         serializer: RecipeSerializer<T>,
     ): Supplier<RecipeSerializer<T>> {
         return recipeSerializers!!.register(key.path) { serializer }
+    }
+
+    override fun <V : Entity, T : EntityType<V>> registerEntity(
+        key: ResourceLocation,
+        entityTypeSup: Supplier<T>,
+    ): Supplier<T> {
+        return entityTypesRegistry!!.register(key.path, entityTypeSup)
     }
 }

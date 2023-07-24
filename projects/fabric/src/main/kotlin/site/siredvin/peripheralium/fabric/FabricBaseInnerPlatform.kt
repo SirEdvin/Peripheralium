@@ -12,6 +12,8 @@ import net.minecraft.stats.Stat
 import net.minecraft.stats.StatFormatter
 import net.minecraft.stats.Stats
 import net.minecraft.world.Container
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntityType
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.item.CreativeModeTab
@@ -100,5 +102,13 @@ abstract class FabricBaseInnerPlatform : BaseInnerPlatform {
     ): Supplier<RecipeSerializer<T>> {
         val registeredRecipe = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, key, serializer)
         return Supplier { registeredRecipe }
+    }
+
+    override fun <V : Entity, T : EntityType<V>> registerEntity(
+        key: ResourceLocation,
+        entityTypeSup: Supplier<T>,
+    ): Supplier<T> {
+        val registeredEntityType = Registry.register(BuiltInRegistries.ENTITY_TYPE, key, entityTypeSup.get())
+        return Supplier { registeredEntityType }
     }
 }

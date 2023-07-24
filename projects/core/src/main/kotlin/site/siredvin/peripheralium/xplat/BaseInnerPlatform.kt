@@ -8,6 +8,8 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.stats.Stat
 import net.minecraft.stats.StatFormatter
 import net.minecraft.world.Container
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntityType
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.item.CreativeModeTab
@@ -50,4 +52,6 @@ interface BaseInnerPlatform {
     fun registerCustomStat(id: ResourceLocation, formatter: StatFormatter = StatFormatter.DEFAULT): Supplier<Stat<ResourceLocation>>
 
     fun <C : Container, T : Recipe<C>> registerRecipeSerializer(key: ResourceLocation, serializer: RecipeSerializer<T>): Supplier<RecipeSerializer<T>>
+
+    fun <V : Entity, T : EntityType<V>> registerEntity(key: ResourceLocation, entityTypeSup: Supplier<T>): Supplier<T>
 }
