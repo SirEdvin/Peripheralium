@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Integration loading toolkit
+
 ## [0.6.6] - 2023-07-22
 
 ### Added
