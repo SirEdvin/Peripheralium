@@ -13,14 +13,13 @@ import site.siredvin.peripheralium.api.peripheral.IPeripheralOperation
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 import site.siredvin.peripheralium.api.peripheral.IPluggablePeripheral
 import java.util.*
-import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 import java.util.function.Consumer
 
-open class PluggablePeripheral<T>(private val peripheralType: String, private val peripheralTarget: T?): IDynamicPeripheral, IPluggablePeripheral {
-    protected val _connectedComputers: MutableList<IComputerAccess> = ArrayList()
+open class PluggablePeripheral<T>(protected val peripheralType: String, protected val peripheralTarget: T?): IDynamicPeripheral, IPluggablePeripheral {
+    protected val _connectedComputers: MutableList<IComputerAccess> = mutableListOf()
     protected var initialized = false
-    protected val pluggedMethods: MutableList<BoundMethod> = ArrayList()
+    protected val pluggedMethods: MutableList<BoundMethod> = mutableListOf()
     protected var plugins: MutableList<IPeripheralPlugin>? = null
     protected var _methodNames = Array(0) { "" }
     protected var additionalTypeStorage: MutableSet<String>? = null
@@ -110,8 +109,18 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
     override val connectedComputersCount: Int
         get() = connectedComputersLock.withLock { return _connectedComputers.size }
 
-    override fun equals(iPeripheral: IPeripheral?): Boolean {
-        return iPeripheral === this
+    override fun equals(other: IPeripheral?): Boolean {
+        return equals(other as Any?)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        val otherPluggable = other as? PluggablePeripheral<*> ?: return false
+        if (peripheralTarget != otherPluggable.peripheralTarget || peripheralType != otherPluggable.peripheralType) return false
+        if (!otherPluggable.initialized) otherPluggable.buildPlugins()
+        return pluggedMethods.all {
+            otherPluggable.pluggedMethods.any(it::equalWithoutTarget)
+        }
     }
 
     override fun getMethodNames(): Array<String> {
@@ -142,5 +151,12 @@ open class PluggablePeripheral<T>(private val peripheralType: String, private va
         if (!initialized)
             buildPlugins()
         return pluggedMethods[index].apply(access, context, arguments)
+    }
+
+    override fun hashCode(): Int {
+        var result = peripheralType.hashCode()
+        result = 31 * result + (peripheralTarget?.hashCode() ?: 0)
+        result = 31 * result + pluggedMethods.hashCode()
+        return result
     }
 }

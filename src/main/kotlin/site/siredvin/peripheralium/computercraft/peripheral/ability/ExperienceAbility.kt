@@ -130,4 +130,16 @@ class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadi
         val player: Player = owner.owner ?: return MethodResult.of(null, "Cannot find owning player")
         return MethodResult.of(player.totalExperience)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other === this) return true
+        if (other !is ExperienceAbility) return false
+        return owner == other.owner && interactionRadius == other.interactionRadius
+    }
+
+    override fun hashCode(): Int {
+        var result = owner.hashCode()
+        result = 31 * result + interactionRadius
+        return result
+    }
 }

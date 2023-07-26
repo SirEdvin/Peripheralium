@@ -20,4 +20,16 @@ open class TurtleFuelAbility(owner: TurtlePeripheralOwner, override val maxFuelC
     override fun addFuel(count: Int) {
         owner.turtle.addFuel(count)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other === this) return true
+        if (other !is TurtleFuelAbility) return false
+        return owner == other.owner && maxFuelConsumptionRate == other.maxFuelConsumptionRate
+    }
+
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + maxFuelConsumptionRate
+        return result
+    }
 }

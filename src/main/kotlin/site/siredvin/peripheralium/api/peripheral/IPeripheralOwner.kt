@@ -46,4 +46,6 @@ interface IPeripheralOwner {
         attachAbility(PeripheralOwnerAbility.OPERATION, operationAbility)
         for (operation in operations) operationAbility.registerOperation(operation)
     }
+
+    override fun equals(other: Any?): Boolean
 }

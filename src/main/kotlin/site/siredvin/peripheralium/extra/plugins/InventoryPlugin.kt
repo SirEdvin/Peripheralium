@@ -13,4 +13,15 @@ class InventoryPlugin(override val level: Level, override val itemStorage: ItemS
 
     override val additionalType: String
         get() = PLUGIN_TYPE
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is InventoryPlugin) return false
+
+        return itemStorage == other.itemStorage
+    }
+
+    override fun hashCode(): Int {
+        return itemStorage.hashCode()
+    }
 }

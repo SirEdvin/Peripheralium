@@ -69,8 +69,21 @@ abstract class FuelAbility<T : IPeripheralOwner>(protected var owner: T) : IOwne
         data["isFuelConsumptionDisable"] = isFuelConsumptionDisable
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is FuelAbility<*>) return false
+
+        return owner == other.owner
+    }
+
+    override fun hashCode(): Int {
+        return owner.hashCode()
+    }
+
     companion object {
         protected const val FUEL_CONSUMING_RATE_SETTING = "FUEL_CONSUMING_RATE"
         protected const val DEFAULT_FUEL_CONSUMING_RATE = 1
     }
+
+
 }

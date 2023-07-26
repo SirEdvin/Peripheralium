@@ -61,4 +61,14 @@ class PocketPeripheralOwner(private val pocket: IPocketAccess?) : BasePeripheral
     override fun move(level: Level, pos: BlockPos): Boolean {
         return false
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other === this) return true
+        if (other !is PocketPeripheralOwner) return false
+        return pocket == other.pocket
+    }
+
+    override fun hashCode(): Int {
+        return pocket?.hashCode() ?: 0
+    }
 }

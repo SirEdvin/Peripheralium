@@ -19,7 +19,7 @@ import site.siredvin.peripheralium.util.world.LibFakePlayer
 
 class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : BasePeripheralOwner() {
 
-    override val level: Level?
+    override val level: Level
         get() = turtle.level
     override val pos: BlockPos
         get() = turtle.position
@@ -75,5 +75,17 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
     fun attachFuel(maxFuelConsumptionLevel: Int): TurtlePeripheralOwner {
         attachAbility(PeripheralOwnerAbility.FUEL, TurtleFuelAbility(this, maxFuelConsumptionLevel))
         return this
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other === this) return true
+        if (other !is TurtlePeripheralOwner) return false
+        return other.turtle == turtle && other.side == side
+    }
+
+    override fun hashCode(): Int {
+        var result = turtle.hashCode()
+        result = 31 * result + side.hashCode()
+        return result
     }
 }

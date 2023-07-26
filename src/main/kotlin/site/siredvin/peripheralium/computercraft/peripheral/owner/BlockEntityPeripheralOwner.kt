@@ -58,4 +58,14 @@ class BlockEntityPeripheralOwner<T>(val tileEntity: T) :
     override fun move(level: Level, pos: BlockPos): Boolean {
         return false
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other === this) return true
+        if (other !is BlockEntityPeripheralOwner<*>) return false
+        return tileEntity == other.tileEntity
+    }
+
+    override fun hashCode(): Int {
+        return tileEntity.hashCode()
+    }
 }

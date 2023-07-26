@@ -80,4 +80,15 @@ class ItemStoragePlugin(private val level: Level, private val storage: Storage<I
         val realLimit = min(PeripheraliumConfig.itemStorageTransferLimit, limit.orElse(Long.MAX_VALUE))
         return StorageUtil.move(fromStorage, storage, predicate, realLimit, null)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ItemStoragePlugin) return false
+
+        return storage == other.storage
+    }
+
+    override fun hashCode(): Int {
+        return storage.hashCode()
+    }
 }
