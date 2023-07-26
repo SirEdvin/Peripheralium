@@ -211,12 +211,19 @@ publishing {
     }
 
     repositories {
-        mavenLocal()
-        maven {
-            url = uri("https://repo.repsy.io/mvn/siredvin/default")
-            credentials {
-                username = secretEnv["USERNAME"] ?: System.getenv("USERNAME")
-                password = secretEnv["PASSWORD"] ?: System.getenv("PASSWORD")
+        repositories {
+            val modVersion: String by project.extra
+            val isUnstable = modVersion.split("-").size > 1
+            if (isUnstable) {
+                maven("https://mvn.siredvin.site/snapshots") {
+                    name = "SirEdvin"
+                    credentials(PasswordCredentials::class)
+                }
+            } else {
+                maven("https://mvn.siredvin.site/minecraft") {
+                    name = "SirEdvin"
+                    credentials(PasswordCredentials::class)
+                }
             }
         }
     }

@@ -80,4 +80,11 @@ abstract class OwnedPeripheral<O : IPeripheralOwner>(peripheralType: String, fin
             ?: throw IllegalArgumentException("This shouldn't happen at all")
         return operationAbility.performOperation(operation, context, check, method, successCallback, failCallback)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        val otherPluggable = other as? OwnedPeripheral<*> ?: return false
+        if (peripheralTarget != otherPluggable.peripheralTarget || peripheralType != otherPluggable.peripheralType || peripheralOwner != other.peripheralOwner) return false
+        return pluggedMethods == otherPluggable.pluggedMethods
+    }
 }
