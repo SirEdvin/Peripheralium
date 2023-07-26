@@ -17,9 +17,9 @@ import java.util.concurrent.locks.ReentrantLock
 import java.util.function.Consumer
 
 open class PluggablePeripheral<T>(protected val peripheralType: String, protected val peripheralTarget: T?): IDynamicPeripheral, IPluggablePeripheral {
-    protected val _connectedComputers: MutableList<IComputerAccess> = ArrayList()
+    protected val _connectedComputers: MutableList<IComputerAccess> = mutableListOf()
     protected var initialized = false
-    protected val pluggedMethods: MutableList<BoundMethod> = ArrayList()
+    protected val pluggedMethods: MutableList<BoundMethod> = mutableListOf()
     protected var plugins: MutableList<IPeripheralPlugin>? = null
     protected var _methodNames = Array(0) { "" }
     protected var additionalTypeStorage: MutableSet<String>? = null
@@ -117,7 +117,10 @@ open class PluggablePeripheral<T>(protected val peripheralType: String, protecte
         if (this === other) return true
         val otherPluggable = other as? PluggablePeripheral<*> ?: return false
         if (peripheralTarget != otherPluggable.peripheralTarget || peripheralType != otherPluggable.peripheralType) return false
-        return pluggedMethods == otherPluggable.pluggedMethods
+        if (!otherPluggable.initialized) otherPluggable.buildPlugins()
+        return pluggedMethods.all {
+            otherPluggable.pluggedMethods.any(it::equalWithoutTarget)
+        }
     }
 
     override fun getMethodNames(): Array<String> {

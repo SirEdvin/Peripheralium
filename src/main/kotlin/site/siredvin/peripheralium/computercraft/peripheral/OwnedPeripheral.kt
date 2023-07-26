@@ -85,6 +85,9 @@ abstract class OwnedPeripheral<O : IPeripheralOwner>(peripheralType: String, fin
         if (this === other) return true
         val otherPluggable = other as? OwnedPeripheral<*> ?: return false
         if (peripheralTarget != otherPluggable.peripheralTarget || peripheralType != otherPluggable.peripheralType || peripheralOwner != other.peripheralOwner) return false
-        return pluggedMethods == otherPluggable.pluggedMethods
+        if (!otherPluggable.initialized) otherPluggable.buildPlugins()
+        return pluggedMethods.all {
+            otherPluggable.pluggedMethods.any(it::equalWithoutTarget)
+        }
     }
 }

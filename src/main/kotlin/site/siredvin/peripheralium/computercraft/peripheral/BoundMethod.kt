@@ -27,6 +27,12 @@ class BoundMethod(private val target: Any, method: NamedMethod<PeripheralMethod>
         return method.apply(target, context, access, arguments)
     }
 
+    fun equalWithoutTarget(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is BoundMethod) return false
+        return name == other.name && method == other.method
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is BoundMethod) return false

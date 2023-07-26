@@ -115,6 +115,19 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
         return allowedOperations.keys.toList()
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is OperationAbility) return false
+        if (owner != other.owner) return false
+        return reduceRate == other.reduceRate
+    }
+
+    override fun hashCode(): Int {
+        var result = owner.hashCode()
+        result = 31 * result + reduceRate.hashCode()
+        return result
+    }
+
     enum class FailReason {
         COOLDOWN, NOT_ENOUGH_FUEL, CHECK_FAILED
     }
@@ -122,4 +135,6 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
     companion object {
         private const val COOLDOWNS_TAG = "cooldowns"
     }
+
+
 }

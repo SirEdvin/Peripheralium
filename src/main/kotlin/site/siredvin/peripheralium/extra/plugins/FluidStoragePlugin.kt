@@ -84,4 +84,17 @@ class FluidStoragePlugin(private val level: Level, private val storage: Storage<
         val realLimit = min(PeripheraliumConfig.fluidStorageTransferLimit, limit.map { it * FORGE_COMPACT_DEVIDER.toLong() }.orElse(Long.MAX_VALUE))
         return StorageUtil.move(fromStorage, storage, predicate, realLimit, null) / FORGE_COMPACT_DEVIDER
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is FluidStoragePlugin) return false
+
+        return storage == other.storage
+    }
+
+    override fun hashCode(): Int {
+        return storage.hashCode()
+    }
+
+
 }
