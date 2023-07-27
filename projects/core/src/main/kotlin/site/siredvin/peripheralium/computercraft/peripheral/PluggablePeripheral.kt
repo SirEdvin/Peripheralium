@@ -125,10 +125,13 @@ open class PluggablePeripheral<T>(protected val peripheralType: String, protecte
 
     open fun equals(other: PluggablePeripheral<*>): Boolean {
         if (peripheralTarget != other.peripheralTarget || peripheralType != other.peripheralType) return false
-        if (!other.initialized) other.buildPlugins()
-        return pluggedMethods.all {
-            other.pluggedMethods.any(it::equalWithoutTarget)
+        if (initialized) {
+            return pluggedMethods.all {
+                other.pluggedMethods.any(it::equalWithoutTarget)
+            }
         }
+        if (other.initialized) return false
+        return plugins == other.plugins
     }
 
     override fun equals(other: IPeripheral?): Boolean {

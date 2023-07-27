@@ -60,10 +60,13 @@ abstract class OwnedPeripheral<O : IPeripheralOwner>(peripheralType: String, fin
 
     fun equals(other: OwnedPeripheral<*>): Boolean {
         if (peripheralTarget != other.peripheralTarget || peripheralType != other.peripheralType || peripheralOwner != other.peripheralOwner) return false
-        if (!other.initialized) other.buildPlugins()
-        return pluggedMethods.all {
-            other.pluggedMethods.any(it::equalWithoutTarget)
+        if (initialized) {
+            return pluggedMethods.all {
+                other.pluggedMethods.any(it::equalWithoutTarget)
+            }
         }
+        if (other.initialized) return false
+        return plugins == other.plugins
     }
 
     override fun equals(other: Any?): Boolean {
