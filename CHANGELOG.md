@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Mix of entity and block entity peripheral owner
+
+### Fixed
+
+- `equals` handing for peripherals
+
 ## [0.6.8] - 2023-07-27
 
 ### Fixed

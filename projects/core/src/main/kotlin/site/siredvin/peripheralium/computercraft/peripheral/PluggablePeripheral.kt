@@ -123,18 +123,23 @@ open class PluggablePeripheral<T>(protected val peripheralType: String, protecte
     override val connectedComputersCount: Int
         get() = connectedComputersLock.withLock { return _connectedComputers.size }
 
+    open fun equals(other: PluggablePeripheral<*>): Boolean {
+        if (peripheralTarget != other.peripheralTarget || peripheralType != other.peripheralType) return false
+        if (!other.initialized) other.buildPlugins()
+        return pluggedMethods.all {
+            other.pluggedMethods.any(it::equalWithoutTarget)
+        }
+    }
+
     override fun equals(other: IPeripheral?): Boolean {
-        return equals(other as Any?)
+        val otherPluggable = other as? PluggablePeripheral<*> ?: return false
+        return equals(otherPluggable)
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         val otherPluggable = other as? PluggablePeripheral<*> ?: return false
-        if (peripheralTarget != otherPluggable.peripheralTarget || peripheralType != otherPluggable.peripheralType) return false
-        if (!otherPluggable.initialized) otherPluggable.buildPlugins()
-        return pluggedMethods.all {
-            otherPluggable.pluggedMethods.any(it::equalWithoutTarget)
-        }
+        return equals(otherPluggable)
     }
 
     override fun getMethodNames(): Array<String> {

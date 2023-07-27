@@ -53,14 +53,23 @@ abstract class OwnedPeripheral<O : IPeripheralOwner>(peripheralType: String, fin
         return OrientationUtil.getDirection(peripheralOwner.facing, dir)
     }
 
+    override fun equals(other: PluggablePeripheral<*>): Boolean {
+        val otherPluggable = other as? OwnedPeripheral<*> ?: return false
+        return equals(otherPluggable)
+    }
+
+    fun equals(other: OwnedPeripheral<*>): Boolean {
+        if (peripheralTarget != other.peripheralTarget || peripheralType != other.peripheralType || peripheralOwner != other.peripheralOwner) return false
+        if (!other.initialized) other.buildPlugins()
+        return pluggedMethods.all {
+            other.pluggedMethods.any(it::equalWithoutTarget)
+        }
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         val otherPluggable = other as? OwnedPeripheral<*> ?: return false
-        if (peripheralTarget != otherPluggable.peripheralTarget || peripheralType != otherPluggable.peripheralType || peripheralOwner != other.peripheralOwner) return false
-        if (!otherPluggable.initialized) otherPluggable.buildPlugins()
-        return pluggedMethods.all {
-            otherPluggable.pluggedMethods.any(it::equalWithoutTarget)
-        }
+        return equals(otherPluggable)
     }
 
     override fun hashCode(): Int {
