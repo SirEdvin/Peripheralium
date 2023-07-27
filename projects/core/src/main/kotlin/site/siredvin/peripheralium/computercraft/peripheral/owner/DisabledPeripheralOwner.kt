@@ -53,4 +53,12 @@ class DisabledPeripheralOwner : BasePeripheralOwner() {
     override fun move(level: Level, pos: BlockPos): Boolean {
         throw RuntimeException("Really no code should use this, this is disabled owner")
     }
+
+    override fun equals(other: Any?): Boolean {
+        return other is DisabledPeripheralOwner
+    }
+
+    override fun hashCode(): Int {
+        return javaClass.hashCode()
+    }
 }

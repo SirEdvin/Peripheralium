@@ -56,4 +56,6 @@ interface IPeripheralOwner {
             ?: throw IllegalArgumentException("Owner doesn't have ability to store operations logic, which is very strange!")
         return operationAbility.performOperation(operation, context, check, method, successCallback, failCallback)
     }
+
+    override fun equals(other: Any?): Boolean
 }

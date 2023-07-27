@@ -73,4 +73,15 @@ class PocketPeripheralOwner(val pocket: IPocketAccess) : BasePeripheralOwner() {
         attachAbility(PeripheralOwnerAbility.FUEL, PocketFuelAbility(this, foodFuelPrice, maxFuelConsumptionLevel))
         return this
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is PocketPeripheralOwner) return false
+
+        return pocket == other.pocket
+    }
+
+    override fun hashCode(): Int {
+        return pocket.hashCode()
+    }
 }

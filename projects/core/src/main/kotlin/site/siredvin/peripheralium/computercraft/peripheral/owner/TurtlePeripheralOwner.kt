@@ -84,4 +84,18 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
         attachAbility(PeripheralOwnerAbility.FUEL, TurtleFuelAbility(this, maxFuelConsumptionLevel))
         return this
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is TurtlePeripheralOwner) return false
+
+        if (turtle != other.turtle) return false
+        return side == other.side
+    }
+
+    override fun hashCode(): Int {
+        var result = turtle.hashCode()
+        result = 31 * result + side.hashCode()
+        return result
+    }
 }
