@@ -51,4 +51,24 @@ class PocketFuelAbility(owner: PocketPeripheralOwner, private val foodFuelPrice:
             fuelConsumptionBuffer -= leftFuel
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is PocketFuelAbility) return false
+        if (!super.equals(other)) return false
+
+        if (foodFuelPrice != other.foodFuelPrice) return false
+        if (maxFuelConsumptionRate != other.maxFuelConsumptionRate) return false
+        if (fuelConsumptionBuffer != other.fuelConsumptionBuffer) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + foodFuelPrice
+        result = 31 * result + maxFuelConsumptionRate
+        result = 31 * result + fuelConsumptionBuffer
+        return result
+    }
 }

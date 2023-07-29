@@ -77,6 +77,7 @@ class BlockEntityPeripheralOwner<T>(private val tileEntity: T, private val facin
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is BlockEntityPeripheralOwner<*>) return false
+        if (!super.equals(other)) return false
 
         if (tileEntity != other.tileEntity) return false
         return facingProperty == other.facingProperty

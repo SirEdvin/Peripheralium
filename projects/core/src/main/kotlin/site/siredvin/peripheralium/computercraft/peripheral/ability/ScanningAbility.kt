@@ -171,4 +171,20 @@ class ScanningAbility<T : IPeripheralOwner>(val owner: T, val maxRadius: Int) : 
             scanningMethod.scan(this, radius)
         })
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ScanningAbility<*>) return false
+
+        if (maxRadius != other.maxRadius) return false
+        if (scanningMethods != other.scanningMethods) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = maxRadius
+        result = 31 * result + scanningMethods.hashCode()
+        return result
+    }
 }

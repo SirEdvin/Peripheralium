@@ -112,6 +112,24 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
         return allowedOperations.keys.toList()
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is OperationAbility) return false
+
+        if (reduceRate != other.reduceRate) return false
+        if (config != other.config) return false
+        if (allowedOperations != other.allowedOperations) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = reduceRate.hashCode()
+        result = 31 * result + config.hashCode()
+        result = 31 * result + allowedOperations.hashCode()
+        return result
+    }
+
     enum class FailReason {
         COOLDOWN, NOT_ENOUGH_FUEL, CHECK_FAILED
     }

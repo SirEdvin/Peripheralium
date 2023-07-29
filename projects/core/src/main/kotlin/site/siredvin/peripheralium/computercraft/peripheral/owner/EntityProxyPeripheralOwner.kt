@@ -96,6 +96,7 @@ class EntityProxyPeripheralOwner<T>(private val tileEntity: T, private val entit
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is EntityProxyPeripheralOwner<*>) return false
+        if (!super.equals(other)) return false
 
         if (tileEntity != other.tileEntity) return false
         if (entity != other.entity) return false

@@ -88,6 +88,7 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is TurtlePeripheralOwner) return false
+        if (!super.equals(other)) return false
 
         if (turtle != other.turtle) return false
         return side == other.side

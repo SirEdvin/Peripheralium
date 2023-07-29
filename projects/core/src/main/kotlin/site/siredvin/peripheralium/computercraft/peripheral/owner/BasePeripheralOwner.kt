@@ -33,4 +33,17 @@ abstract class BasePeripheralOwner : IPeripheralOwner {
         val operationAbility = OperationAbility(this, reduceRate = reduceRate, config = config)
         attachAbility(PeripheralOwnerAbility.OPERATION, operationAbility)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is BasePeripheralOwner) return false
+
+        if (_abilities != other._abilities) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return _abilities.hashCode()
+    }
 }
