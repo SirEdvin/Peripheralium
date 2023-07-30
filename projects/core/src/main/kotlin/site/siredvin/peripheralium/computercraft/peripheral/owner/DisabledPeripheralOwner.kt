@@ -61,4 +61,7 @@ class DisabledPeripheralOwner : BasePeripheralOwner() {
     override fun hashCode(): Int {
         return javaClass.hashCode()
     }
+
+    override val targetRepresentation: Any?
+        get() = null
 }

@@ -85,4 +85,7 @@ class PocketPeripheralOwner(val pocket: IPocketAccess) : BasePeripheralOwner() {
     override fun hashCode(): Int {
         return pocket.hashCode()
     }
+
+    override val targetRepresentation: Any?
+        get() = owner
 }

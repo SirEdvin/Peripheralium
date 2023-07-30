@@ -103,4 +103,7 @@ class EntityProxyPeripheralOwner<T>(private val tileEntity: T, private val entit
 
         return true
     }
+
+    override val targetRepresentation: Any
+        get() = entity
 }

@@ -22,8 +22,6 @@ interface IPeripheralOwner {
             return owner?.customName.toString()
         }
     val targetRepresentation: Any?
-        get() = null
-
     val level: Level?
     val pos: BlockPos
     val facing: Direction
