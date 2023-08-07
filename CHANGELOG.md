@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.10] - 2023-08-07
+
+### Fixed
+
+- Relative block pos handling
+
 ## [0.6.9] - 2023-07-30
 
 ### Added

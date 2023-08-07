@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.EnumProperty
 import net.minecraft.world.level.block.state.properties.IntegerProperty
 import net.minecraft.world.level.block.state.properties.Property
-import site.siredvin.peripheralium.ext.toRelative
+import site.siredvin.peripheralium.ext.fromRelative
 import site.siredvin.peripheralium.xplat.XplatRegistries
 
 object LuaInterpretation {
@@ -35,7 +35,7 @@ object LuaInterpretation {
 
     @Throws(LuaException::class)
     fun asBlockPos(center: BlockPos, table: Map<*, *>, facing: Direction): BlockPos {
-        val relative = asBlockPos(table).toRelative(facing.opposite)
+        val relative = asBlockPos(table).fromRelative(facing)
         return BlockPos(center.x + relative.x, center.y + relative.y, center.z + relative.z)
     }
 

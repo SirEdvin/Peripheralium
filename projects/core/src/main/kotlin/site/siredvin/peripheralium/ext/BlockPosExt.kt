@@ -16,4 +16,14 @@ fun BlockPos.toRelative(facing: Direction): BlockPos {
     }
 }
 
+fun BlockPos.fromRelative(facing: Direction): BlockPos {
+    return when (facing) {
+        Direction.UP, Direction.DOWN -> throw IllegalArgumentException("This works only for horizontal facing")
+        Direction.NORTH -> this.rotate(Rotation.COUNTERCLOCKWISE_90)
+        Direction.SOUTH -> this.rotate(Rotation.CLOCKWISE_90)
+        Direction.EAST -> this
+        Direction.WEST -> this.rotate(Rotation.CLOCKWISE_180)
+    }
+}
+
 fun Vec3.toBlockPos() = BlockPos(x.toInt(), y.toInt(), z.toInt())

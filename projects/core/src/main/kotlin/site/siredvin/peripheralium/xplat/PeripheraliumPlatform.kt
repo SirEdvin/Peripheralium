@@ -155,10 +155,12 @@ interface PeripheraliumPlatform {
             get().triggerRenderUpdate(blockEntity)
         }
 
+        @Deprecated("Please, don't use it, replace with proper code that doesn't use this")
         fun tintConvert(tint: Int): Int {
             return get().tintConvert(tint)
         }
 
+        @Deprecated("Please, don't use it, replace with proper code that doesn't use this")
         fun reverseTintConvert(tint: Int): Int {
             return get().reverseTintConvert(tint)
         }
@@ -223,6 +225,7 @@ interface PeripheraliumPlatform {
         return XplatTags.isOre(block)
     }
     fun triggerRenderUpdate(blockEntity: BlockEntity)
+
     fun tintConvert(tint: Int): Int = tint
     fun reverseTintConvert(tint: Int): Int = tintConvert(tint)
 
