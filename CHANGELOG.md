@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.11] - 2023-08-16
+
+### Fixed
+
+- `toInventoryOrToWorld` methods not loop throw all inventory, not only single slot
+
 ## [0.6.10] - 2023-08-07
 
 ### Fixed

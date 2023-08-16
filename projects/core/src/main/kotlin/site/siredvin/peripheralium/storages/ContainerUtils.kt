@@ -91,7 +91,10 @@ object ContainerUtils {
     }
 
     fun toInventoryOrToWorld(output: ItemStack, container: Container, startSlot: Int, outputPos: BlockPos, level: Level) {
-        val rest = storeItem(container, output, startSlot, startSlot)
+        var rest = storeItem(container, output, startSlot, container.containerSize - 1)
+        if (!rest.isEmpty && startSlot > 0) {
+            rest = storeItem(container, output, 0, startSlot - 1)
+        }
         if (!rest.isEmpty) {
             Containers.dropItemStack(level, outputPos.x.toDouble(), outputPos.y.toDouble(), outputPos.z.toDouble(), rest)
         }
