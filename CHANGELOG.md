@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Correctly propagate operations from plugins
+
 ## [0.6.11] - 2023-08-16
 
 ### Fixed

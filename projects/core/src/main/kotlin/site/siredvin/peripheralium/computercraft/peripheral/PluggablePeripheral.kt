@@ -10,7 +10,6 @@ import dan200.computercraft.api.peripheral.IPeripheral
 import kotlinx.atomicfu.locks.withLock
 import net.minecraft.server.MinecraftServer
 import site.siredvin.peripheralium.api.peripheral.IObservingPeripheralPlugin
-import site.siredvin.peripheralium.api.peripheral.IPeripheralOperation
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 import site.siredvin.peripheralium.api.peripheral.IPluggablePeripheral
 import site.siredvin.peripheralium.extra.plugins.PeripheralPluginUtils
@@ -69,16 +68,11 @@ open class PluggablePeripheral<T>(protected val peripheralType: String, protecte
         }
     }
 
-    protected open fun addOperations(operations: List<IPeripheralOperation<*>>) {
-        require(operations.isEmpty()) { "This is not possible to attach plugin with operations to not operationable owner" }
-    }
-
     fun addPlugin(plugin: IPeripheralPlugin) {
         if (plugins == null) {
             plugins = LinkedList()
         }
         plugins!!.add(plugin)
-        addOperations(plugin.operations)
         addAdditionalType(plugin.additionalType)
     }
 
