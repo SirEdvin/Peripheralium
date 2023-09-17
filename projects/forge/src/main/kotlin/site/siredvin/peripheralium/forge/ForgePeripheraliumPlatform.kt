@@ -1,6 +1,7 @@
 package site.siredvin.peripheralium.forge
 
 import com.mojang.authlib.GameProfile
+import dan200.computercraft.api.ForgeComputerCraftAPI
 import dan200.computercraft.api.peripheral.IPeripheral
 import dan200.computercraft.api.pocket.IPocketUpgrade
 import dan200.computercraft.api.turtle.ITurtleAccess
@@ -42,6 +43,7 @@ import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraftforge.common.ForgeHooks
 import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.common.util.LazyOptional
 import net.minecraftforge.common.world.ForgeChunkManager
 import net.minecraftforge.event.level.BlockEvent.BreakEvent
 import net.minecraftforge.eventbus.api.Event
@@ -49,10 +51,10 @@ import net.minecraftforge.network.NetworkHooks
 import net.minecraftforge.registries.ForgeRegistry
 import net.minecraftforge.registries.RegistryManager
 import net.minecraftforge.server.ServerLifecycleHooks
+import site.siredvin.peripheralium.api.peripheral.IPeripheralProvider
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.RegistryWrapper
 import site.siredvin.peripheralium.xplat.SavingFunction
-import java.awt.Color
 import java.util.*
 import java.util.function.BiFunction
 import java.util.function.Function
@@ -259,13 +261,20 @@ object ForgePeripheraliumPlatform : PeripheraliumPlatform {
         }
     }
 
-    override fun tintConvert(tint: Int): Int {
-        // For some unknown reason forge tint should be in bgr
-        val color = Color(tint)
-        return Color(color.blue, color.green, color.red).rgb
-    }
-
     override fun openMenu(player: Player, owner: MenuProvider, savingFunction: SavingFunction) {
         NetworkHooks.openScreen(player as ServerPlayer, owner, savingFunction::toBytes)
+    }
+
+    override fun registerGenericPeripheralLookup() {
+        ForgeComputerCraftAPI.registerPeripheralProvider { world, pos, side ->
+            val entity = world.getBlockEntity(pos)
+            if (entity is IPeripheralProvider<*>) {
+                val foundPeripheral = entity.getPeripheral(side)
+                if (foundPeripheral != null) {
+                    return@registerPeripheralProvider LazyOptional.of { foundPeripheral }
+                }
+            }
+            return@registerPeripheralProvider LazyOptional.empty()
+        }
     }
 }

@@ -52,6 +52,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
+import site.siredvin.peripheralium.api.peripheral.IPeripheralProvider
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.RegistryWrapper
 import site.siredvin.peripheralium.xplat.SavingFunction
@@ -257,6 +258,15 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
 
         override fun writeScreenOpeningData(player: ServerPlayer, buf: FriendlyByteBuf) {
             savingFunction.toBytes(buf)
+        }
+    }
+
+    override fun registerGenericPeripheralLookup() {
+        PeripheralLookup.get().registerFallback { _, _, _, blockEntity, context ->
+            if (blockEntity is IPeripheralProvider<*>) {
+                return@registerFallback blockEntity.getPeripheral(context)
+            }
+            return@registerFallback null
         }
     }
 }

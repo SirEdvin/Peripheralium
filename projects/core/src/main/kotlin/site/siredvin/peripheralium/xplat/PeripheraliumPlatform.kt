@@ -40,6 +40,7 @@ import java.util.function.Predicate
 interface PeripheraliumPlatform {
     companion object {
         private var _IMPL: PeripheraliumPlatform? = null
+        private var genericLookupRegistered = false
 
         fun configure(impl: PeripheraliumPlatform) {
             _IMPL = impl
@@ -139,34 +140,19 @@ interface PeripheraliumPlatform {
             return get().createPocketsWithUpgrade(upgrade)
         }
 
-        @Deprecated(
-            level = DeprecationLevel.WARNING,
-            message = "Use XplatTags now",
-            replaceWith = ReplaceWith(
-                "get().isOre(block)",
-                "site.siredvin.peripheralium.xplat.PeripheraliumPlatform.Companion.get",
-            ),
-        )
-        fun isOre(block: BlockState): Boolean {
-            return XplatTags.isOre(block)
-        }
-
         fun triggerRenderUpdate(blockEntity: BlockEntity) {
             get().triggerRenderUpdate(blockEntity)
         }
 
-        @Deprecated("Please, don't use it, replace with proper code that doesn't use this")
-        fun tintConvert(tint: Int): Int {
-            return get().tintConvert(tint)
-        }
-
-        @Deprecated("Please, don't use it, replace with proper code that doesn't use this")
-        fun reverseTintConvert(tint: Int): Int {
-            return get().reverseTintConvert(tint)
-        }
-
         fun openMenu(player: Player, owner: MenuProvider, savingFunction: SavingFunction) {
             return get().openMenu(player, owner, savingFunction)
+        }
+
+        fun registerGenericPeripheralLookup() {
+            if (!genericLookupRegistered) {
+                get().registerGenericPeripheralLookup()
+                genericLookupRegistered = true
+            }
         }
     }
 
@@ -216,18 +202,9 @@ interface PeripheraliumPlatform {
     fun createTurtlesWithUpgrade(upgrade: UpgradeData<ITurtleUpgrade>): List<ItemStack>
     fun createPocketsWithUpgrade(upgrade: UpgradeData<IPocketUpgrade>): List<ItemStack>
 
-    @Deprecated(
-        level = DeprecationLevel.WARNING,
-        message = "Use XplatTags now",
-        replaceWith = ReplaceWith("XplatTags.isOre(block)"),
-    )
-    fun isOre(block: BlockState): Boolean {
-        return XplatTags.isOre(block)
-    }
     fun triggerRenderUpdate(blockEntity: BlockEntity)
 
-    fun tintConvert(tint: Int): Int = tint
-    fun reverseTintConvert(tint: Int): Int = tintConvert(tint)
-
     fun openMenu(player: Player, owner: MenuProvider, savingFunction: SavingFunction)
+
+    fun registerGenericPeripheralLookup()
 }

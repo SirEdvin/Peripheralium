@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `scanMethods` exposed via configuration API
+- `registerGenericPeripheralLookup` fabric and forge methods
 
 ## [0.6.12] - 2023-09-14
 
