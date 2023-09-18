@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `scanMethods` exposed via configuration API
 - `registerGenericPeripheralLookup` fabric and forge methods
 
+### Fixed
+
+- owner player saving logic
+
 ## [0.6.12] - 2023-09-14
 
 ### Changed
