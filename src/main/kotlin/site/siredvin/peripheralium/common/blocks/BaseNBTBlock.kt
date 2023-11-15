@@ -17,7 +17,7 @@ import site.siredvin.peripheralium.api.blockentities.ISyncingBlockEntity
 
 abstract class BaseNBTBlock<T>(
     belongToTickingEntity: Boolean,
-    properties: Properties = Properties.of(Material.METAL).strength(1f, 5f).sound(SoundType.METAL).noOcclusion()
+    properties: Properties = Properties.of(Material.METAL).strength(1f, 5f).sound(SoundType.METAL).noOcclusion(),
 ) :
     BaseTileEntityBlock<T>(belongToTickingEntity, properties) where T : BlockEntity, T : ISyncingBlockEntity {
     abstract fun createItemStack(): ItemStack
@@ -43,7 +43,7 @@ abstract class BaseNBTBlock<T>(
                     pos.x.toDouble() + 0.5,
                     pos.y.toDouble() + 0.5,
                     pos.z.toDouble() + 0.5,
-                    itemstack
+                    itemstack,
                 )
                 itemDrop.setDefaultPickUpDelay()
                 level.addFreshEntity(itemDrop)
@@ -53,8 +53,8 @@ abstract class BaseNBTBlock<T>(
     }
 
     override fun setPlacedBy(level: Level, pos: BlockPos, state: BlockState, entity: LivingEntity?, stack: ItemStack) {
-        var state = state
-        super.setPlacedBy(level, pos, state, entity, stack)
+        var mutableState = state
+        super.setPlacedBy(level, pos, mutableState, entity, stack)
         val blockEntity = level.getBlockEntity(pos)
         if (blockEntity is ISyncingBlockEntity) {
             if (!level.isClientSide) {
@@ -63,13 +63,14 @@ abstract class BaseNBTBlock<T>(
                     if (data.contains(BLOCK_STATE_TAG)) {
                         val savedState: BlockState = NbtUtils.readBlockState(data.getCompound(BLOCK_STATE_TAG))
                         for (property in savableProperties) {
+                            @Suppress("UNCHECKED_CAST")
                             property as Property<Comparable<Any>>
-                            state = state.setValue(property, savedState.getValue(property) as Comparable<Any>)
+                            mutableState = mutableState.setValue(property, savedState.getValue(property) as Comparable<Any>)
                         }
                     }
                     if (data.contains(INTERNAL_DATA_TAG)) {
-                        state = blockEntity.loadInternalData(data.getCompound(INTERNAL_DATA_TAG), state)
-                        blockEntity.pushInternalDataChangeToClient(state)
+                        mutableState = blockEntity.loadInternalData(data.getCompound(INTERNAL_DATA_TAG), mutableState)
+                        blockEntity.pushInternalDataChangeToClient(mutableState)
                     }
                 }
             }

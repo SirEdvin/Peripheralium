@@ -8,18 +8,19 @@ import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.world.level.block.entity.BlockEntity
 import site.siredvin.peripheralium.api.blockentities.IObservingBlockEntity
 
-
 @Environment(EnvType.CLIENT)
-object PeripheraliumClient: ClientModInitializer {
+object PeripheraliumClient : ClientModInitializer {
     override fun onInitializeClient() {
         registerEvents()
     }
 
     fun registerEvents() {
-        ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register(ClientBlockEntityEvents.Unload { blockEntity: BlockEntity, world: ClientLevel ->
-            if (blockEntity is IObservingBlockEntity) {
-                blockEntity.onChunkUnloaded()
-            }
-        })
+        ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register(
+            ClientBlockEntityEvents.Unload { blockEntity: BlockEntity, _: ClientLevel ->
+                if (blockEntity is IObservingBlockEntity) {
+                    blockEntity.onChunkUnloaded()
+                }
+            },
+        )
     }
 }

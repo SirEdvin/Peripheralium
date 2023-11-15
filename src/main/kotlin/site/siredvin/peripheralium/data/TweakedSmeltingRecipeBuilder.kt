@@ -18,7 +18,7 @@ class TweakedSmeltingRecipeBuilder(
     private val experience: Float,
     private val cookingTime: Int,
     private var serializer: SimpleCookingSerializer<*>,
-    private var group: String? = null
+    private var group: String? = null,
 ) {
     private val result: Item
 
@@ -75,8 +75,8 @@ class TweakedSmeltingRecipeBuilder(
                 var10006,
                 var10007,
                 var10008,
-                serializer
-            )
+                serializer,
+            ),
         )
     }
 
@@ -87,7 +87,7 @@ class TweakedSmeltingRecipeBuilder(
         private val result: Item,
         private val experience: Float,
         private val cookingTime: Int,
-        private val serializer: RecipeSerializer<out AbstractCookingRecipe?>
+        private val serializer: RecipeSerializer<out AbstractCookingRecipe?>,
     ) : FinishedRecipe {
         override fun serializeRecipeData(jsonObject: JsonObject) {
             if (group.isNotEmpty()) {

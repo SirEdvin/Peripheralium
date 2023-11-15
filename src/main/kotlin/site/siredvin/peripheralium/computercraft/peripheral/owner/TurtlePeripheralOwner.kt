@@ -56,16 +56,20 @@ class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide) : B
 
     override fun isMovementPossible(level: Level, pos: BlockPos): Boolean {
         return FakePlayerProviderTurtle.withPlayer(turtle, { player ->
-            if (level.isOutsideBuildHeight(pos))
-                return@withPlayer false;
-            if (!level.isInWorldBounds(pos))
-                return@withPlayer false;
-            if (ComputerCraft.turtlesObeyBlockProtection && !TurtlePermissions.isBlockEnterable(level, pos, player))
-                return@withPlayer false;
-            if (!level.isLoaded(pos))
-                return@withPlayer false;
-            return@withPlayer level.worldBorder.isWithinBounds(pos);
-        });
+            if (level.isOutsideBuildHeight(pos)) {
+                return@withPlayer false
+            }
+            if (!level.isInWorldBounds(pos)) {
+                return@withPlayer false
+            }
+            if (ComputerCraft.turtlesObeyBlockProtection && !TurtlePermissions.isBlockEnterable(level, pos, player)) {
+                return@withPlayer false
+            }
+            if (!level.isLoaded(pos)) {
+                return@withPlayer false
+            }
+            return@withPlayer level.worldBorder.isWithinBounds(pos)
+        })
     }
 
     override fun move(level: Level, pos: BlockPos): Boolean {

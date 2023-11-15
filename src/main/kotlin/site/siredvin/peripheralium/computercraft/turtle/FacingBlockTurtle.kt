@@ -14,7 +14,7 @@ import site.siredvin.peripheralium.api.TurtlePeripheralBuildFunction
 import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
 import site.siredvin.peripheralium.common.items.TurtleItem
 
-abstract class FacingBlockTurtle<T : IOwnedPeripheral<*>>: PeripheralTurtleUpgrade<T> {
+abstract class FacingBlockTurtle<T : IOwnedPeripheral<*>> : PeripheralTurtleUpgrade<T> {
     constructor(id: ResourceLocation, adjective: String, item: ItemStack) : super(id, adjective, item)
     constructor(id: ResourceLocation, item: ItemStack) : super(id, item)
 
@@ -27,7 +27,7 @@ abstract class FacingBlockTurtle<T : IOwnedPeripheral<*>>: PeripheralTurtleUpgra
         }
     }
 
-    private class Dynamic<T : IOwnedPeripheral<*>>(id: ResourceLocation, itemStack: ItemStack, private val constructor: TurtlePeripheralBuildFunction<T>): FacingBlockTurtle<T>(id, itemStack) {
+    private class Dynamic<T : IOwnedPeripheral<*>>(id: ResourceLocation, itemStack: ItemStack, private val constructor: TurtlePeripheralBuildFunction<T>) : FacingBlockTurtle<T>(id, itemStack) {
         override fun buildPeripheral(turtle: ITurtleAccess, side: TurtleSide): T {
             return constructor.build(turtle, side)
         }

@@ -16,10 +16,10 @@ import site.siredvin.peripheralium.api.blockentities.IObservingBlockEntity
 import site.siredvin.peripheralium.api.peripheral.IPeripheralTileEntity
 import java.util.*
 
-abstract class BaseTileEntityBlock<T: BlockEntity>(
+abstract class BaseTileEntityBlock<T : BlockEntity>(
     private val belongToTickingEntity: Boolean,
-    properties: Properties = Properties.of(Material.METAL).strength(1f, 5f).sound(SoundType.METAL).noOcclusion()
-): BaseEntityBlock(properties) {
+    properties: Properties = Properties.of(Material.METAL).strength(1f, 5f).sound(SoundType.METAL).noOcclusion(),
+) : BaseEntityBlock(properties) {
 
     override fun getRenderShape(blockState: BlockState): RenderShape {
         return RenderShape.MODEL
@@ -28,10 +28,11 @@ abstract class BaseTileEntityBlock<T: BlockEntity>(
     override fun <T : BlockEntity> getTicker(
         tickerLevel: Level,
         tickerState: BlockState,
-        type: BlockEntityType<T>
+        type: BlockEntityType<T>,
     ): BlockEntityTicker<T>? {
-        if (tickerLevel.isClientSide || !belongToTickingEntity)
+        if (tickerLevel.isClientSide || !belongToTickingEntity) {
             return null
+        }
         return BlockEntityTicker { level, pos, state, entity ->
             if (entity is IPeripheralTileEntity) {
                 entity.handleTick(level, pos, state)
@@ -45,19 +46,23 @@ abstract class BaseTileEntityBlock<T: BlockEntity>(
         blockPos: BlockPos,
         neighbourBlock: Block,
         neighbourPos: BlockPos,
-        bl: Boolean
+        bl: Boolean,
     ) {
+        @Suppress("DEPRECATION")
         super.neighborChanged(blockState, level, blockPos, neighbourBlock, neighbourPos, bl)
         val tile = level.getBlockEntity(blockPos)
-        if (tile is IObservingBlockEntity)
+        if (tile is IObservingBlockEntity) {
             tile.onNeighbourChange(neighbourPos)
+        }
     }
 
     override fun tick(blockState: BlockState, serverLevel: ServerLevel, blockPos: BlockPos, random: Random) {
+        @Suppress("DEPRECATION")
         super.tick(blockState, serverLevel, blockPos, random)
         val tile = serverLevel.getBlockEntity(blockPos)
-        if (tile is IObservingBlockEntity)
+        if (tile is IObservingBlockEntity) {
             tile.blockTick()
+        }
     }
 
     override fun onPlace(
@@ -65,13 +70,15 @@ abstract class BaseTileEntityBlock<T: BlockEntity>(
         level: Level,
         blockPos: BlockPos,
         newState: BlockState,
-        bl: Boolean
+        bl: Boolean,
     ) {
+        @Suppress("DEPRECATION")
         super.onPlace(blockState, level, blockPos, newState, bl)
         if (newState.block === this) {
             val tile = level.getBlockEntity(blockPos)
-            if (tile is IObservingBlockEntity)
+            if (tile is IObservingBlockEntity) {
                 tile.placed()
+            }
         }
     }
 
@@ -80,13 +87,16 @@ abstract class BaseTileEntityBlock<T: BlockEntity>(
         level: Level,
         blockPos: BlockPos,
         replace: BlockState,
-        bl: Boolean
+        bl: Boolean,
     ) {
-        if (blockState.block === replace.block)
+        if (blockState.block === replace.block) {
             return
+        }
         val tile = level.getBlockEntity(blockPos)
+        @Suppress("DEPRECATION")
         super.onRemove(blockState, level, blockPos, replace, bl)
-        if (tile is IObservingBlockEntity)
+        if (tile is IObservingBlockEntity) {
             tile.destroy()
+        }
     }
 }

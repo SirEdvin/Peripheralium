@@ -42,11 +42,13 @@ import java.util.*
 import java.util.function.Predicate
 
 class LibFakePlayer(
-    level: ServerLevel, owner: Entity?, profile: GameProfile?,
-    private val range: Double = 4.0
-): FakePlayer(
+    level: ServerLevel,
+    owner: Entity?,
+    profile: GameProfile?,
+    private val range: Double = 4.0,
+) : FakePlayer(
     level,
-    if (profile != null && profile.isComplete) profile else PROFILE
+    if (profile != null && profile.isComplete) profile else PROFILE,
 ) {
     companion object {
         val PROFILE = GameProfile(UUID.fromString("6e483f02-30db-4454-b612-3a167614b276"), "[" + Peripheralium.MOD_ID + "]")
@@ -78,7 +80,6 @@ class LibFakePlayer(
 
     override fun openTextEdit(p_175141_1_: SignBlockEntity) {}
 
-
     override fun isSilent(): Boolean {
         return true
     }
@@ -96,7 +97,7 @@ class LibFakePlayer(
                 digPosition!!,
                 ServerboundPlayerActionPacket.Action.ABORT_DESTROY_BLOCK,
                 Direction.EAST,
-                1
+                1,
             )
         }
         digPosition = pos
@@ -105,16 +106,19 @@ class LibFakePlayer(
     }
 
     override fun getEyeHeight(pose: Pose): Float {
-        return 0f;
+        return 0f
     }
 
     fun isBlockProtected(pos: BlockPos, state: BlockState): Boolean {
-        if (!ComputerCraft.turtlesObeyBlockProtection)
+        if (!ComputerCraft.turtlesObeyBlockProtection) {
             return false
-        if(!PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(level, this, pos, state, null ))
+        }
+        if (!PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(level, this, pos, state, null)) {
             return true
-        if(!TurtlePermissions.isBlockEditable(level, pos, this ))
+        }
+        if (!TurtlePermissions.isBlockEditable(level, pos, this)) {
             return true
+        }
         return false
     }
 
@@ -146,7 +150,10 @@ class LibFakePlayer(
         val blockHit: HitResult = if (skipBlock) {
             BlockHitResult.miss(traceContext.to, traceDirection, BlockPos(traceContext.to))
         } else {
-            BlockGetter.traverseBlocks(traceContext.from, traceContext.to, traceContext,
+            BlockGetter.traverseBlocks(
+                traceContext.from,
+                traceContext.to,
+                traceContext,
                 { _: ClipContext?, blockPos: BlockPos ->
                     if (level.isEmptyBlock(blockPos)) {
                         return@traverseBlocks null
@@ -155,14 +162,14 @@ class LibFakePlayer(
                         Vec3(blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble()),
                         traceDirection,
                         blockPos,
-                        false
+                        false,
                     )
-                }
+                },
             ) { rayTraceContext: ClipContext ->
                 BlockHitResult.miss(
                     rayTraceContext.to,
                     traceDirection,
-                    BlockPos(rayTraceContext.to)
+                    BlockPos(rayTraceContext.to),
                 )
             }!!
         }
@@ -170,8 +177,9 @@ class LibFakePlayer(
             return blockHit
         }
         val entities = level.getEntities(
-            this, boundingBox.expandTowards(look.x * range, look.y * range, look.z * range).inflate(1.0, 1.0, 1.0),
-            collidablePredicate
+            this,
+            boundingBox.expandTowards(look.x * range, look.y * range, look.z * range).inflate(1.0, 1.0, 1.0),
+            collidablePredicate,
         )
         var closestEntity: LivingEntity? = null
         var closestVec: Vec3? = null
@@ -205,9 +213,11 @@ class LibFakePlayer(
                 }
             }
         }
-        return if (closestEntity != null && closestDistance <= range && (blockHit.type == HitResult.Type.MISS || distanceToSqr(
-                blockHit.location
-            ) > closestDistance * closestDistance)
+        return if (closestEntity != null && closestDistance <= range && (
+                blockHit.type == HitResult.Type.MISS || distanceToSqr(
+                    blockHit.location,
+                ) > closestDistance * closestDistance
+                )
         ) {
             EntityHitResult(closestEntity, closestVec!!)
         } else {
@@ -217,29 +227,32 @@ class LibFakePlayer(
 
     fun useOnSpecificEntity(entity: Entity, result: HitResult): InteractionResult {
         val simpleInteraction = interactOn(entity, InteractionHand.MAIN_HAND)
-        if (simpleInteraction == InteractionResult.SUCCESS)
+        if (simpleInteraction == InteractionResult.SUCCESS) {
             return simpleInteraction
+        }
         return UseEntityCallback.EVENT.invoker().interact(this, level, InteractionHand.MAIN_HAND, entity, result as EntityHitResult)
     }
 
     fun use(skipEntity: Boolean, skipBlock: Boolean, entityFilter: Predicate<Entity>?): InteractionResult {
-        val hit = findHit(skipEntity, skipBlock, entityFilter);
+        val hit = findHit(skipEntity, skipBlock, entityFilter)
         if (hit is BlockHitResult) {
             return withConsumer(level, hit.blockPos) {
                 var result = this.interactAt(this, hit.blockPos.toVec3(), InteractionHand.MAIN_HAND)
-                if (result != InteractionResult.PASS)
+                if (result != InteractionResult.PASS) {
                     return@withConsumer result
+                }
                 level.destroyBlockProgress(id, hit.blockPos, -1)
                 result = gameMode.useItemOn(this, level, mainHandItem, InteractionHand.MAIN_HAND, hit)
-                if (result != InteractionResult.PASS)
+                if (result != InteractionResult.PASS) {
                     return@withConsumer result
+                }
                 return@withConsumer gameMode.useItem(this, level, mainHandItem, InteractionHand.MAIN_HAND)
             }
         }
         if (hit is EntityHitResult) {
             return withConsumer(hit.entity) { useOnSpecificEntity(hit.entity, hit) }
         }
-        return InteractionResult.FAIL;
+        return InteractionResult.FAIL
     }
 
     fun use(skipEntity: Boolean, skipBlock: Boolean): InteractionResult {
@@ -247,13 +260,16 @@ class LibFakePlayer(
     }
 
     fun swing(skipEntity: Boolean, skipBlock: Boolean, entityFilter: Predicate<Entity>?): Pair<Boolean, String> {
-        val hit = findHit(skipEntity = skipEntity, skipBlock = skipBlock, entityFilter = entityFilter);
-        if (hit.type == HitResult.Type.MISS)
+        val hit = findHit(skipEntity = skipEntity, skipBlock = skipBlock, entityFilter = entityFilter)
+        if (hit.type == HitResult.Type.MISS) {
             return Pair.of(false, "Nothing to swing")
-        if (hit is BlockHitResult)
+        }
+        if (hit is BlockHitResult) {
             return swingBlock(hit)
-        if (hit is EntityHitResult)
+        }
+        if (hit is EntityHitResult) {
             return swingEntity(hit)
+        }
         return Pair.of(false, "Nothing found")
     }
 
@@ -262,13 +278,16 @@ class LibFakePlayer(
         val state = level.getBlockState(pos)
         val block = state.block
         val tool = inventory.getSelected()
-        if (block != digBlock || pos != digPosition)
+        if (block != digBlock || pos != digPosition) {
             setState(block, pos)
+        }
         if (!level.isEmptyBlock(pos) && !state.material.isLiquid) {
-            if (isBlockProtected(pos, state))
+            if (isBlockProtected(pos, state)) {
                 return Pair.of(false, "Cannot break protected block")
-            if (block == Blocks.BEDROCK || state.getDestroySpeed(level, pos) <= -1f)
+            }
+            if (block == Blocks.BEDROCK || state.getDestroySpeed(level, pos) <= -1f) {
                 return Pair.of(false, "Unbreakable block detected")
+            }
             val breakSpeed = 0.5f * tool.getDestroySpeed(state) / state.getDestroySpeed(level, pos) - 0.1f
             for (i in 0..9) {
                 currentDamage += breakSpeed
@@ -285,20 +304,23 @@ class LibFakePlayer(
                     break
                 }
             }
-            return Pair.of(true, "");
+            return Pair.of(true, "")
         }
-        return Pair.of(false, "Nothing to dig here");
+        return Pair.of(false, "Nothing to dig here")
     }
 
     fun swingEntity(hit: EntityHitResult): Pair<Boolean, String> {
         val tool = inventory.getSelected()
-        if (tool.isEmpty)
-            return Pair.of(false, "Cannot swing without tool");
+        if (tool.isEmpty) {
+            return Pair.of(false, "Cannot swing without tool")
+        }
         val entity = hit.entity
-        if (entity !is LivingEntity)
+        if (entity !is LivingEntity) {
             return Pair.of(false, "Incorrect entity hit")
-        if (!canAttack(entity))
+        }
+        if (!canAttack(entity)) {
             return Pair.of(false, "Can't swing this entity")
+        }
         withConsumer(entity) { attack(entity) }
         cooldowns.addCooldown(tool.item, 1)
         return Pair.of(true, "")

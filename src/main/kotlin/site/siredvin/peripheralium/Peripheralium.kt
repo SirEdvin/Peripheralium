@@ -13,8 +13,7 @@ import site.siredvin.peripheralium.common.configuration.ConfigHolder
 import site.siredvin.peripheralium.common.setup.Blocks
 import site.siredvin.peripheralium.common.setup.Items
 
-
-object Peripheralium: ModInitializer {
+object Peripheralium : ModInitializer {
     const val MOD_ID = "peripheralium"
 
     var LOGGER: Logger = LogManager.getLogger(MOD_ID)
@@ -27,10 +26,12 @@ object Peripheralium: ModInitializer {
     }
 
     fun registerHandlers() {
-        ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register(ServerBlockEntityEvents.Unload { blockEntity: BlockEntity, world: ServerLevel ->
-            if (blockEntity is IObservingBlockEntity) {
-                blockEntity.onChunkUnloaded()
-            }
-        })
+        ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register(
+            ServerBlockEntityEvents.Unload { blockEntity: BlockEntity, _: ServerLevel ->
+                if (blockEntity is IObservingBlockEntity) {
+                    blockEntity.onChunkUnloaded()
+                }
+            },
+        )
     }
 }

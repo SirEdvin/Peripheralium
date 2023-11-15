@@ -7,8 +7,8 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
-import site.siredvin.peripheralium.common.blocks.GenericBlockEntityBlock
 import site.siredvin.peripheralium.api.peripheral.IPeripheralTileEntity
+import site.siredvin.peripheralium.common.blocks.GenericBlockEntityBlock
 import site.siredvin.peripheralium.util.DataStorageUtil
 import site.siredvin.peripheralium.util.world.LibFakePlayer
 import java.util.*
@@ -25,7 +25,7 @@ class BlockEntityPeripheralOwner<T>(val tileEntity: T) :
         get() = tileEntity
 
     override val facing: Direction
-        get() = tileEntity.blockState.getValue(GenericBlockEntityBlock.FACING);
+        get() = tileEntity.blockState.getValue(GenericBlockEntityBlock.FACING)
 
     override val owner: Player?
         get() = null

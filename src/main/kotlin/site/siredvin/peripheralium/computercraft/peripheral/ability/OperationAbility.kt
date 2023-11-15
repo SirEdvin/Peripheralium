@@ -22,7 +22,7 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
             if (!dataStorage.contains(COOLDOWNS_TAG)) dataStorage.put(COOLDOWNS_TAG, CompoundTag())
             dataStorage.getCompound(COOLDOWNS_TAG).putLong(
                 operation.settingsName(),
-                Timestamp.valueOf(LocalDateTime.now().plus(cooldown.toLong(), ChronoUnit.MILLIS)).time
+                Timestamp.valueOf(LocalDateTime.now().plus(cooldown.toLong(), ChronoUnit.MILLIS)).time,
             )
         }
     }
@@ -52,7 +52,7 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
         check: IPeripheralCheck<T>?,
         method: IPeripheralFunction<T, MethodResult>,
         successCallback: Consumer<T>?,
-        failCallback: BiConsumer<MethodResult?, FailReason?>?
+        failCallback: BiConsumer<MethodResult?, FailReason?>?,
     ): MethodResult {
         if (isOnCooldown(operation)) {
             val result = MethodResult.of(null, String.format("%s is on cooldown", operation.settingsName()))
@@ -85,8 +85,9 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
         }
         val result = method.apply(context)
         successCallback?.accept(context)
-        if (cooldown > PeripheraliumConfig.cooldownTrasholdLevel)
+        if (cooldown > PeripheraliumConfig.cooldownTrasholdLevel) {
             setCooldown(operation, cooldown)
+        }
         return result
     }
 
@@ -135,6 +136,4 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
     companion object {
         private const val COOLDOWNS_TAG = "cooldowns"
     }
-
-
 }

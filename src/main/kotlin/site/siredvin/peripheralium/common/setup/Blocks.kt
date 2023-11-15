@@ -9,6 +9,5 @@ object Blocks {
     val PERIPHERALIUM_BLOCK = Block(BlockBehaviour.Properties.of(Material.STONE).destroyTime(0.5f)).register("peripheralium_block")
 
     fun doSomething() {
-
     }
 }

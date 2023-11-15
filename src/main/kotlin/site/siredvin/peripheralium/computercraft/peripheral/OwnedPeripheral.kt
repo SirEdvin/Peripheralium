@@ -1,9 +1,7 @@
 package site.siredvin.peripheralium.computercraft.peripheral
 
 import dan200.computercraft.api.lua.*
-import dan200.computercraft.api.peripheral.IComputerAccess
 import dan200.computercraft.api.peripheral.IDynamicPeripheral
-import dan200.computercraft.api.peripheral.IPeripheral
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.level.Level
@@ -62,7 +60,7 @@ abstract class OwnedPeripheral<O : IPeripheralOwner>(peripheralType: String, fin
         context: T,
         check: IPeripheralCheck<T>?,
         method: IPeripheralFunction<T, MethodResult>,
-        successCallback: Consumer<T>?
+        successCallback: Consumer<T>?,
     ): MethodResult {
         return withOperation(operation, context, check, method, successCallback, null)
     }
@@ -74,7 +72,7 @@ abstract class OwnedPeripheral<O : IPeripheralOwner>(peripheralType: String, fin
         check: IPeripheralCheck<T>?,
         method: IPeripheralFunction<T, MethodResult>,
         successCallback: Consumer<T>?,
-        failCallback: BiConsumer<MethodResult?, OperationAbility.FailReason?>?
+        failCallback: BiConsumer<MethodResult?, OperationAbility.FailReason?>?,
     ): MethodResult {
         val operationAbility = peripheralOwner.getAbility(PeripheralOwnerAbility.OPERATION)
             ?: throw IllegalArgumentException("This shouldn't happen at all")

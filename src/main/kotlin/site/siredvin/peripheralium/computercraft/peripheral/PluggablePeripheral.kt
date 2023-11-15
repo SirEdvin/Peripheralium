@@ -16,7 +16,7 @@ import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import java.util.function.Consumer
 
-open class PluggablePeripheral<T>(protected val peripheralType: String, protected val peripheralTarget: T?): IDynamicPeripheral, IPluggablePeripheral {
+open class PluggablePeripheral<T>(protected val peripheralType: String, protected val peripheralTarget: T?) : IDynamicPeripheral, IPluggablePeripheral {
     protected val _connectedComputers: MutableList<IComputerAccess> = mutableListOf()
     protected var initialized = false
     protected val pluggedMethods: MutableList<BoundMethod> = mutableListOf()
@@ -30,8 +30,9 @@ open class PluggablePeripheral<T>(protected val peripheralType: String, protecte
 
     protected open fun addAdditionalType(additionalType: String?) {
         if (additionalType != null && additionalType != peripheralType) {
-            if (additionalTypeStorage == null)
+            if (additionalTypeStorage == null) {
                 additionalTypeStorage = mutableSetOf()
+            }
             additionalTypeStorage!!.add(additionalType)
         }
     }
@@ -65,8 +66,9 @@ open class PluggablePeripheral<T>(protected val peripheralType: String, protecte
     }
 
     fun addPlugin(plugin: IPeripheralPlugin) {
-        if (plugins == null)
+        if (plugins == null) {
             plugins = LinkedList()
+        }
         plugins!!.add(plugin)
         addOperations(plugin.operations)
         addAdditionalType(plugin.additionalType)
@@ -75,22 +77,26 @@ open class PluggablePeripheral<T>(protected val peripheralType: String, protecte
     override fun attach(computer: IComputerAccess) {
         connectedComputersLock.withLock {
             _connectedComputers.add(computer)
-            if (_connectedComputers.size == 1 && plugins != null)
+            if (_connectedComputers.size == 1 && plugins != null) {
                 plugins!!.forEach {
-                    if (it is IObservingPeripheralPlugin)
+                    if (it is IObservingPeripheralPlugin) {
                         it.onFirstAttach()
+                    }
                 }
+            }
         }
     }
 
     override fun detach(computer: IComputerAccess) {
         connectedComputersLock.withLock {
             _connectedComputers.remove(computer)
-            if (_connectedComputers.isEmpty() && plugins != null)
+            if (_connectedComputers.isEmpty() && plugins != null) {
                 plugins!!.forEach {
-                    if (it is IObservingPeripheralPlugin)
+                    if (it is IObservingPeripheralPlugin) {
                         it.onLastDetach()
+                    }
                 }
+            }
         }
     }
 
@@ -124,8 +130,9 @@ open class PluggablePeripheral<T>(protected val peripheralType: String, protecte
     }
 
     override fun getMethodNames(): Array<String> {
-        if (!initialized)
+        if (!initialized) {
             buildPlugins()
+        }
         return _methodNames
     }
 
@@ -146,10 +153,11 @@ open class PluggablePeripheral<T>(protected val peripheralType: String, protecte
         access: IComputerAccess,
         context: ILuaContext,
         index: Int,
-        arguments: IArguments
+        arguments: IArguments,
     ): MethodResult {
-        if (!initialized)
+        if (!initialized) {
             buildPlugins()
+        }
         return pluggedMethods[index].apply(access, context, arguments)
     }
 
