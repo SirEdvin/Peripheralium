@@ -12,9 +12,9 @@ import site.siredvin.peripheralium.util.world.LibFakePlayer
 
 interface IPeripheralOwner {
     val name: String?
-@dan200.computercraft.api.lua.LuaFunction get() {
-        return owner?.customName.toString()
-    }
+        @dan200.computercraft.api.lua.LuaFunction get() {
+            return owner?.customName.toString()
+        }
     val targetRepresentation: Any?
         get() = null
 
@@ -26,7 +26,7 @@ interface IPeripheralOwner {
 
     fun markDataStorageDirty()
 
-    fun <T> withPlayer(function: (LibFakePlayer) ->  T, overwrittenDirection: Direction? = null): T
+    fun <T> withPlayer(function: (LibFakePlayer) -> T, overwrittenDirection: Direction? = null): T
     val toolInMainHand: ItemStack
     fun storeItem(stored: ItemStack): ItemStack
     fun destroyUpgrade()

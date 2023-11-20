@@ -4,10 +4,6 @@ import com.google.common.collect.Lists
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import net.minecraft.advancements.Advancement
-import net.minecraft.advancements.AdvancementRewards
-import net.minecraft.advancements.CriterionTriggerInstance
-import net.minecraft.advancements.RequirementsStrategy
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger
 import net.minecraft.core.Registry
 import net.minecraft.data.recipes.FinishedRecipe
 import net.minecraft.resources.ResourceLocation
@@ -87,8 +83,8 @@ class TweakedShapelessRecipeBuilder(itemLike: ItemLike, private val count: Int) 
                 var10004,
                 var10005,
                 var10006,
-                ingredients
-            )
+                ingredients,
+            ),
         )
     }
 
@@ -97,7 +93,7 @@ class TweakedShapelessRecipeBuilder(itemLike: ItemLike, private val count: Int) 
         private val result: Item,
         private val count: Int,
         private val group: String,
-        private val ingredients: List<Ingredient>
+        private val ingredients: List<Ingredient>,
     ) :
         FinishedRecipe {
         override fun serializeRecipeData(jsonObject: JsonObject) {

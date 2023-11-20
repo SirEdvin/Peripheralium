@@ -9,6 +9,5 @@ object Items {
     val PERIPHERALIUM_DUST = DescriptiveItem(Item.Properties()).register("peripheralium_dust")
 
     fun doSomething() {
-
     }
 }

@@ -8,13 +8,11 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Shearable
 import net.minecraft.world.entity.animal.Animal
 import net.minecraft.world.entity.npc.Villager
-import net.minecraft.world.entity.npc.WanderingTrader
 import net.minecraft.world.item.trading.Merchant
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.IntegerProperty
-
 
 fun animalData(entity: Entity, data: MutableMap<String, Any>) {
     if (entity is Animal) {
@@ -22,7 +20,7 @@ fun animalData(entity: Entity, data: MutableMap<String, Any>) {
         data["inLove"] = entity.isInLove
         data["aggressive"] = entity.isAggressive
         if (entity is Shearable) {
-            data["shareable"] = entity.readyForShearing();
+            data["shareable"] = entity.readyForShearing()
         }
     }
 }
@@ -31,10 +29,11 @@ fun merchantData(entity: Entity, data: MutableMap<String, Any>) {
 }
 
 fun villagerData(entity: Entity, data: MutableMap<String, Any>) {
-    if (entity is Villager)
+    if (entity is Villager) {
         LuaRepresentation.forVillager(entity).forEach {
             data[it.key] = it.value
         }
+    }
 }
 
 fun effectsData(entity: Entity, data: MutableMap<String, Any>) {
@@ -62,7 +61,6 @@ fun cropAge(state: BlockState, data: MutableMap<String, Any>) {
         data["maxAge"] = ageProperty.possibleValues.maxOf { it }
     }
 }
-
 
 fun honeyLevel(state: BlockState, data: MutableMap<String, Any>) {
     val ageProperty = state.properties.find { it.name == "honey_level" } as IntegerProperty?

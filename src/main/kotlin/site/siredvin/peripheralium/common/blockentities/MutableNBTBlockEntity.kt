@@ -13,7 +13,7 @@ import java.util.*
 abstract class MutableNBTBlockEntity<T : IOwnedPeripheral<*>>(
     blockEntityType: BlockEntityType<*>,
     blockPos: BlockPos,
-    blockState: BlockState
+    blockState: BlockState,
 ) : PeripheralBlockEntity<T>(blockEntityType, blockPos, blockState), ISyncingBlockEntity {
 
     // Client-server sync logic
@@ -54,7 +54,6 @@ abstract class MutableNBTBlockEntity<T : IOwnedPeripheral<*>>(
         }
     }
 
-
     // Render tricks
 
     override fun triggerRenderUpdate() {
@@ -65,5 +64,4 @@ abstract class MutableNBTBlockEntity<T : IOwnedPeripheral<*>>(
             Minecraft.getInstance().levelRenderer.setBlocksDirty(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z)
         }
     }
-
 }

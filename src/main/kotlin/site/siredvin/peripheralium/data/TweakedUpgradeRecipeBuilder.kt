@@ -13,7 +13,7 @@ class TweakedUpgradeRecipeBuilder(
     private val type: RecipeSerializer<*>,
     private val base: Ingredient,
     private val addition: Ingredient,
-    private val result: Item
+    private val result: Item,
 ) {
 
     companion object {
@@ -37,8 +37,8 @@ class TweakedUpgradeRecipeBuilder(
                 var10004,
                 var10005,
                 var10006,
-                var10007
-            )
+                var10007,
+            ),
         )
     }
 

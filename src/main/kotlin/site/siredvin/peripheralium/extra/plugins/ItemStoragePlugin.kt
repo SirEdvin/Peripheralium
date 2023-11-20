@@ -20,7 +20,7 @@ import java.util.*
 import java.util.function.Predicate
 import kotlin.math.min
 
-class ItemStoragePlugin(private val level: Level, private val storage: Storage<ItemVariant>): IPeripheralPlugin {
+class ItemStoragePlugin(private val level: Level, private val storage: Storage<ItemVariant>) : IPeripheralPlugin {
     companion object {
         const val PLUGIN_TYPE = "item_storage"
     }
@@ -34,7 +34,7 @@ class ItemStoragePlugin(private val level: Level, private val storage: Storage<I
         val transaction = Transaction.openOuter()
         transaction.use {
             storage.iterator().forEach {
-                if (!it.isResourceBlank)
+               if (!it.isResourceBlank)
                     result.add(ItemData.fill(HashMap(), it.resource.toStack(it.amount.toInt())))
             }
         }
@@ -53,8 +53,9 @@ class ItemStoragePlugin(private val level: Level, private val storage: Storage<I
             Predicate { true }
         } else {
             val item = Registry.ITEM.get(ResourceLocation(itemName.get()))
-            if (item == Items.AIR)
+            if (item == Items.AIR) {
                 throw LuaException("There is no item ${itemName.get()}")
+            }
             Predicate { it.isOf(item) }
         }
         val realLimit = min(PeripheraliumConfig.itemStorageTransferLimit, limit.orElse(Long.MAX_VALUE))
@@ -73,8 +74,9 @@ class ItemStoragePlugin(private val level: Level, private val storage: Storage<I
             Predicate { true }
         } else {
             val item = Registry.ITEM.get(ResourceLocation(itemName.get()))
-            if (item == Items.AIR)
+            if (item == Items.AIR) {
                 throw LuaException("There is no item ${itemName.get()}")
+            }
             Predicate { it.isOf(item) }
         }
         val realLimit = min(PeripheraliumConfig.itemStorageTransferLimit, limit.orElse(Long.MAX_VALUE))

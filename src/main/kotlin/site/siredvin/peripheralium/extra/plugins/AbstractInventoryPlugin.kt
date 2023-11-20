@@ -13,7 +13,7 @@ import site.siredvin.peripheralium.util.assertBetween
 import site.siredvin.peripheralium.util.CCItemStorageHelpers
 import java.util.*
 
-abstract class AbstractInventoryPlugin: IPeripheralPlugin {
+abstract class AbstractInventoryPlugin : IPeripheralPlugin {
 
     /*Kotlin rework from https://github.com/cc-tweaked/cc-restitched/blob/mc-1.18.x%2Fstable/src/main/java/dan200/computercraft/shared/peripheral/generic/methods/InventoryMethods.java */
 
@@ -31,8 +31,10 @@ abstract class AbstractInventoryPlugin: IPeripheralPlugin {
         val size = itemStorage.size()
         for (i in 0 until size) {
             val stack = itemStorage.getStack(i)
-            if (!stack.isEmpty) result[i + 1] =
-                ItemData.fillBasic(HashMap(4), stack)
+            if (!stack.isEmpty) {
+                result[i + 1] =
+                    ItemData.fillBasic(HashMap(4), stack)
+            }
         }
         return result
     }
@@ -53,7 +55,6 @@ abstract class AbstractInventoryPlugin: IPeripheralPlugin {
     @LuaFunction(mainThread = true)
     @Throws(LuaException::class)
     fun pushItems(computer: IComputerAccess, toName: String, fromSlot: Int, limit: Optional<Int>, toSlot: Optional<Int>): Int {
-
         // Find location to transfer to
         val location: IPeripheral = computer.getAvailablePeripheral(toName)
             ?: throw LuaException("Target '$toName' does not exist")
@@ -66,8 +67,9 @@ abstract class AbstractInventoryPlugin: IPeripheralPlugin {
         // Validate slots
         val actualLimit: Int = limit.orElse(Int.MAX_VALUE)
         assertBetween(fromSlot, 1, itemStorage.size(), "fromtSlot")
-        if (toSlot.isPresent)
+        if (toSlot.isPresent) {
             assertBetween(toSlot.get(), 1, toStorage.size(), "toSlot")
+        }
 
         return if (actualLimit <= 0) 0 else CCItemStorageHelpers.moveBetweenInventories(
             itemStorage,

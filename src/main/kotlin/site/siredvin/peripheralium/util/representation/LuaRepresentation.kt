@@ -43,13 +43,13 @@ object LuaRepresentation {
         return data
     }
 
-    fun <T: Entity> withPos(entity: T, facing: Direction, center: BlockPos, converter: (T) -> (MutableMap<String, Any>)):  MutableMap<String, Any> {
+    fun <T : Entity> withPos(entity: T, facing: Direction, center: BlockPos, converter: (T) -> (MutableMap<String, Any>)): MutableMap<String, Any> {
         val base = converter(entity)
         base.putAll(forBlockPos(entity.blockPosition(), facing, center))
         return base
     }
 
-    fun <T> withPos(value: T, pos: BlockPos, facing: Direction, center: BlockPos, converter: (T) -> (MutableMap<String, Any>)):  MutableMap<String, Any> {
+    fun <T> withPos(value: T, pos: BlockPos, facing: Direction, center: BlockPos, converter: (T) -> (MutableMap<String, Any>)): MutableMap<String, Any> {
         val base = converter(value)
         base.putAll(forBlockPos(pos, facing, center))
         return base
@@ -68,13 +68,13 @@ object LuaRepresentation {
         return mutableMapOf(
             "name" to enchantment.getFullname(level).string,
             "technicalName" to fromLegacyToNewID(enchantment.descriptionId),
-            "level" to level
+            "level" to level,
         )
     }
 
-    fun forEnchantments(enchantments : MutableMap<Enchantment, Int>): List<Map<String, Any>> {
+    fun forEnchantments(enchantments: MutableMap<Enchantment, Int>): List<Map<String, Any>> {
         val list = mutableListOf<Map<String, Any>>()
-        for(enchantment:MutableMap.MutableEntry<Enchantment, Int> in enchantments.entries) {
+        for (enchantment: MutableMap.MutableEntry<Enchantment, Int> in enchantments.entries) {
             list.add(forEnchantment(enchantment.key, enchantment.value))
         }
         return list
@@ -86,12 +86,14 @@ object LuaRepresentation {
         map["count"] = stack.count
         map["maxStackSize"] = stack.maxStackSize
         val hash = NBTUtil.getNBTHash(stack.tag)
-        if (hash != null)
+        if (hash != null) {
             map["nbt"] = hash
-        if(stack.isEnchanted || stack.`is`(Items.ENCHANTED_BOOK)) {
+        }
+        if (stack.isEnchanted || stack.`is`(Items.ENCHANTED_BOOK)) {
             val enchantments = EnchantmentHelper.getEnchantments(stack)
-            if (enchantments != null)
+            if (enchantments != null) {
                 map["enchantments"] = forEnchantments(enchantments)
+            }
         }
         return map
     }
@@ -112,11 +114,13 @@ object LuaRepresentation {
 
     fun forMobEffectInstance(effectInstance: MobEffectInstance): MutableMap<String, Any> {
         val base = forMobEffect(effectInstance.effect)
-        base.putAll(mapOf(
-            "duration" to effectInstance.duration,
-            "amplifier" to effectInstance.amplifier,
-            "isAmbient" to effectInstance.isAmbient
-        ))
+        base.putAll(
+            mapOf(
+                "duration" to effectInstance.duration,
+                "amplifier" to effectInstance.amplifier,
+                "isAmbient" to effectInstance.isAmbient,
+            ),
+        )
         return base
     }
 
@@ -127,16 +131,17 @@ object LuaRepresentation {
     fun forMerchantOffers(merchant: Merchant): Map<Int, Map<String, Any>> {
         val offers = mutableMapOf<Int, Map<String, Any>>()
         var currentIndex = 1
-        for(merchantOffer:MerchantOffer in merchant.offers) {
+        for (merchantOffer: MerchantOffer in merchant.offers) {
             if (merchantOffer.isOutOfStock) {
                 currentIndex++
                 continue
             }
-            val offerMap : MutableMap<String, Any> = HashMap()
+            val offerMap: MutableMap<String, Any> = HashMap()
             val inputs: MutableList<Map<String, Any>> = mutableListOf()
             inputs.add(forItemStack(merchantOffer.costA))
-            if (!merchantOffer.costB.isEmpty)
+            if (!merchantOffer.costB.isEmpty) {
                 inputs.add(forItemStack(merchantOffer.costB))
+            }
             offerMap["inputs"] = inputs
             offerMap["outputs"] = listOf(forItemStack(merchantOffer.result))
             offers[currentIndex] = offerMap

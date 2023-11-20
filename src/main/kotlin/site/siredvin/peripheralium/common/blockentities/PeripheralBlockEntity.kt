@@ -1,20 +1,20 @@
 package site.siredvin.peripheralium.common.blockentities
 
-import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
-import net.minecraft.world.level.block.entity.BlockEntityType
-import net.minecraft.core.BlockPos
-import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.block.entity.BlockEntity
-import site.siredvin.peripheralium.api.peripheral.IPeripheralTileEntity
-import dan200.computercraft.api.peripheral.IPeripheralTile
-import net.minecraft.nbt.CompoundTag
 import dan200.computercraft.api.peripheral.IComputerAccess
+import dan200.computercraft.api.peripheral.IPeripheralTile
+import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityType
+import net.minecraft.world.level.block.state.BlockState
+import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
+import site.siredvin.peripheralium.api.peripheral.IPeripheralTileEntity
 
 abstract class PeripheralBlockEntity<T : IOwnedPeripheral<*>>(
     blockEntityType: BlockEntityType<*>,
     blockPos: BlockPos,
-    blockState: BlockState
+    blockState: BlockState,
 ) : BlockEntity(blockEntityType, blockPos, blockState), IPeripheralTileEntity, IPeripheralTile {
     // Peripheral logic
     final override var peripheralSettings: CompoundTag

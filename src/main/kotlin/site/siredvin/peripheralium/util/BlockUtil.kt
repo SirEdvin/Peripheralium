@@ -21,7 +21,7 @@ object BlockUtil {
         explosionResistance: Float,
         soundType: SoundType?,
         isOcclusion: Boolean,
-        hasDrop: Boolean
+        hasDrop: Boolean,
     ): BlockBehaviour.Properties {
         var properties: BlockBehaviour.Properties = BlockBehaviour.Properties.of(material)
             .strength(destroyTime, explosionResistance)
@@ -34,22 +34,34 @@ object BlockUtil {
 
     fun defaultProperties(): BlockBehaviour.Properties {
         return createProperties(
-            Material.METAL, 1f, 5f, SoundType.METAL,
-            false, hasDrop = true
+            Material.METAL,
+            1f,
+            5f,
+            SoundType.METAL,
+            false,
+            hasDrop = true,
         )
     }
 
     fun decoration(): BlockBehaviour.Properties {
         return createProperties(
-            Material.DECORATION, 1f, 5f, SoundType.WOOD,
-            false, hasDrop = true
+            Material.DECORATION,
+            1f,
+            5f,
+            SoundType.WOOD,
+            false,
+            hasDrop = true,
         )
     }
 
     fun unbreakable(): BlockBehaviour.Properties {
         return createProperties(
-            Material.DECORATION, -1.0f, 3600000.0f,
-            null, false, hasDrop = false
+            Material.DECORATION,
+            -1.0f,
+            3600000.0f,
+            null,
+            false,
+            hasDrop = false,
         )
     }
 }

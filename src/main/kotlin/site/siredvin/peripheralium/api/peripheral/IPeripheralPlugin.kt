@@ -6,6 +6,7 @@ import site.siredvin.peripheralium.computercraft.peripheral.BoundMethod
 import java.util.stream.Collectors
 
 interface IPeripheralPlugin {
+    @Suppress("UNUSED_PARAMETER")
     var connectedPeripheral: IPluggablePeripheral?
         get() = null
         set(value) {}

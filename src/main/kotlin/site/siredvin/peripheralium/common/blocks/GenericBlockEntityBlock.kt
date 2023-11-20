@@ -1,6 +1,5 @@
 package site.siredvin.peripheralium.common.blocks
 
-import dan200.computercraft.shared.Registry
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.item.context.BlockPlaceContext
@@ -17,8 +16,8 @@ class GenericBlockEntityBlock<T : BlockEntity>(
     private val blockEntityTypeSup: Supplier<BlockEntityType<T>>,
     private val isRotatable: Boolean,
     belongToTickingEntity: Boolean = false,
-    properties: Properties = Properties.of(Material.METAL).strength(1f, 5f).sound(SoundType.METAL).noOcclusion()
-): BaseTileEntityBlock<T>(belongToTickingEntity, properties) {
+    properties: Properties = Properties.of(Material.METAL).strength(1f, 5f).sound(SoundType.METAL).noOcclusion(),
+) : BaseTileEntityBlock<T>(belongToTickingEntity, properties) {
 
     companion object {
         val FACING: DirectionProperty = HorizontalDirectionalBlock.FACING
@@ -33,10 +32,14 @@ class GenericBlockEntityBlock<T : BlockEntity>(
     }
 
     override fun rotate(state: BlockState, rot: Rotation): BlockState {
-        return if (isRotatable) state.setValue(
-            FACING,
-            rot.rotate(state.getValue(FACING))
-        ) else state
+        return if (isRotatable) {
+            state.setValue(
+                FACING,
+                rot.rotate(state.getValue(FACING)),
+            )
+        } else {
+            state
+        }
     }
 
     override fun mirror(state: BlockState, mirrorIn: Mirror): BlockState {
@@ -48,9 +51,13 @@ class GenericBlockEntityBlock<T : BlockEntity>(
     }
 
     override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
-        return if (isRotatable) defaultBlockState().setValue(
-            FACING,
-            context.horizontalDirection.opposite
-        ) else defaultBlockState()
+        return if (isRotatable) {
+            defaultBlockState().setValue(
+                FACING,
+                context.horizontalDirection.opposite,
+            )
+        } else {
+            defaultBlockState()
+        }
     }
 }

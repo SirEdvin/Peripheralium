@@ -5,8 +5,9 @@ import net.minecraft.core.BlockPos
 import kotlin.math.abs
 
 fun assertBetween(arg: Int, min: Int, max: Int, name: String) {
-    if (arg < min || arg > max)
+    if (arg < min || arg > max) {
         throw LuaException("$name should be between $min and $max")
+    }
 }
 
 fun radiusCorrect(first: BlockPos, second: BlockPos, radius: Int): Boolean {

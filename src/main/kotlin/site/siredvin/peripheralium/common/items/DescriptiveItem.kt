@@ -14,8 +14,9 @@ open class DescriptiveItem(properties: Properties) : Item(properties) {
 
     private val extraDescription: Component
         get() {
-            if (_description == null)
+            if (_description == null) {
                 _description = itemTooltip(this.descriptionId)
+            }
             return _description!!
         }
 
@@ -23,7 +24,7 @@ open class DescriptiveItem(properties: Properties) : Item(properties) {
         itemStack: ItemStack,
         level: Level?,
         list: MutableList<Component>,
-        tooltipFlag: TooltipFlag
+        tooltipFlag: TooltipFlag,
     ) {
         val keyContents = extraDescription.contents as TranslatableContents
         if (keyContents.key != extraDescription.string)

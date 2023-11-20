@@ -1,8 +1,8 @@
 package site.siredvin.peripheralium.computercraft.peripheral.owner
 
 import site.siredvin.peripheralium.api.peripheral.IOwnerAbility
-import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
 import site.siredvin.peripheralium.api.peripheral.IPeripheralOwner
+import site.siredvin.peripheralium.computercraft.peripheral.ability.PeripheralOwnerAbility
 
 abstract class BasePeripheralOwner : IPeripheralOwner {
     private val _abilities: MutableMap<PeripheralOwnerAbility<*>, IOwnerAbility>

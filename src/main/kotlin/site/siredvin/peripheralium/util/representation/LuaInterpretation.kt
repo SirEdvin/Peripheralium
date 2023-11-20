@@ -4,7 +4,6 @@ import dan200.computercraft.api.lua.LuaException
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.level.block.Rotation
-import site.siredvin.peripheralium.common.blocks.GenericBlockEntityBlock
 import site.siredvin.peripheralium.ext.toRelative
 
 object LuaInterpretation {

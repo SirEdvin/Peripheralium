@@ -26,8 +26,9 @@ object ExtractorProxy {
     @Suppress("UNUSED_PARAMETER")
     fun extractFluidStorage(level: Level, obj: Any?): Storage<FluidVariant>? {
         if (obj is BlockEntity) {
-            if (obj.isRemoved)
+            if (obj.isRemoved) {
                 return null
+            }
             return FluidStorage.SIDED.find(obj.level, obj.blockPos, null)
         }
         return null
@@ -36,8 +37,9 @@ object ExtractorProxy {
     @Suppress("UNUSED_PARAMETER")
     fun extractItemStorage(level: Level, obj: Any?): Storage<ItemVariant>? {
         if (obj is BlockEntity) {
-            if (obj.isRemoved)
+            if (obj.isRemoved) {
                 return null
+            }
             return net.fabricmc.fabric.api.transfer.v1.item.ItemStorage.SIDED.find(obj.level, obj.blockPos, null)
         }
         return null
@@ -46,19 +48,23 @@ object ExtractorProxy {
     fun extractCCItemStorage(level: Level, obj: Any?): ItemStorage? {
         for (extractor in ADDITIONAL_CC_ITEM_STORAGE_EXTRACTORS) {
             val result = extractor.extract(level, obj)
-            if (result != null)
+            if (result != null) {
                 return result
+            }
         }
 
         if (obj is BlockEntity) {
-            if (obj.isRemoved)
+            if (obj.isRemoved) {
                 return null
+            }
             val inventory = InventoryUtil.getInventory(obj)
-            if (inventory != null)
+            if (inventory != null) {
                 return ItemStorage.wrap(inventory)
+            }
         }
-        if (obj is Container)
+        if (obj is Container) {
             return ItemStorage.wrap(obj)
+        }
         return null
     }
 }
