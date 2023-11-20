@@ -29,7 +29,8 @@ class DescriptiveBlockItem(block: Block, properties: Properties) : BlockItem(blo
     ) {
         super.appendHoverText(itemStack, level, list, tooltipFlag)
         val keyContents = extraDescription.contents as TranslatableContents
-            if (keyContents.key != extraDescription.string)
-                list.add(extraDescription)
+        if (keyContents.key != extraDescription.string) {
+            list.add(extraDescription)
+        }
     }
 }

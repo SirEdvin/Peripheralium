@@ -27,7 +27,8 @@ open class DescriptiveItem(properties: Properties) : Item(properties) {
         tooltipFlag: TooltipFlag,
     ) {
         val keyContents = extraDescription.contents as TranslatableContents
-        if (keyContents.key != extraDescription.string)
+        if (keyContents.key != extraDescription.string) {
             list.add(extraDescription)
+        }
     }
 }

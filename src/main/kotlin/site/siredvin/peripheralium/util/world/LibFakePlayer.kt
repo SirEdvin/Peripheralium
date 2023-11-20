@@ -97,7 +97,8 @@ class LibFakePlayer(
                 digPosition!!,
                 ServerboundPlayerActionPacket.Action.ABORT_DESTROY_BLOCK,
                 Direction.EAST,
-                1, 1
+                1,
+                1,
             )
         }
         digPosition = pos

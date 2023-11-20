@@ -27,8 +27,9 @@ object BlockUtil {
             .strength(destroyTime, explosionResistance)
         if (soundType != null) properties = properties.sound(soundType)
         if (!isOcclusion) properties = properties.noOcclusion()
-        if (hasDrop)
+        if (hasDrop) {
             properties.requiresCorrectToolForDrops()
+        }
         return properties
     }
 

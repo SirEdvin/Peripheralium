@@ -9,8 +9,8 @@ import dan200.computercraft.shared.util.ItemStorage
 import net.minecraft.world.level.Level
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 import site.siredvin.peripheralium.common.ExtractorProxy
-import site.siredvin.peripheralium.util.assertBetween
 import site.siredvin.peripheralium.util.CCItemStorageHelpers
+import site.siredvin.peripheralium.util.assertBetween
 import java.util.*
 
 abstract class AbstractInventoryPlugin : IPeripheralPlugin {
@@ -71,13 +71,17 @@ abstract class AbstractInventoryPlugin : IPeripheralPlugin {
             assertBetween(toSlot.get(), 1, toStorage.size(), "toSlot")
         }
 
-        return if (actualLimit <= 0) 0 else CCItemStorageHelpers.moveBetweenInventories(
-            itemStorage,
-            fromSlot - 1,
-            toStorage,
-            toSlot.orElse(0) - 1,
-            actualLimit
-        )
+        return if (actualLimit <= 0) {
+            0
+        } else {
+            CCItemStorageHelpers.moveBetweenInventories(
+                itemStorage,
+                fromSlot - 1,
+                toStorage,
+                toSlot.orElse(0) - 1,
+                actualLimit,
+            )
+        }
     }
 
     @LuaFunction(mainThread = true)
@@ -92,14 +96,19 @@ abstract class AbstractInventoryPlugin : IPeripheralPlugin {
         // Validate slots
         val actualLimit = limit.orElse(Int.MAX_VALUE)
         assertBetween(fromSlot, 1, fromStorage.size(), "fromSlot")
-        if (toSlot.isPresent)
-            assertBetween(toSlot.get(),1, itemStorage.size(), "toSlot")
-        return if (actualLimit <= 0) 0 else CCItemStorageHelpers.moveBetweenInventories(
-            fromStorage,
-            fromSlot - 1,
-            itemStorage,
-            toSlot.orElse(0) - 1,
-            actualLimit
-        )
+        if (toSlot.isPresent) {
+            assertBetween(toSlot.get(), 1, itemStorage.size(), "toSlot")
+        }
+        return if (actualLimit <= 0) {
+            0
+        } else {
+            CCItemStorageHelpers.moveBetweenInventories(
+                fromStorage,
+                fromSlot - 1,
+                itemStorage,
+                toSlot.orElse(0) - 1,
+                actualLimit,
+            )
+        }
     }
 }
