@@ -1,11 +1,11 @@
 plugins {
-    id("site.siredvin.root") version "0.5.3"
-    id("site.siredvin.base") version "0.5.3"
-    id("site.siredvin.linting") version "0.5.3"
-    id("site.siredvin.release") version "0.5.3"
-    id("site.siredvin.fabric") version "0.5.3"
-    id("site.siredvin.publishing") version "0.5.3"
-    id("site.siredvin.mod-publishing") version "0.5.3"
+    id("site.siredvin.root") version "0.5.5"
+    id("site.siredvin.base") version "0.5.5"
+    id("site.siredvin.linting") version "0.5.5"
+    id("site.siredvin.release") version "0.5.5"
+    id("site.siredvin.fabric") version "0.5.5"
+    id("site.siredvin.publishing") version "0.5.5"
+    id("site.siredvin.mod-publishing") version "0.5.5"
 }
 
 val modVersion: String by extra
@@ -72,6 +72,9 @@ dependencies {
 
 githubShaking {
     modBranch.set("1.18")
+    useFabric.set(false)
+    useForge.set(false)
+    useRoot.set(true)
     shake()
 }
 
