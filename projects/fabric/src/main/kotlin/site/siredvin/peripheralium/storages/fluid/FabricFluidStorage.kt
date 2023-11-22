@@ -14,9 +14,7 @@ open class FabricFluidStorage(private val storage: Storage<FluidVariant>) : Flui
         get() = FabricStorageUtils.MOVABLE_TYPE
 
     override fun getFluids(): Iterator<FluidStack> {
-        return storage.nonEmptyViews().map {
-            it.toVanilla()
-        }.iterator()
+        return this.storage.map { it.toVanilla() }.iterator()
     }
 
     override fun moveTo(to: FluidSink, limit: Long, takePredicate: Predicate<FluidStack>): Long {

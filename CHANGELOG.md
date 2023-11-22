@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.14] - 2023-11-22
+
+### Added
+
+- `DeferredFluidStoragePlugin`
+
+### Changed
+
+- Now empty tanks are shown in `fluid_storage` API
+
 ## [0.6.13] - 2023-09-21
 
 ### Added
