@@ -71,7 +71,7 @@ interface PeripheraliumPlatform {
             return get().getTurtleAccess(entity)
         }
 
-        fun getPeripheral(level: Level, pos: BlockPos, side: Direction = Direction.NORTH): IPeripheral? {
+        fun getPeripheral(level: ServerLevel, pos: BlockPos, side: Direction = Direction.NORTH): IPeripheral? {
             return get().getPeripheral(level, pos, side)
         }
 
@@ -165,7 +165,7 @@ interface PeripheraliumPlatform {
 
     fun getTurtleAccess(entity: BlockEntity): ITurtleAccess?
 
-    fun getPeripheral(level: Level, pos: BlockPos, side: Direction): IPeripheral?
+    fun getPeripheral(level: ServerLevel, pos: BlockPos, side: Direction): IPeripheral?
 
     fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean
 
