@@ -6,9 +6,7 @@ import net.minecraft.world.item.ItemStack
 import kotlin.jvm.JvmOverloads
 
 class LimitedInventory(private val parent: Container, private val usedSlots: IntArray) : Container {
-    override fun getContainerSize(): Int {
-        return usedSlots.size
-    }
+    override fun getContainerSize(): Int = usedSlots.size
 
     override fun isEmpty(): Boolean {
         for (slot in usedSlots) {
@@ -17,17 +15,11 @@ class LimitedInventory(private val parent: Container, private val usedSlots: Int
         return true
     }
 
-    override fun getItem(slot: Int): ItemStack {
-        return parent.getItem(usedSlots[slot])
-    }
+    override fun getItem(slot: Int): ItemStack = parent.getItem(usedSlots[slot])
 
-    override fun removeItem(slot: Int, p_70298_2_: Int): ItemStack {
-        return parent.removeItem(usedSlots[slot], p_70298_2_)
-    }
+    override fun removeItem(slot: Int, p_70298_2_: Int): ItemStack = parent.removeItem(usedSlots[slot], p_70298_2_)
 
-    override fun removeItemNoUpdate(slot: Int): ItemStack {
-        return parent.removeItemNoUpdate(usedSlots[slot])
-    }
+    override fun removeItemNoUpdate(slot: Int): ItemStack = parent.removeItemNoUpdate(usedSlots[slot])
 
     override fun setItem(slot: Int, item: ItemStack) {
         parent.setItem(usedSlots[slot], item)
@@ -49,9 +41,7 @@ class LimitedInventory(private val parent: Container, private val usedSlots: Int
         }
     }
 
-    override fun stillValid(player: Player): Boolean {
-        return parent.stillValid(player)
-    }
+    override fun stillValid(player: Player): Boolean = parent.stillValid(player)
 
     override fun clearContent() {
         for (slot in usedSlots) parent.setItem(slot, ItemStack.EMPTY)

@@ -19,13 +19,9 @@ class DummyStorage(private val maxSlots: Int, initialItems: List<ItemStack>) : A
         clean()
     }
 
-    override fun getItem(slot: Int): ItemStack {
-        return items[slot]
-    }
+    override fun getItem(slot: Int): ItemStack = items[slot]
 
-    override fun getItems(): Iterator<ItemStack> {
-        return items.iterator()
-    }
+    override fun getItems(): Iterator<ItemStack> = items.iterator()
 
     fun clean() {
         items.removeIf { it.isEmpty }

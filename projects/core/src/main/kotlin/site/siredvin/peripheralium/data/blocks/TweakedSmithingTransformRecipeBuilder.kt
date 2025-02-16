@@ -18,9 +18,7 @@ class TweakedSmithingTransformRecipeBuilder(
 ) {
 
     companion object {
-        fun smithingTransform(template: Ingredient, base: Ingredient, addition: Ingredient, item: Item): TweakedSmithingTransformRecipeBuilder {
-            return TweakedSmithingTransformRecipeBuilder(RecipeSerializer.SMITHING_TRANSFORM, template, base, addition, item)
-        }
+        fun smithingTransform(template: Ingredient, base: Ingredient, addition: Ingredient, item: Item): TweakedSmithingTransformRecipeBuilder = TweakedSmithingTransformRecipeBuilder(RecipeSerializer.SMITHING, template, base, addition, item)
     }
 
     fun save(consumer: Consumer<FinishedRecipe>) {
@@ -47,8 +45,7 @@ class TweakedSmithingTransformRecipeBuilder(
         private val base: Ingredient,
         private val addition: Ingredient,
         private val result: Item,
-    ) :
-        FinishedRecipe {
+    ) : FinishedRecipe {
         override fun serializeRecipeData(jsonObject: JsonObject) {
             jsonObject.add("template", template.toJson())
             jsonObject.add("base", base.toJson())
@@ -58,20 +55,12 @@ class TweakedSmithingTransformRecipeBuilder(
             jsonObject.add("result", jsonObject2)
         }
 
-        override fun getId(): ResourceLocation {
-            return id
-        }
+        override fun getId(): ResourceLocation = id
 
-        override fun getType(): RecipeSerializer<*> {
-            return type
-        }
+        override fun getType(): RecipeSerializer<*> = type
 
-        override fun serializeAdvancement(): JsonObject? {
-            return null
-        }
+        override fun serializeAdvancement(): JsonObject? = null
 
-        override fun getAdvancementId(): ResourceLocation? {
-            return null
-        }
+        override fun getAdvancementId(): ResourceLocation? = null
     }
 }

@@ -56,7 +56,7 @@ object ItemStorageUtils {
     }
 
     fun canStack(first: ItemStack, second: ItemStack): Boolean {
-        if (!ItemStack.isSameItem(first, second)) {
+        if (first.item != second.item) {
             return false
         }
         return first.damageValue == second.damageValue && ItemStack.isSameItemSameTags(first, second)

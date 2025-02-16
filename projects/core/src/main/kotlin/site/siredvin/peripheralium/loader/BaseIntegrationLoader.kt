@@ -17,22 +17,20 @@ abstract class BaseIntegrationLoader(protected val corePackage: String, protecte
         return Optional.empty()
     }
 
-    private fun maybeLoadIntegration(path: String): Optional<Any> {
-        return try {
-            val clazz = Class.forName("$corePackage.integrations.$path")
-            Optional.of(clazz.getDeclaredConstructor().newInstance())
-        } catch (ignored: InstantiationException) {
-            logger.info("Exception when loading integration $ignored")
-            Optional.empty()
-        } catch (ignored: IllegalAccessException) {
-            logger.info("Exception when loading integration $ignored")
-            Optional.empty()
-        } catch (ignored: ClassNotFoundException) {
-            logger.info("Exception when loading integration $ignored")
-            Optional.empty()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Optional.empty()
-        }
+    private fun maybeLoadIntegration(path: String): Optional<Any> = try {
+        val clazz = Class.forName("$corePackage.integrations.$path")
+        Optional.of(clazz.getDeclaredConstructor().newInstance())
+    } catch (ignored: InstantiationException) {
+        logger.info("Exception when loading integration $ignored")
+        Optional.empty()
+    } catch (ignored: IllegalAccessException) {
+        logger.info("Exception when loading integration $ignored")
+        Optional.empty()
+    } catch (ignored: ClassNotFoundException) {
+        logger.info("Exception when loading integration $ignored")
+        Optional.empty()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        Optional.empty()
     }
 }

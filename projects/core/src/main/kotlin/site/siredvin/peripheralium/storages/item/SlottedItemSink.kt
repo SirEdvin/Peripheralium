@@ -9,12 +9,8 @@ interface SlottedItemSink : ItemSink {
 
     fun storeItem(stack: ItemStack, startSlot: Int, endSlot: Int): ItemStack
 
-    fun storeItem(stack: ItemStack, startSlot: Int): ItemStack {
-        return storeItem(stack, startSlot, size - 1)
-    }
-    override fun storeItem(stack: ItemStack): ItemStack {
-        return storeItem(stack, 0, size - 1)
-    }
+    fun storeItem(stack: ItemStack, startSlot: Int): ItemStack = storeItem(stack, startSlot, size - 1)
+    override fun storeItem(stack: ItemStack): ItemStack = storeItem(stack, 0, size - 1)
 
     fun moveFrom(from: ItemStorage, limit: Int, toSlot: Int = -1, fromSlot: Int = -1, takePredicate: Predicate<ItemStack>): Int {
         if (movableType != null) {
@@ -37,7 +33,5 @@ interface SlottedItemSink : ItemSink {
         limit: Int,
         fromSlot: Int,
         takePredicate: Predicate<ItemStack>,
-    ): Int {
-        return moveFrom(from, limit, -1, fromSlot, takePredicate)
-    }
+    ): Int = moveFrom(from, limit, -1, fromSlot, takePredicate)
 }

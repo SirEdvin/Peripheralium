@@ -16,12 +16,10 @@ enum class InteractionMode {
         get() = this == ENTITY
 
     companion object {
-        fun optValueOf(name: String): InteractionMode? {
-            return try {
-                valueOf(name.uppercase())
-            } catch (exc: IllegalArgumentException) {
-                null
-            }
+        fun optValueOf(name: String): InteractionMode? = try {
+            valueOf(name.uppercase())
+        } catch (exc: IllegalArgumentException) {
+            null
         }
 
         fun luaValueOf(name: String, allowedMods: Set<InteractionMode>): InteractionMode {

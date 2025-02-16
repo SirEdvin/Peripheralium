@@ -5,9 +5,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageView
 import net.minecraft.world.item.ItemStack
 
 class SlidingIterator(private val iterator: Iterator<StorageView<ItemVariant>>) : Iterator<ItemStack> {
-    override fun hasNext(): Boolean {
-        return iterator.hasNext()
-    }
+    override fun hasNext(): Boolean = iterator.hasNext()
 
     override fun next(): ItemStack {
         val view = iterator.next()

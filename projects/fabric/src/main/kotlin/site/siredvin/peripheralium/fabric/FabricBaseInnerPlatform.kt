@@ -1,12 +1,11 @@
 package site.siredvin.peripheralium.fabric
 
+import dan200.computercraft.api.ComputerCraftAPI
 import dan200.computercraft.api.pocket.IPocketUpgrade
-import dan200.computercraft.api.pocket.PocketUpgradeSerialiser
 import dan200.computercraft.api.turtle.ITurtleUpgrade
-import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
+import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType
 import net.minecraft.core.Registry
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.stats.Stat
 import net.minecraft.stats.StatFormatter
@@ -24,12 +23,13 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import site.siredvin.peripheralium.xplat.BaseInnerPlatform
+import site.siredvin.peripheralium.xplat.CreativeTabProvider
 import site.siredvin.peripheralium.xplat.MenuBuilder
 import java.util.function.Supplier
 
 abstract class FabricBaseInnerPlatform : BaseInnerPlatform {
     override fun <T : Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T> {
-        val registeredItem = Registry.register(BuiltInRegistries.ITEM, key, item.get())
+        val registeredItem = Registry.register(Registry.ITEM, key, item.get())
         return Supplier { registeredItem }
     }
 
@@ -38,8 +38,8 @@ abstract class FabricBaseInnerPlatform : BaseInnerPlatform {
         block: Supplier<T>,
         itemFactory: (T) -> Item,
     ): Supplier<T> {
-        val registeredBlock = Registry.register(BuiltInRegistries.BLOCK, key, block.get())
-        Registry.register(BuiltInRegistries.ITEM, key, itemFactory(registeredBlock))
+        val registeredBlock = Registry.register(Registry.BLOCK, key, block.get())
+        Registry.register(Registry.ITEM, key, itemFactory(registeredBlock))
         return Supplier { registeredBlock }
     }
 
@@ -47,7 +47,7 @@ abstract class FabricBaseInnerPlatform : BaseInnerPlatform {
         key: ResourceLocation,
         blockEntityTypeSup: Supplier<T>,
     ): Supplier<T> {
-        val registeredBlockEntityType = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, key, blockEntityTypeSup.get())
+        val registeredBlockEntityType = Registry.register(Registry.BLOCK_ENTITY_TYPE, key, blockEntityTypeSup.get())
         return Supplier { registeredBlockEntityType }
     }
 
@@ -56,43 +56,33 @@ abstract class FabricBaseInnerPlatform : BaseInnerPlatform {
         builder: MenuBuilder<M>,
     ): Supplier<MenuType<M>> {
         val menuType = ExtendedScreenHandlerType(builder::build)
-        val registeredMenu = Registry.register(BuiltInRegistries.MENU, key, menuType)
+        val registeredMenu = Registry.register(Registry.MENU, key, menuType)
         return Supplier { registeredMenu }
     }
 
-    override fun registerCreativeTab(key: ResourceLocation, tab: CreativeModeTab): Supplier<CreativeModeTab> {
-        val registeredTab = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, key, tab)
-        return Supplier { registeredTab }
+    override fun buildCreativeTab(key: ResourceLocation, tabProvider: CreativeTabProvider): Supplier<CreativeModeTab> {
+        val tab = FabricItemGroupBuilder.create(key).icon(tabProvider::makeIcon).appendItems(tabProvider::appendItems).build()
+        return Supplier { tab }
     }
 
     override fun <V : ITurtleUpgrade> registerTurtleUpgrade(
         key: ResourceLocation,
-        serializer: TurtleUpgradeSerialiser<V>,
-    ): Supplier<TurtleUpgradeSerialiser<V>> {
-        @Suppress("UNCHECKED_CAST")
-        val registry: Registry<TurtleUpgradeSerialiser<*>> = (
-            BuiltInRegistries.REGISTRY.get(TurtleUpgradeSerialiser.registryId().location())
-                ?: throw IllegalStateException("Something is not correct with turtle registry")
-            ) as Registry<TurtleUpgradeSerialiser<*>>
-        val registered = Registry.register(registry, key, serializer)
-        return Supplier { registered }
+        upgrade: V,
+    ): Supplier<V> {
+        ComputerCraftAPI.registerTurtleUpgrade(upgrade)
+        return Supplier { upgrade }
     }
 
     override fun <V : IPocketUpgrade> registerPocketUpgrade(
         key: ResourceLocation,
-        serializer: PocketUpgradeSerialiser<V>,
-    ): Supplier<PocketUpgradeSerialiser<V>> {
-        @Suppress("UNCHECKED_CAST")
-        val registry: Registry<PocketUpgradeSerialiser<*>> = (
-            BuiltInRegistries.REGISTRY.get(PocketUpgradeSerialiser.registryId().location())
-                ?: throw IllegalStateException("Something is not correct with turtle registry")
-            ) as Registry<PocketUpgradeSerialiser<*>>
-        val registered = Registry.register(registry, key, serializer)
-        return Supplier { registered }
+        upgrade: V,
+    ): Supplier<V> {
+        ComputerCraftAPI.registerPocketUpgrade(upgrade)
+        return Supplier { upgrade }
     }
 
     override fun registerCustomStat(id: ResourceLocation, formatter: StatFormatter): Supplier<Stat<ResourceLocation>> {
-        val registeredStat = Registry.register(BuiltInRegistries.CUSTOM_STAT, id, id)
+        val registeredStat = Registry.register(Registry.CUSTOM_STAT, id, id)
         return Supplier { Stats.CUSTOM.get(registeredStat, formatter) }
     }
 
@@ -100,7 +90,7 @@ abstract class FabricBaseInnerPlatform : BaseInnerPlatform {
         key: ResourceLocation,
         serializer: RecipeSerializer<T>,
     ): Supplier<RecipeSerializer<T>> {
-        val registeredRecipe = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, key, serializer)
+        val registeredRecipe = Registry.register(Registry.RECIPE_SERIALIZER, key, serializer)
         return Supplier { registeredRecipe }
     }
 
@@ -108,7 +98,7 @@ abstract class FabricBaseInnerPlatform : BaseInnerPlatform {
         key: ResourceLocation,
         entityTypeSup: Supplier<T>,
     ): Supplier<T> {
-        val registeredEntityType = Registry.register(BuiltInRegistries.ENTITY_TYPE, key, entityTypeSup.get())
+        val registeredEntityType = Registry.register(Registry.ENTITY_TYPE, key, entityTypeSup.get())
         return Supplier { registeredEntityType }
     }
 }

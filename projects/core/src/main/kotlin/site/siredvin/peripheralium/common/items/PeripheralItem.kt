@@ -29,7 +29,5 @@ open class PeripheralItem(properties: Properties, private var enableSup: Supplie
         }
     }
 
-    fun isEnabled(): Boolean {
-        return enableSup.get()
-    }
+    fun isEnabled(): Boolean = enableSup.get()
 }

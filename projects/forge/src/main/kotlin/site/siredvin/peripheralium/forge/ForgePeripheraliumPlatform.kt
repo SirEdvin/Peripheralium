@@ -70,38 +70,24 @@ object ForgePeripheraliumPlatform : PeripheraliumPlatform {
             return id
         }
 
-        override fun getKey(something: T): ResourceLocation {
-            return registry.getKey(something) ?: throw IllegalArgumentException()
-        }
+        override fun getKey(something: T): ResourceLocation = registry.getKey(something) ?: throw IllegalArgumentException()
 
-        override fun get(location: ResourceLocation): T {
-            return registry.getValue(location) ?: throw IllegalArgumentException()
-        }
+        override fun get(location: ResourceLocation): T = registry.getValue(location) ?: throw IllegalArgumentException()
 
-        override fun get(id: Int): T {
-            return registry.getValue(id) ?: throw IllegalArgumentException()
-        }
+        override fun get(id: Int): T = registry.getValue(id) ?: throw IllegalArgumentException()
 
         override fun get(tagKey: TagKey<T>): Optional<HolderSet.Named<T>> {
             // TODO: Hm ... this isn't quite right, probably
             return Optional.empty()
         }
 
-        override fun get(resourceKey: ResourceKey<T>): Optional<Holder.Reference<T>> {
-            return registry.getDelegate(resourceKey)
-        }
+        override fun get(resourceKey: ResourceKey<T>): Optional<Holder.Reference<T>> = registry.getDelegate(resourceKey)
 
-        override fun tryGet(location: ResourceLocation): T? {
-            return registry.getValue(location)
-        }
+        override fun tryGet(location: ResourceLocation): T? = registry.getValue(location)
 
-        override fun iterator(): Iterator<T> {
-            return registry.iterator()
-        }
+        override fun iterator(): Iterator<T> = registry.iterator()
 
-        override fun keySet(): Set<ResourceLocation> {
-            return registry.keys
-        }
+        override fun keySet(): Set<ResourceLocation> = registry.keys
     }
 
     override val fluidCompactDivider: Int
@@ -110,13 +96,9 @@ object ForgePeripheraliumPlatform : PeripheraliumPlatform {
     override val minecraftServer: MinecraftServer
         get() = ServerLifecycleHooks.getCurrentServer()
 
-    override fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T> {
-        return ForgeRegistryWrapper(registry.location(), RegistryManager.ACTIVE.getRegistry(registry))
-    }
+    override fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T> = ForgeRegistryWrapper(registry.location(), RegistryManager.ACTIVE.getRegistry(registry))
 
-    override fun createFakePlayer(level: ServerLevel, profile: GameProfile): ServerPlayer {
-        return ForgeFakePlayer(level, profile)
-    }
+    override fun createFakePlayer(level: ServerLevel, profile: GameProfile): ServerPlayer = ForgeFakePlayer(level, profile)
 
     override fun getTurtleAccess(entity: BlockEntity): ITurtleAccess? {
         if (entity is TurtleBlockEntity) {
@@ -125,9 +107,7 @@ object ForgePeripheraliumPlatform : PeripheraliumPlatform {
         return null
     }
 
-    override fun getPeripheral(level: ServerLevel, pos: BlockPos, side: Direction): IPeripheral? {
-        return Peripherals.getPeripheral(level, pos, side) {}
-    }
+    override fun getPeripheral(level: ServerLevel, pos: BlockPos, side: Direction): IPeripheral? = Peripherals.getPeripheral(level, pos, side) {}
 
     override fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean {
         if (player.server.isUnderSpawnProtection(player.serverLevel(), pos, player)) {
@@ -185,33 +165,19 @@ object ForgePeripheraliumPlatform : PeripheraliumPlatform {
         return if (event.useItem == Event.Result.DENY) InteractionResult.PASS else stack.useOn(context)
     }
 
-    override fun setChunkForceLoad(level: ServerLevel, modID: String, owner: UUID, chunkPos: ChunkPos, add: Boolean, ticking: Boolean): Boolean {
-        return ForgeChunkManager.forceChunk(level, modID, owner, chunkPos.x, chunkPos.z, add, ticking)
-    }
+    override fun setChunkForceLoad(level: ServerLevel, modID: String, owner: UUID, chunkPos: ChunkPos, add: Boolean, ticking: Boolean): Boolean = ForgeChunkManager.forceChunk(level, modID, owner, chunkPos.x, chunkPos.z, add, ticking)
 
-    override fun nbtHash(tag: CompoundTag?): String? {
-        return NBTUtil.getNBTHash(tag)
-    }
+    override fun nbtHash(tag: CompoundTag?): String? = NBTUtil.getNBTHash(tag)
 
-    override fun getTurtleUpgrade(stack: ItemStack): UpgradeData<ITurtleUpgrade>? {
-        return TurtleUpgrades.instance().get(stack)
-    }
+    override fun getTurtleUpgrade(stack: ItemStack): UpgradeData<ITurtleUpgrade>? = TurtleUpgrades.instance().get(stack)
 
-    override fun getPocketUpgrade(stack: ItemStack): UpgradeData<IPocketUpgrade>? {
-        return PocketUpgrades.instance().get(stack)
-    }
+    override fun getPocketUpgrade(stack: ItemStack): UpgradeData<IPocketUpgrade>? = PocketUpgrades.instance().get(stack)
 
-    override fun getTurtleUpgrade(key: String): ITurtleUpgrade? {
-        return TurtleUpgrades.instance().get(key)
-    }
+    override fun getTurtleUpgrade(key: String): ITurtleUpgrade? = TurtleUpgrades.instance().get(key)
 
-    override fun getPocketUpgrade(key: String): IPocketUpgrade? {
-        return PocketUpgrades.instance().get(key)
-    }
+    override fun getPocketUpgrade(key: String): IPocketUpgrade? = PocketUpgrades.instance().get(key)
 
-    override fun nbtToLua(tag: Tag): Any? {
-        return NBTUtil.toLua(tag)
-    }
+    override fun nbtToLua(tag: Tag): Any? = NBTUtil.toLua(tag)
 
     override fun <T : BlockEntity> createBlockEntityType(
         factory: BiFunction<BlockPos, BlockState, T>,
@@ -229,27 +195,19 @@ object ForgePeripheraliumPlatform : PeripheraliumPlatform {
     override fun <T : Entity> createEntityType(
         name: ResourceLocation,
         factory: Function<Level, T>,
-    ): EntityType<T> {
-        return EntityType.Builder.of({ _, level -> factory.apply(level) }, MobCategory.MISC).build(name.toString())
-    }
+    ): EntityType<T> = EntityType.Builder.of({ _, level -> factory.apply(level) }, MobCategory.MISC).build(name.toString())
 
-    override fun createTabBuilder(): CreativeModeTab.Builder {
-        return CreativeModeTab.builder()
-    }
+    override fun createTabBuilder(): CreativeModeTab.Builder = CreativeModeTab.builder()
 
-    override fun createTurtlesWithUpgrade(upgrade: UpgradeData<ITurtleUpgrade>): List<ItemStack> {
-        return listOf(
-            ModRegistry.Items.TURTLE_NORMAL.get().create(-1, null, -1, null, upgrade, 0, null),
-            ModRegistry.Items.TURTLE_ADVANCED.get().create(-1, null, -1, null, upgrade, 0, null),
-        )
-    }
+    override fun createTurtlesWithUpgrade(upgrade: UpgradeData<ITurtleUpgrade>): List<ItemStack> = listOf(
+        ModRegistry.Items.TURTLE_NORMAL.get().create(-1, null, -1, null, upgrade, 0, null),
+        ModRegistry.Items.TURTLE_ADVANCED.get().create(-1, null, -1, null, upgrade, 0, null),
+    )
 
-    override fun createPocketsWithUpgrade(upgrade: UpgradeData<IPocketUpgrade>): List<ItemStack> {
-        return listOf(
-            ModRegistry.Items.POCKET_COMPUTER_NORMAL.get().create(-1, null, -1, upgrade),
-            ModRegistry.Items.POCKET_COMPUTER_ADVANCED.get().create(-1, null, -1, upgrade),
-        )
-    }
+    override fun createPocketsWithUpgrade(upgrade: UpgradeData<IPocketUpgrade>): List<ItemStack> = listOf(
+        ModRegistry.Items.POCKET_COMPUTER_NORMAL.get().create(-1, null, -1, upgrade),
+        ModRegistry.Items.POCKET_COMPUTER_ADVANCED.get().create(-1, null, -1, upgrade),
+    )
 
     override fun triggerRenderUpdate(blockEntity: BlockEntity) {
         val level = blockEntity.level!!

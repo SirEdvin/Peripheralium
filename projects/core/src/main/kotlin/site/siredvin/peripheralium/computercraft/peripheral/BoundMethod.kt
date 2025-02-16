@@ -5,7 +5,7 @@ import dan200.computercraft.api.lua.ILuaContext
 import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.MethodResult
 import dan200.computercraft.api.peripheral.IComputerAccess
-import dan200.computercraft.core.methods.PeripheralMethod
+import dan200.computercraft.core.asm.PeripheralMethod
 import java.util.*
 
 class BoundMethod(private val target: Any, val name: String, private val method: PeripheralMethod) {
@@ -15,9 +15,7 @@ class BoundMethod(private val target: Any, val name: String, private val method:
         access: IComputerAccess,
         context: ILuaContext,
         arguments: IArguments,
-    ): MethodResult {
-        return method.apply(target, context, access, arguments)
-    }
+    ): MethodResult = method.apply(target, context, access, arguments)
 
     fun equalWithoutTarget(other: Any?): Boolean {
         if (this === other) return true
@@ -30,7 +28,5 @@ class BoundMethod(private val target: Any, val name: String, private val method:
         return target == other.target && name == other.name && method == other.method
     }
 
-    override fun hashCode(): Int {
-        return Objects.hash(target, name, method)
-    }
+    override fun hashCode(): Int = Objects.hash(target, name, method)
 }

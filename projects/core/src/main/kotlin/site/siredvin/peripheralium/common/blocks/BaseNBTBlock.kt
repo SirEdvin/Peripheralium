@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.Property
 import site.siredvin.peripheralium.api.blockentities.ISyncingBlockEntity
 import site.siredvin.peripheralium.util.BlockUtil
-import site.siredvin.peripheralium.xplat.XplatRegistries
 
 abstract class BaseNBTBlock<T>(
     belongToTickingEntity: Boolean,
@@ -66,7 +65,7 @@ abstract class BaseNBTBlock<T>(
                 val data = stack.tag
                 if (data != null) {
                     if (data.contains(BLOCK_STATE_TAG)) {
-                        val savedState: BlockState = NbtUtils.readBlockState(XplatRegistries.BLOCKS, data.getCompound(BLOCK_STATE_TAG))
+                        val savedState: BlockState = NbtUtils.readBlockState(data.getCompound(BLOCK_STATE_TAG))
                         for (property in savableProperties) {
                             @Suppress("UNCHECKED_CAST")
                             property as Property<Comparable<Any>>

@@ -38,14 +38,12 @@ object NBTUtil {
         }
     }
 
-    fun fromText(json: String?): CompoundTag? {
-        return try {
-            if (json == null) null else TagParser.parseTag(json)
-        } catch (ex: CommandSyntaxException) {
+    fun fromText(json: String?): CompoundTag? = try {
+        if (json == null) null else TagParser.parseTag(json)
+    } catch (ex: CommandSyntaxException) {
 //            AdvancedPeripherals.debug("Could not parse json data to NBT", Level.ERROR);
-            ex.printStackTrace()
-            null
-        }
+        ex.printStackTrace()
+        null
     }
 
     fun fromBinary(base64: String?): CompoundTag? {
@@ -68,9 +66,7 @@ object NBTUtil {
         return data
     }
 
-    fun blockPosFromNBT(nbt: CompoundTag): BlockPos {
-        return BlockPos(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"))
-    }
+    fun blockPosFromNBT(nbt: CompoundTag): BlockPos = BlockPos(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"))
 
     fun toNBT(pos: ChunkPos): CompoundTag {
         val data = CompoundTag()
@@ -79,9 +75,7 @@ object NBTUtil {
         return data
     }
 
-    fun chunkPosFromNBT(nbt: CompoundTag): ChunkPos {
-        return ChunkPos(nbt.getInt("x"), nbt.getInt("z"))
-    }
+    fun chunkPosFromNBT(nbt: CompoundTag): ChunkPos = ChunkPos(nbt.getInt("x"), nbt.getInt("z"))
 
     fun isSubSet(set: CompoundTag, subset: CompoundTag): Boolean {
         for (key in subset.allKeys) {

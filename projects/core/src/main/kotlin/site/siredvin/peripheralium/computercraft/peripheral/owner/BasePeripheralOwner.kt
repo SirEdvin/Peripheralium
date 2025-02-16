@@ -44,7 +44,5 @@ abstract class BasePeripheralOwner : IPeripheralOwner {
         return true
     }
 
-    override fun hashCode(): Int {
-        return _abilities.hashCode()
-    }
+    override fun hashCode(): Int = _abilities.hashCode()
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import site.siredvin.peripheralium.ext.copyWithCount
 import site.siredvin.peripheralium.storages.item.AccessibleItemStorage
 import site.siredvin.peripheralium.storages.item.ItemStorageUtils
 import java.util.*
@@ -16,18 +17,16 @@ abstract class StorageTests {
 
     abstract fun createStorage(items: List<ItemStack>, secondary: Boolean): AccessibleItemStorage
 
-    fun createStorage(sizes: List<Int>, stack: ItemStack, secondary: Boolean): AccessibleItemStorage {
-        return createStorage(
-            sizes.map {
-                if (it == 0) {
-                    ItemStack.EMPTY
-                } else {
-                    stack.copyWithCount(it)
-                }
-            },
-            secondary,
-        )
-    }
+    fun createStorage(sizes: List<Int>, stack: ItemStack, secondary: Boolean): AccessibleItemStorage = createStorage(
+        sizes.map {
+            if (it == 0) {
+                ItemStack.EMPTY
+            } else {
+                stack.copyWithCount(it)
+            }
+        },
+        secondary,
+    )
 
     data class MoveArguments(
         val initialFrom: List<Int>,

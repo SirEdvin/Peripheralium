@@ -1,15 +1,14 @@
+import org.gradle.kotlin.dsl.get
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("site.siredvin.vanilla")
     id("site.siredvin.publishing")
 }
 
-val modVersion: String by extra
-val minecraftVersion: String by extra
-val modBaseName: String by extra
-
 baseShaking {
     projectPart.set("common")
+    integrationRepositories.set(true)
     shake()
 }
 
@@ -37,7 +36,13 @@ sourceSets {
 
 dependencies {
     implementation(libs.bundles.kotlin)
-    implementation(libs.bundles.cccommon)
+    libs.bundles.cccommon.get().map {
+        implementation(variantOf(provider { it }) { classifier("dev") }) {
+            exclude("net.fabricmc.fabric-api")
+            exclude("net.fabricmc")
+            exclude("com.terraformersmc")
+        }
+    }
     implementation(libs.bundles.onlycore)
     api(libs.bundles.apicommon)
     compileOnly(libs.mixin)

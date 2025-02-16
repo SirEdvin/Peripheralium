@@ -13,14 +13,12 @@ class BlockPosExtTests {
 
     companion object {
         @JvmStatic
-        fun generateDirections(): List<Direction> {
-            return listOf(
-                Direction.EAST,
-                Direction.WEST,
-                Direction.NORTH,
-                Direction.SOUTH,
-            )
-        }
+        fun generateDirections(): List<Direction> = listOf(
+            Direction.EAST,
+            Direction.WEST,
+            Direction.NORTH,
+            Direction.SOUTH,
+        )
     }
 
     @ParameterizedTest

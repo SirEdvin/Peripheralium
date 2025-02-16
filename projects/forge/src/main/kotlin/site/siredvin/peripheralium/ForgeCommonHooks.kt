@@ -1,6 +1,7 @@
 package site.siredvin.peripheralium
 
 import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.item.CreativeModeTab
 import net.minecraftforge.event.entity.EntityJoinLevelEvent
 import net.minecraftforge.event.entity.living.LivingDropsEvent
 import net.minecraftforge.eventbus.api.EventPriority

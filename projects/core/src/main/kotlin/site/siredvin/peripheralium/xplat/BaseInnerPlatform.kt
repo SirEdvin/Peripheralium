@@ -1,9 +1,7 @@
 package site.siredvin.peripheralium.xplat
 
 import dan200.computercraft.api.pocket.IPocketUpgrade
-import dan200.computercraft.api.pocket.PocketUpgradeSerialiser
 import dan200.computercraft.api.turtle.ITurtleUpgrade
-import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.stats.Stat
 import net.minecraft.stats.StatFormatter
@@ -38,16 +36,16 @@ interface BaseInnerPlatform {
         builder: MenuBuilder<M>,
     ): Supplier<MenuType<M>>
 
-    fun registerCreativeTab(key: ResourceLocation, tab: CreativeModeTab): Supplier<CreativeModeTab>
+    fun buildCreativeTab(key: ResourceLocation, tabProvider: CreativeTabProvider): Supplier<CreativeModeTab>
 
     fun <V : ITurtleUpgrade> registerTurtleUpgrade(
         key: ResourceLocation,
-        serializer: TurtleUpgradeSerialiser<V>,
-    ): Supplier<TurtleUpgradeSerialiser<V>>
+        upgrade: V,
+    ): Supplier<V>
     fun <V : IPocketUpgrade> registerPocketUpgrade(
         key: ResourceLocation,
-        serializer: PocketUpgradeSerialiser<V>,
-    ): Supplier<PocketUpgradeSerialiser<V>>
+        upgrade: V,
+    ): Supplier<V>
 
     fun registerCustomStat(id: ResourceLocation, formatter: StatFormatter = StatFormatter.DEFAULT): Supplier<Stat<ResourceLocation>>
 

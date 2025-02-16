@@ -17,8 +17,6 @@ class ValueContainer<T>(var value: T) {
     }
 
     companion object {
-        fun <T> of(t: T): ValueContainer<T> {
-            return ValueContainer(t)
-        }
+        fun <T> of(t: T): ValueContainer<T> = ValueContainer(t)
     }
 }

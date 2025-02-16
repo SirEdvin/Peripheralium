@@ -19,25 +19,15 @@ interface XplatTags {
             return impl!!
         }
 
-        fun isOre(state: BlockState): Boolean {
-            return get().isOre(state)
-        }
+        fun isOre(state: BlockState): Boolean = get().isOre(state)
 
-        fun isOre(stack: ItemStack): Boolean {
-            return get().isOre(stack)
-        }
+        fun isOre(stack: ItemStack): Boolean = get().isOre(stack)
 
-        fun isBookshelf(state: BlockState): Boolean {
-            return get().isBookshelf(state)
-        }
+        fun isBookshelf(state: BlockState): Boolean = get().isBookshelf(state)
 
-        fun isBookshelf(stack: ItemStack): Boolean {
-            return get().isBookshelf(stack)
-        }
+        fun isBookshelf(stack: ItemStack): Boolean = get().isBookshelf(stack)
 
-        fun isShearable(entity: Entity, targetItem: ItemStack): Pair<Boolean, Boolean> {
-            return get().isShearable(entity, targetItem)
-        }
+        fun isShearable(entity: Entity, targetItem: ItemStack): Pair<Boolean, Boolean> = get().isShearable(entity, targetItem)
     }
     fun isOre(state: BlockState): Boolean
 

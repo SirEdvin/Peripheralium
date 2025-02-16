@@ -31,7 +31,5 @@ open class PeripheralBlockItem(block: Block, properties: Properties, private var
         }
     }
 
-    fun isEnabled(): Boolean {
-        return enableSup.get()
-    }
+    fun isEnabled(): Boolean = enableSup.get()
 }

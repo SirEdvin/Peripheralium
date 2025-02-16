@@ -39,9 +39,7 @@ object ForgeDataGenerators {
         )
     }
     class ForgeGeneratorSink(private val generator: DataGenerator.PackGenerator, private val existingFiles: ExistingFileHelper, private val registries: CompletableFuture<HolderLookup.Provider>) : GeneratorSink {
-        override fun <T : DataProvider> add(factory: DataProvider.Factory<T>): T {
-            return generator.addProvider(factory)
-        }
+        override fun <T : DataProvider> add(factory: DataProvider.Factory<T>): T = generator.addProvider(factory)
 
         override fun lootTable(tables: List<LootTableProvider.SubProviderEntry>) {
             add { out: PackOutput ->
@@ -49,45 +47,37 @@ object ForgeDataGenerators {
             }
         }
 
-        override fun blockTags(modID: String, tags: Consumer<TagConsumer<Block>>): TagsProvider<Block> {
-            return add { out ->
-                object : BlockTagsProvider(out, registries, modID, existingFiles) {
-                    override fun addTags(registries: HolderLookup.Provider) {
-                        tags.accept { x -> LibTagAppender(XplatRegistries.BLOCKS, getOrCreateRawBuilder(x)) }
-                    }
+        override fun blockTags(modID: String, tags: Consumer<TagConsumer<Block>>): TagsProvider<Block> = add { out ->
+            object : BlockTagsProvider(out, registries, modID, existingFiles) {
+                override fun addTags(registries: HolderLookup.Provider) {
+                    tags.accept { x -> LibTagAppender(XplatRegistries.BLOCKS, getOrCreateRawBuilder(x)) }
                 }
             }
         }
 
-        override fun entityTags(modID: String, tags: Consumer<TagConsumer<EntityType<*>>>): TagsProvider<EntityType<*>> {
-            return add { out ->
-                object : EntityTypeTagsProvider(out, registries, modID, existingFiles) {
-                    override fun addTags(arg: HolderLookup.Provider) {
-                        tags.accept { x -> LibTagAppender(XplatRegistries.ENTITY_TYPES, getOrCreateRawBuilder(x)) }
-                    }
+        override fun entityTags(modID: String, tags: Consumer<TagConsumer<EntityType<*>>>): TagsProvider<EntityType<*>> = add { out ->
+            object : EntityTypeTagsProvider(out, registries, modID, existingFiles) {
+                override fun addTags(arg: HolderLookup.Provider) {
+                    tags.accept { x -> LibTagAppender(XplatRegistries.ENTITY_TYPES, getOrCreateRawBuilder(x)) }
                 }
             }
         }
 
-        override fun itemTags(modID: String, tags: Consumer<ItemTagConsumer>, blocks: TagsProvider<Block>): TagsProvider<Item> {
-            return add { out ->
-                object :
-                    ItemTagsProvider(out, registries, blocks.contentsGetter(), modID, existingFiles) {
-                    override fun addTags(registries: HolderLookup.Provider) {
-                        val self: ItemTagsProvider = this
-                        tags.accept(object : ItemTagConsumer {
-                            override fun tag(tag: TagKey<Item>): LibTagAppender<Item> {
-                                return LibTagAppender(XplatRegistries.ITEMS, getOrCreateRawBuilder(tag))
-                            }
+        override fun itemTags(modID: String, tags: Consumer<ItemTagConsumer>, blocks: TagsProvider<Block>): TagsProvider<Item> = add { out ->
+            object :
+                ItemTagsProvider(out, registries, blocks.contentsGetter(), modID, existingFiles) {
+                override fun addTags(registries: HolderLookup.Provider) {
+                    val self: ItemTagsProvider = this
+                    tags.accept(object : ItemTagConsumer {
+                        override fun tag(tag: TagKey<Item>): LibTagAppender<Item> = LibTagAppender(XplatRegistries.ITEMS, getOrCreateRawBuilder(tag))
 
-                            override fun copy(
-                                block: TagKey<Block>,
-                                item: TagKey<Item>,
-                            ) {
-                                self.copy(block, item)
-                            }
-                        })
-                    }
+                        override fun copy(
+                            block: TagKey<Block>,
+                            item: TagKey<Item>,
+                        ) {
+                            self.copy(block, item)
+                        }
+                    })
                 }
             }
         }

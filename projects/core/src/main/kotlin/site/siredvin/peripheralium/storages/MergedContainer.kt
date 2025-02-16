@@ -23,13 +23,9 @@ class MergedContainer(private val containers: List<Container>) : Container {
         containers.forEach { it.clearContent() }
     }
 
-    override fun getContainerSize(): Int {
-        return containers.sumOf { it.containerSize }
-    }
+    override fun getContainerSize(): Int = containers.sumOf { it.containerSize }
 
-    override fun isEmpty(): Boolean {
-        return containers.all { it.isEmpty }
-    }
+    override fun isEmpty(): Boolean = containers.all { it.isEmpty }
 
     override fun getItem(i: Int): ItemStack {
         val access = fromIndex(i) ?: return ItemStack.EMPTY
@@ -55,7 +51,5 @@ class MergedContainer(private val containers: List<Container>) : Container {
         containers.forEach { it.setChanged() }
     }
 
-    override fun stillValid(player: Player): Boolean {
-        return containers.all { it.stillValid(player) }
-    }
+    override fun stillValid(player: Player): Boolean = containers.all { it.stillValid(player) }
 }

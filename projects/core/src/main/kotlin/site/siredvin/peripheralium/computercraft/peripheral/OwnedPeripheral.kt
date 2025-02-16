@@ -16,7 +16,10 @@ import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import java.util.function.Consumer
 
-abstract class OwnedPeripheral<O : IPeripheralOwner>(protected open val peripheralType: String, final override val peripheralOwner: O) : IOwnedPeripheral<O>, IDynamicPeripheral, IExpandedPeripheral {
+abstract class OwnedPeripheral<O : IPeripheralOwner>(protected open val peripheralType: String, final override val peripheralOwner: O) :
+    IOwnedPeripheral<O>,
+    IDynamicPeripheral,
+    IExpandedPeripheral {
     protected open val internalConnectedComputers: MutableList<IComputerAccess> = mutableListOf()
     protected open var initialized = false
     protected open val pluggedMethods: MutableList<BoundMethod> = mutableListOf()
@@ -53,7 +56,7 @@ abstract class OwnedPeripheral<O : IPeripheralOwner>(protected open val peripher
             return data
         }
 
-    protected open fun addOperations(operations: List<IPeripheralOperation<*>>) {
+    protected open fun addOperations(operations: List<IPeripheralOperation<*, *>>) {
         if (operations.isNotEmpty()) {
             val operationAbility = peripheralOwner.getAbility(PeripheralOwnerAbility.OPERATION)
             if (operationAbility != null) {
@@ -144,17 +147,11 @@ abstract class OwnedPeripheral<O : IPeripheralOwner>(protected open val peripher
         return internalMethodNames
     }
 
-    override fun getAdditionalTypes(): Set<String> {
-        return additionalTypeStorage
-    }
+    override fun getAdditionalTypes(): Set<String> = additionalTypeStorage
 
-    override fun getType(): String {
-        return peripheralType
-    }
+    override fun getType(): String = peripheralType
 
-    override fun getTarget(): Any? {
-        return peripheralOwner.targetRepresentation
-    }
+    override fun getTarget(): Any? = peripheralOwner.targetRepresentation
 
     @Throws(LuaException::class)
     override fun callMethod(
@@ -180,13 +177,9 @@ abstract class OwnedPeripheral<O : IPeripheralOwner>(protected open val peripher
         return true
     }
 
-    override fun equals(other: IPeripheral?): Boolean {
-        return internalEquals(other)
-    }
+    override fun equals(other: IPeripheral?): Boolean = internalEquals(other)
 
-    override fun equals(other: Any?): Boolean {
-        return internalEquals(other)
-    }
+    override fun equals(other: Any?): Boolean = internalEquals(other)
 
     override fun hashCode(): Int {
         var result = peripheralType.hashCode()

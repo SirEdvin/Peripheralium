@@ -34,18 +34,12 @@ object PeripheralPluginUtils {
         return Predicate { it.`is`(item) }
     }
 
-    fun builtItemDisplayNamePredicate(displayName: String): Predicate<ItemStack> {
-        return Predicate { it.hoverName.string == displayName }
-    }
+    fun builtItemDisplayNamePredicate(displayName: String): Predicate<ItemStack> = Predicate { it.hoverName.string == displayName }
 
-    fun builtItemTagPredicate(tag: String): Predicate<ItemStack> {
-        return Predicate { itemStack -> itemStack.tags.anyMatch { it.location.toString() == tag } }
-    }
+    fun builtItemTagPredicate(tag: String): Predicate<ItemStack> = Predicate { itemStack -> itemStack.tags.anyMatch { it.location.toString() == tag } }
 
-    fun builtNBTPredicate(nbt: String): Predicate<ItemStack> {
-        return Predicate {
-            nbt == PeripheraliumPlatform.nbtHash(it.tag)
-        }
+    fun builtNBTPredicate(nbt: String): Predicate<ItemStack> = Predicate {
+        nbt == PeripheraliumPlatform.nbtHash(it.tag)
     }
 
     fun itemQueryToPredicate(something: Any?): Predicate<ItemStack> {

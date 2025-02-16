@@ -29,7 +29,7 @@ object FakePlayerProviderBlockEntity {
         }
         var fake: FakePlayerProxy? = registeredPlayers[blockEntity]
         if (fake == null) {
-            fake = FakePlayerProxy(PeripheraliumPlatform.createFakePlayer(blockEntity.player!!.level() as ServerLevel, profile))
+            fake = FakePlayerProxy(PeripheraliumPlatform.createFakePlayer(blockEntity.player!!.level as ServerLevel, profile))
             registeredPlayers[blockEntity] = fake
         }
         return fake
@@ -37,7 +37,7 @@ object FakePlayerProviderBlockEntity {
 
     private fun load(player: ServerPlayer, realPlayer: Player, storage: SlottedItemStorage?, overwrittenDirection: Direction? = null, skipInventory: Boolean = false) {
         val direction = overwrittenDirection ?: realPlayer.direction
-        player.setServerLevel(realPlayer.level() as ServerLevel)
+        player.level = realPlayer.level as ServerLevel
         val position = realPlayer.blockPosition()
         // Player position
         val pitch: Float = if (direction == Direction.UP) {
@@ -118,7 +118,7 @@ object FakePlayerProviderBlockEntity {
                             storage,
                             0,
                             realPlayer.blockPosition(),
-                            realPlayer.level(),
+                            realPlayer.level,
                         )
                     }
                     playerInventory.setItem(i, ItemStack.EMPTY)

@@ -1,6 +1,7 @@
 package site.siredvin.peripheralium.storages.item
 
 import dan200.computercraft.api.lua.LuaException
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage
@@ -9,8 +10,7 @@ import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.storages.FabricStorageUtils
 import java.util.function.Predicate
 
-class FabricSlottedStorageWrapper(internal val storage: net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage<ItemVariant>) :
-    SlottedItemStorage {
+class FabricSlottedStorageWrapper(internal val storage: InventoryStorage) : SlottedItemStorage {
 
     override fun moveTo(
         to: ItemSink,
@@ -130,13 +130,9 @@ class FabricSlottedStorageWrapper(internal val storage: net.fabricmc.fabric.api.
         return slotStorage.resource.toStack(slotStorage.amount.toInt())
     }
 
-    fun getSingleSlot(slot: Int): SingleSlotStorage<ItemVariant> {
-        return storage.getSlot(slot)
-    }
+    fun getSingleSlot(slot: Int): SingleSlotStorage<ItemVariant> = storage.getSlot(slot)
 
-    override fun canPlaceItem(slot: Int, item: ItemStack): Boolean {
-        return true
-    }
+    override fun canPlaceItem(slot: Int, item: ItemStack): Boolean = true
 
     override fun storeItem(stack: ItemStack, startSlot: Int, endSlot: Int): ItemStack {
         Transaction.openOuter().use {
@@ -158,7 +154,7 @@ class FabricSlottedStorageWrapper(internal val storage: net.fabricmc.fabric.api.
     }
 
     override val size: Int
-        get() = storage.slotCount
+        get() = storage.slots.size
 
     override val movableType: String
         get() = FabricStorageUtils.MOVABLE_TYPE

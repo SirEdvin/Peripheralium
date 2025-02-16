@@ -9,20 +9,16 @@ import site.siredvin.peripheralium.common.setup.Items
 import site.siredvin.peripheralium.util.world.DropConsumer
 
 object LibCommonHooks {
-    fun onEntitySpawn(entity: Entity): Boolean {
-        return DropConsumer.onEntitySpawn(entity)
-    }
+    fun onEntitySpawn(entity: Entity): Boolean = DropConsumer.onEntitySpawn(entity)
 
-    fun onLivingDrop(entity: Entity, stack: ItemStack?): Boolean {
-        return DropConsumer.onLivingDrop(entity, stack!!)
-    }
+    fun onLivingDrop(entity: Entity, stack: ItemStack?): Boolean = DropConsumer.onLivingDrop(entity, stack!!)
 
     fun onRegister() {
         Blocks.doSomething()
         Items.doSomething()
-        LibPlatform.registerCreativeTab(
+        LibPlatform.buildCreativeTab(
             ResourceLocation(PeripheraliumCore.MOD_ID, "tab"),
-            PeripheraliumCore.configureCreativeTab(PeripheraliumPlatform.createTabBuilder()).build(),
+            PeripheraliumCore.configureCreativeTab(),
         )
     }
 }

@@ -7,15 +7,9 @@ import net.minecraft.nbt.CompoundTag
 import site.siredvin.peripheralium.api.peripheral.IPeripheralTileEntity
 
 object DataStorageUtil {
-    fun getDataStorage(access: ITurtleAccess, side: TurtleSide?): CompoundTag {
-        return access.getUpgradeNBTData(side)
-    }
+    fun getDataStorage(access: ITurtleAccess, side: TurtleSide?): CompoundTag = access.getUpgradeNBTData(side)
 
-    fun getDataStorage(tileEntity: IPeripheralTileEntity): CompoundTag {
-        return tileEntity.peripheralSettings
-    }
+    fun getDataStorage(tileEntity: IPeripheralTileEntity): CompoundTag = tileEntity.peripheralSettings
 
-    fun getDataStorage(pocket: IPocketAccess): CompoundTag {
-        return pocket.upgradeNBTData
-    }
+    fun getDataStorage(pocket: IPocketAccess): CompoundTag = pocket.upgradeNBTData
 }

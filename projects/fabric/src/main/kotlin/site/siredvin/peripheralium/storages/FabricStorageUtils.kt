@@ -4,6 +4,7 @@ import dan200.computercraft.api.lua.LuaException
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
@@ -12,6 +13,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
+import site.siredvin.peripheralium.ext.copyWithCount
 import site.siredvin.peripheralium.storages.fluid.*
 import site.siredvin.peripheralium.storages.item.*
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
@@ -23,18 +25,12 @@ object FabricStorageUtils {
     const val MOVABLE_TYPE = "fabricTransaction"
 
     private class PredicateWrapper(private val predicate: Predicate<ItemStack>) : Predicate<ItemVariant> {
-        override fun test(p0: ItemVariant): Boolean {
-            return predicate.test(p0.toStack())
-        }
+        override fun test(p0: ItemVariant): Boolean = predicate.test(p0.toStack())
     }
 
-    fun wrapItem(predicate: Predicate<ItemStack>): Predicate<ItemVariant> {
-        return PredicateWrapper(predicate)
-    }
+    fun wrapItem(predicate: Predicate<ItemStack>): Predicate<ItemVariant> = PredicateWrapper(predicate)
 
-    fun wrapFluid(predicate: Predicate<FluidStack>): Predicate<FluidVariant> {
-        return Predicate<FluidVariant> { predicate.test(it.toVanilla()) }
-    }
+    fun wrapFluid(predicate: Predicate<FluidStack>): Predicate<FluidVariant> = Predicate<FluidVariant> { predicate.test(it.toVanilla()) }
 
     /**
      * Generic move to any targetable storage, should be used only after make sure that to is not fabric one related!
@@ -151,12 +147,10 @@ object FabricStorageUtils {
 
     fun extractStorage(level: Level, pos: BlockPos, @Suppress("UNUSED_PARAMETER") blockEntity: BlockEntity?): site.siredvin.peripheralium.storages.item.ItemStorage? {
         val itemStorage = ItemStorage.SIDED.find(level, pos, null) ?: return null
-
-        return if (itemStorage is net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage) {
-            FabricSlottedStorageWrapper(itemStorage)
-        } else {
-            FabricStorageWrapper(itemStorage)
+        if (itemStorage is InventoryStorage) {
+            return FabricSlottedStorageWrapper(itemStorage)
         }
+        return FabricStorageWrapper(itemStorage)
     }
 
     fun extractFluidStorage(level: Level, pos: BlockPos, @Suppress("UNUSED_PARAMETER") blockEntity: BlockEntity?): site.siredvin.peripheralium.storages.fluid.FluidStorage? {

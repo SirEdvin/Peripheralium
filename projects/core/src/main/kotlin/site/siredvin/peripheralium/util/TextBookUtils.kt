@@ -28,30 +28,30 @@ object TextBookUtils {
             Items.WRITABLE_BOOK -> {
                 val pagesData = book.tag?.getList("pages", 8) ?: return emptyList()
                 val pages: MutableList<String> = mutableListOf()
-                for (i in 0 until pagesData.size)
+                for (i in 0 until pagesData.size) {
                     pages.add(pagesData.getString(i))
+                }
                 return pages
             }
             Items.WRITTEN_BOOK -> {
                 val pagesData = book.tag?.getList("pages", 8) ?: return emptyList()
                 val pages: MutableList<String> = mutableListOf()
-                for (i in 0 until pagesData.size)
+                for (i in 0 until pagesData.size) {
                     pages.add(resolvePage(pagesData.getString(i)))
+                }
                 return pages
             }
             else -> emptyList()
         }
     }
 
-    fun getCharacterWidth(c: Char): Int {
-        return when (c) {
-            ' ', '!', '\'', ',', '.', ':', ';', 'i', '|' -> 1
-            '`', 'l' -> 2
-            '"', '(', ')', '*', 'I', '[', ']', 't', '{', '}' -> 3
-            '<', '>', 'f', 'k' -> 4
-            '@', '~' -> 6
-            else -> 5
-        }
+    fun getCharacterWidth(c: Char): Int = when (c) {
+        ' ', '!', '\'', ',', '.', ':', ';', 'i', '|' -> 1
+        '`', 'l' -> 2
+        '"', '(', ')', '*', 'I', '[', ']', 't', '{', '}' -> 3
+        '<', '>', 'f', 'k' -> 4
+        '@', '~' -> 6
+        else -> 5
     }
 
     fun stripText(text: String): String {

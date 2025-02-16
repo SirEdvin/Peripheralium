@@ -24,9 +24,8 @@ abstract class BaseTileEntityBlock<T : BlockEntity>(
     properties: Properties = BlockUtil.defaultProperties(),
 ) : BaseEntityBlock(properties) {
 
-    override fun getRenderShape(blockState: BlockState): RenderShape {
-        return RenderShape.MODEL
-    }
+    @Deprecated("Deprecated in Java")
+    override fun getRenderShape(blockState: BlockState): RenderShape = RenderShape.MODEL
 
     override fun <T : BlockEntity> getTicker(
         tickerLevel: Level,

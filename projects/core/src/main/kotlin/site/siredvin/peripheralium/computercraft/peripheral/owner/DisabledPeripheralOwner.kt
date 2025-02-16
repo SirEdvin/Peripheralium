@@ -31,36 +31,22 @@ class DisabledPeripheralOwner : BasePeripheralOwner() {
         function: (FakePlayerProxy) -> T,
         overwrittenDirection: Direction?,
         skipInventory: Boolean,
-    ): T {
-        throw RuntimeException("Really no code should use this, this is disabled owner")
-    }
+    ): T = throw RuntimeException("Really no code should use this, this is disabled owner")
 
     override val toolInMainHand: ItemStack
         get() = ItemStack.EMPTY
 
-    override fun storeItem(stored: ItemStack): ItemStack {
-        throw RuntimeException("Really no code should use this, this is disabled owner")
-    }
+    override fun storeItem(stored: ItemStack): ItemStack = throw RuntimeException("Really no code should use this, this is disabled owner")
 
-    override fun destroyUpgrade() {
-        throw RuntimeException("Really no code should use this, this is disabled owner")
-    }
+    override fun destroyUpgrade(): Unit = throw RuntimeException("Really no code should use this, this is disabled owner")
 
-    override fun isMovementPossible(level: Level, pos: BlockPos): Boolean {
-        throw RuntimeException("Really no code should use this, this is disabled owner")
-    }
+    override fun isMovementPossible(level: Level, pos: BlockPos): Boolean = throw RuntimeException("Really no code should use this, this is disabled owner")
 
-    override fun move(level: Level, pos: BlockPos): Boolean {
-        throw RuntimeException("Really no code should use this, this is disabled owner")
-    }
+    override fun move(level: Level, pos: BlockPos): Boolean = throw RuntimeException("Really no code should use this, this is disabled owner")
 
-    override fun equals(other: Any?): Boolean {
-        return other is DisabledPeripheralOwner
-    }
+    override fun equals(other: Any?): Boolean = other is DisabledPeripheralOwner
 
-    override fun hashCode(): Int {
-        return javaClass.hashCode()
-    }
+    override fun hashCode(): Int = javaClass.hashCode()
 
     override val targetRepresentation: Any?
         get() = null

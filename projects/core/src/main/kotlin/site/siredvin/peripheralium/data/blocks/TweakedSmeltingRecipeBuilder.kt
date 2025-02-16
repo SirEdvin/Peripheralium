@@ -30,25 +30,15 @@ class TweakedSmeltingRecipeBuilder<T : AbstractCookingRecipe>(
     }
 
     companion object {
-        fun <T : AbstractCookingRecipe> cooking(ingredient: Ingredient, itemLike: ItemLike, experience: Float, cookingTime: Int, simpleCookingSerializer: RecipeSerializer<T>): TweakedSmeltingRecipeBuilder<T> {
-            return TweakedSmeltingRecipeBuilder(itemLike, ingredient, experience, cookingTime, simpleCookingSerializer)
-        }
+        fun <T : AbstractCookingRecipe> cooking(ingredient: Ingredient, itemLike: ItemLike, experience: Float, cookingTime: Int, simpleCookingSerializer: RecipeSerializer<T>): TweakedSmeltingRecipeBuilder<T> = TweakedSmeltingRecipeBuilder(itemLike, ingredient, experience, cookingTime, simpleCookingSerializer)
 
-        fun campfireCooking(ingredient: Ingredient, itemLike: ItemLike, experience: Float, cookingTime: Int): TweakedSmeltingRecipeBuilder<CampfireCookingRecipe> {
-            return cooking(ingredient, itemLike, experience, cookingTime, RecipeSerializer.CAMPFIRE_COOKING_RECIPE)
-        }
+        fun campfireCooking(ingredient: Ingredient, itemLike: ItemLike, experience: Float, cookingTime: Int): TweakedSmeltingRecipeBuilder<CampfireCookingRecipe> = cooking(ingredient, itemLike, experience, cookingTime, RecipeSerializer.CAMPFIRE_COOKING_RECIPE)
 
-        fun blasting(ingredient: Ingredient, itemLike: ItemLike, experience: Float, cookingTime: Int): TweakedSmeltingRecipeBuilder<BlastingRecipe> {
-            return cooking(ingredient, itemLike, experience, cookingTime, RecipeSerializer.BLASTING_RECIPE)
-        }
+        fun blasting(ingredient: Ingredient, itemLike: ItemLike, experience: Float, cookingTime: Int): TweakedSmeltingRecipeBuilder<BlastingRecipe> = cooking(ingredient, itemLike, experience, cookingTime, RecipeSerializer.BLASTING_RECIPE)
 
-        fun smelting(ingredient: Ingredient, itemLike: ItemLike, experience: Float, cookingTime: Int): TweakedSmeltingRecipeBuilder<SmeltingRecipe> {
-            return cooking(ingredient, itemLike, experience, cookingTime, RecipeSerializer.SMELTING_RECIPE)
-        }
+        fun smelting(ingredient: Ingredient, itemLike: ItemLike, experience: Float, cookingTime: Int): TweakedSmeltingRecipeBuilder<SmeltingRecipe> = cooking(ingredient, itemLike, experience, cookingTime, RecipeSerializer.SMELTING_RECIPE)
 
-        fun smoking(ingredient: Ingredient, itemLike: ItemLike, experience: Float, cookingTime: Int): TweakedSmeltingRecipeBuilder<SmokingRecipe> {
-            return cooking(ingredient, itemLike, experience, cookingTime, RecipeSerializer.SMOKING_RECIPE)
-        }
+        fun smoking(ingredient: Ingredient, itemLike: ItemLike, experience: Float, cookingTime: Int): TweakedSmeltingRecipeBuilder<SmokingRecipe> = cooking(ingredient, itemLike, experience, cookingTime, RecipeSerializer.SMOKING_RECIPE)
     }
 
     fun group(string: String?): TweakedSmeltingRecipeBuilder<T> {
@@ -56,9 +46,7 @@ class TweakedSmeltingRecipeBuilder<T : AbstractCookingRecipe>(
         return this
     }
 
-    fun getResult(): Item {
-        return result
-    }
+    fun getResult(): Item = result
 
     fun save(consumer: Consumer<FinishedRecipe>) {
         this.save(consumer, XplatRegistries.ITEMS.getKey(result))
@@ -102,20 +90,12 @@ class TweakedSmeltingRecipeBuilder<T : AbstractCookingRecipe>(
             jsonObject.addProperty("cookingtime", cookingTime)
         }
 
-        override fun getType(): RecipeSerializer<*> {
-            return serializer
-        }
+        override fun getType(): RecipeSerializer<*> = serializer
 
-        override fun getId(): ResourceLocation {
-            return id
-        }
+        override fun getId(): ResourceLocation = id
 
-        override fun serializeAdvancement(): JsonObject? {
-            return null
-        }
+        override fun serializeAdvancement(): JsonObject? = null
 
-        override fun getAdvancementId(): ResourceLocation? {
-            return null
-        }
+        override fun getAdvancementId(): ResourceLocation? = null
     }
 }

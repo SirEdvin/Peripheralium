@@ -59,9 +59,7 @@ open class FabricStorageWrapper(internal val storage: FabricStorage<ItemVariant>
     override val movableType: String
         get() = FabricStorageUtils.MOVABLE_TYPE
 
-    override fun getItems(): Iterator<ItemStack> {
-        return SlidingIterator(storage.iterator())
-    }
+    override fun getItems(): Iterator<ItemStack> = SlidingIterator(storage.iterator())
 
     override fun takeItems(predicate: Predicate<ItemStack>, limit: Int): ItemStack {
         Transaction.openOuter().use {

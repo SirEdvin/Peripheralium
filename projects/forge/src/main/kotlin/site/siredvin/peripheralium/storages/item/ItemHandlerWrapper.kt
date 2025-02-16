@@ -41,13 +41,9 @@ class ItemHandlerWrapper(private val handler: IItemHandler) : SlottedItemStorage
         return slidingItemStack
     }
 
-    override fun getItem(slot: Int): ItemStack {
-        return handler.getStackInSlot(slot)
-    }
+    override fun getItem(slot: Int): ItemStack = handler.getStackInSlot(slot)
 
-    override fun canPlaceItem(slot: Int, item: ItemStack): Boolean {
-        return true
-    }
+    override fun canPlaceItem(slot: Int, item: ItemStack): Boolean = true
 
     override fun storeItem(stack: ItemStack, startSlot: Int, endSlot: Int): ItemStack {
         var slidingItemStack = stack

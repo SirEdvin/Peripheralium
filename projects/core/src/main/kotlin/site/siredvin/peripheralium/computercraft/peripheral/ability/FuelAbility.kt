@@ -6,7 +6,9 @@ import site.siredvin.peripheralium.api.peripheral.IOwnerAbility
 import site.siredvin.peripheralium.api.peripheral.IPeripheralOwner
 import site.siredvin.peripheralium.api.peripheral.IPeripheralPlugin
 
-abstract class FuelAbility<T : IPeripheralOwner>(protected var owner: T) : IOwnerAbility, IPeripheralPlugin {
+abstract class FuelAbility<T : IPeripheralOwner>(protected var owner: T) :
+    IOwnerAbility,
+    IPeripheralPlugin {
     protected abstract fun consumeFuelInternal(count: Int): Boolean
     protected abstract val maxFuelConsumptionRate: Int
     protected fun getFuelConsumptionRateInternal(): Int {
@@ -34,9 +36,7 @@ abstract class FuelAbility<T : IPeripheralOwner>(protected var owner: T) : IOwne
     val fuelConsumptionMultiply: Int
         get() = Math.pow(2.0, (getFuelConsumptionRateInternal() - 1).toDouble()).toInt()
 
-    fun reduceCooldownAccordingToConsumptionRate(cooldown: Int): Int {
-        return cooldown / getFuelConsumptionRateInternal()
-    }
+    fun reduceCooldownAccordingToConsumptionRate(cooldown: Int): Int = cooldown / getFuelConsumptionRateInternal()
 
     fun consumeFuel(count: Int, simulate: Boolean): Boolean {
         if (isFuelConsumptionDisable) return true

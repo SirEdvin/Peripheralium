@@ -27,7 +27,5 @@ class PeripheralPocketUpgrade<T : IOwnedPeripheral<*>> : BasePocketUpgrade<T> {
         this.constructor = constructor
     }
 
-    override fun getPeripheral(access: IPocketAccess): T {
-        return constructor.build(access)
-    }
+    override fun getPeripheral(access: IPocketAccess): T = constructor.build(access)
 }

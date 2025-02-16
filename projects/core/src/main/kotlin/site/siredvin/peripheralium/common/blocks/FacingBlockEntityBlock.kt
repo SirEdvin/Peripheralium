@@ -30,20 +30,16 @@ open class FacingBlockEntityBlock<T : BlockEntity>(
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.SOUTH))
     }
 
-    override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? {
-        return blockEntityTypeSup.get().create(pos, state)
-    }
+    override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? = blockEntityTypeSup.get().create(pos, state)
 
     @Deprecated("Deprecated in Java")
-    override fun rotate(state: BlockState, rot: Rotation): BlockState {
-        return if (isRotatable) {
-            state.setValue(
-                FACING,
-                rot.rotate(state.getValue(FACING)),
-            )
-        } else {
-            state
-        }
+    override fun rotate(state: BlockState, rot: Rotation): BlockState = if (isRotatable) {
+        state.setValue(
+            FACING,
+            rot.rotate(state.getValue(FACING)),
+        )
+    } else {
+        state
     }
 
     @Deprecated("Deprecated in Java")
@@ -56,14 +52,12 @@ open class FacingBlockEntityBlock<T : BlockEntity>(
         builder.add(FACING)
     }
 
-    override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
-        return if (isRotatable) {
-            defaultBlockState().setValue(
-                FACING,
-                context.horizontalDirection.opposite,
-            )
-        } else {
-            defaultBlockState()
-        }
+    override fun getStateForPlacement(context: BlockPlaceContext): BlockState? = if (isRotatable) {
+        defaultBlockState().setValue(
+            FACING,
+            context.horizontalDirection.opposite,
+        )
+    } else {
+        defaultBlockState()
     }
 }

@@ -4,9 +4,7 @@ import net.minecraft.world.item.ItemStack
 
 class SlottedStorageIterator(private val storage: SlottedItemStorage) : Iterator<ItemStack> {
     private var currentIndex = 0
-    override fun hasNext(): Boolean {
-        return currentIndex < storage.size
-    }
+    override fun hasNext(): Boolean = currentIndex < storage.size
 
     override fun next(): ItemStack {
         val oldIndex = currentIndex

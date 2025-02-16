@@ -1,27 +1,24 @@
 package site.siredvin.peripheralium.fabric
 
 import com.mojang.authlib.GameProfile
+import dan200.computercraft.api.ComputerCraftAPI
 import dan200.computercraft.api.peripheral.IPeripheral
-import dan200.computercraft.api.peripheral.PeripheralLookup
 import dan200.computercraft.api.pocket.IPocketUpgrade
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.ITurtleUpgrade
-import dan200.computercraft.api.upgrades.UpgradeData
-import dan200.computercraft.impl.PocketUpgrades
-import dan200.computercraft.impl.TurtleUpgrades
-import dan200.computercraft.shared.ModRegistry
-import dan200.computercraft.shared.turtle.blocks.TurtleBlockEntity
+import dan200.computercraft.shared.Peripherals
+import dan200.computercraft.shared.PocketUpgrades
+import dan200.computercraft.shared.TurtleUpgrades
+import dan200.computercraft.shared.turtle.blocks.TileTurtle
 import dan200.computercraft.shared.util.NBTUtil
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.fabricmc.fabric.api.event.player.UseBlockCallback
 import net.fabricmc.fabric.api.event.player.UseEntityCallback
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricEntityTypeBuilder
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.minecraft.client.Minecraft
 import net.minecraft.core.*
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.FriendlyByteBuf
@@ -41,7 +38,6 @@ import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
-import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.ChunkPos
@@ -72,37 +68,22 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
             return id
         }
 
-        override fun getKey(something: T): ResourceLocation {
-            return registry.getKey(something) ?: throw IllegalArgumentException()
-        }
+        @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+        override fun getKey(something: T): ResourceLocation = registry.getKey(something) ?: throw IllegalArgumentException()
 
-        override fun get(location: ResourceLocation): T {
-            return registry.get(location) ?: throw IllegalArgumentException()
-        }
+        override fun get(location: ResourceLocation): T = registry.get(location) ?: throw IllegalArgumentException()
 
-        override fun get(id: Int): T {
-            return registry.byId(id) ?: throw IllegalArgumentException()
-        }
+        override fun get(id: Int): T = registry.byId(id) ?: throw IllegalArgumentException()
 
-        override fun get(tagKey: TagKey<T>): Optional<HolderSet.Named<T>> {
-            return registry.getTag(tagKey)
-        }
+        override fun get(tagKey: TagKey<T>): Optional<HolderSet.Named<T>> = registry.getTag(tagKey)
 
-        override fun get(resourceKey: ResourceKey<T>): Optional<Holder.Reference<T>> {
-            return registry.getHolder(resourceKey)
-        }
+        override fun get(resourceKey: ResourceKey<T>): Optional<Holder<T>> = registry.getHolder(resourceKey)
 
-        override fun tryGet(location: ResourceLocation): T? {
-            return registry.get(location)
-        }
+        override fun tryGet(location: ResourceLocation): T? = registry.get(location)
 
-        override fun iterator(): Iterator<T> {
-            return registry.iterator()
-        }
+        override fun iterator(): Iterator<T> = registry.iterator()
 
-        override fun keySet(): Set<ResourceLocation> {
-            return registry.keySet()
-        }
+        override fun keySet(): Set<ResourceLocation> = registry.keySet()
     }
 
     override val fluidCompactDivider: Int
@@ -116,34 +97,30 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
 
     override fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T> {
         @Suppress("UNCHECKED_CAST")
-        val targetRegistry: Registry<T> = (BuiltInRegistries.REGISTRY.get(registry.location()) ?: throw IllegalArgumentException("Cannot find registry $registry")) as Registry<T>
+        val targetRegistry: Registry<T> = (Registry.REGISTRY.get(registry.location()) ?: throw IllegalArgumentException("Cannot find registry $registry")) as Registry<T>
         return FabricRegistryWrapper(registry.location(), targetRegistry)
     }
 
-    override fun createFakePlayer(level: ServerLevel, profile: GameProfile): ServerPlayer {
-        return FabricFakePlayer.create(level, profile)
-    }
+    override fun createFakePlayer(level: ServerLevel, profile: GameProfile): ServerPlayer = FabricFakePlayer.create(level, profile)
 
     override fun getTurtleAccess(entity: BlockEntity): ITurtleAccess? {
-        if (entity is TurtleBlockEntity) {
+        if (entity is TileTurtle) {
             return entity.access
         }
         return null
     }
 
-    override fun getPeripheral(level: ServerLevel, pos: BlockPos, side: Direction): IPeripheral? {
-        return PeripheralLookup.get().find(level, pos, side)
-    }
+    override fun getPeripheral(level: ServerLevel, pos: BlockPos, side: Direction): IPeripheral? = Peripherals.getPeripheral(level, pos, side)
 
     override fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean {
-        if (player.server.isUnderSpawnProtection(player.serverLevel(), pos, player)) {
+        if (player.server.isUnderSpawnProtection(player.level as ServerLevel, pos, player)) {
             return true
         }
-        return !PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(player.level(), player, pos, state, null)
+        return !PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(player.level, player, pos, state, null)
     }
 
     override fun interactWithEntity(player: ServerPlayer, hand: InteractionHand, entity: Entity, hit: EntityHitResult): InteractionResult {
-        val fabricInteraction = UseEntityCallback.EVENT.invoker().interact(player, entity.level(), InteractionHand.MAIN_HAND, entity, hit)
+        val fabricInteraction = UseEntityCallback.EVENT.invoker().interact(player, entity.level, InteractionHand.MAIN_HAND, entity, hit)
         if (fabricInteraction.consumesAction()) {
             return fabricInteraction
         }
@@ -160,77 +137,51 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
         hit: BlockHitResult,
         canUseBlock: Predicate<BlockState>,
     ): InteractionResult {
-        val result = UseBlockCallback.EVENT.invoker().interact(player, player.level(), InteractionHand.MAIN_HAND, hit)
+        val result = UseBlockCallback.EVENT.invoker().interact(player, player.level, InteractionHand.MAIN_HAND, hit)
         if (result != InteractionResult.PASS) return result
-        val block = player.level().getBlockState(hit.blockPos)
+        val block = player.level.getBlockState(hit.blockPos)
         if (!block.isAir && canUseBlock.test(block)) {
-            val useResult = block.use(player.level(), player, InteractionHand.MAIN_HAND, hit)
+            val useResult = block.use(player.level, player, InteractionHand.MAIN_HAND, hit)
             if (useResult.consumesAction()) return useResult
         }
         return stack.useOn(UseOnContext(player, InteractionHand.MAIN_HAND, hit))
     }
 
-    override fun setChunkForceLoad(level: ServerLevel, modID: String, owner: UUID, chunkPos: ChunkPos, add: Boolean, ticking: Boolean): Boolean {
-        return level.setChunkForced(chunkPos.x, chunkPos.z, add)
-    }
+    override fun setChunkForceLoad(level: ServerLevel, modID: String, owner: UUID, chunkPos: ChunkPos, add: Boolean, ticking: Boolean): Boolean = level.setChunkForced(chunkPos.x, chunkPos.z, add)
 
-    override fun nbtHash(tag: CompoundTag?): String? {
-        return NBTUtil.getNBTHash(tag)
-    }
+    override fun nbtHash(tag: CompoundTag?): String? = NBTUtil.getNBTHash(tag)
 
-    override fun getTurtleUpgrade(stack: ItemStack): UpgradeData<ITurtleUpgrade>? {
-        return TurtleUpgrades.instance().get(stack)
-    }
+    override fun getTurtleUpgrade(stack: ItemStack): ITurtleUpgrade? = TurtleUpgrades.get(stack)
 
-    override fun getPocketUpgrade(stack: ItemStack): UpgradeData<IPocketUpgrade>? {
-        return PocketUpgrades.instance().get(stack)
-    }
+    override fun getPocketUpgrade(stack: ItemStack): IPocketUpgrade? = PocketUpgrades.get(stack)
 
-    override fun getTurtleUpgrade(key: String): ITurtleUpgrade? {
-        return TurtleUpgrades.instance().get(key)
-    }
+    override fun getTurtleUpgrade(key: String): ITurtleUpgrade? = TurtleUpgrades.get(key)
 
-    override fun getPocketUpgrade(key: String): IPocketUpgrade? {
-        return PocketUpgrades.instance().get(key)
-    }
+    override fun getPocketUpgrade(key: String): IPocketUpgrade? = PocketUpgrades.get(key)
 
-    override fun nbtToLua(tag: Tag): Any? {
-        return NBTUtil.toLua(tag)
-    }
+    override fun nbtToLua(tag: Tag): Any? = NBTUtil.toLua(tag)
 
     override fun <T : Entity> createEntityType(
         name: ResourceLocation,
         factory: Function<Level, T>,
-    ): EntityType<T> {
-        return FabricEntityTypeBuilder.create(MobCategory.MISC) { _, level -> factory.apply(level) }.build()
-    }
+    ): EntityType<T> = FabricEntityTypeBuilder.create(MobCategory.MISC) { _, level -> factory.apply(level) }.build()
 
     override fun <T : BlockEntity> createBlockEntityType(
         factory: BiFunction<BlockPos, BlockState, T>,
         block: Block,
-    ): BlockEntityType<T> {
-        return FabricBlockEntityTypeBuilder.create({ t: BlockPos, u: BlockState ->
-            factory.apply(t, u)
-        }).addBlock(block).build()
-    }
+    ): BlockEntityType<T> = FabricBlockEntityTypeBuilder.create({ t: BlockPos, u: BlockState ->
+        factory.apply(t, u)
+    }).addBlock(block).build()
 
-    override fun createTabBuilder(): CreativeModeTab.Builder {
-        return FabricItemGroup.builder()
-    }
+    override fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack> = listOf(
+        dan200.computercraft.shared.Registry.ModItems.TURTLE_NORMAL.create(-1, null, -1, null, upgrade, 0, null),
+        dan200.computercraft.shared.Registry.ModItems.TURTLE_NORMAL.create(-1, null, -1, null, upgrade, 0, null),
+    )
 
-    override fun createTurtlesWithUpgrade(upgrade: UpgradeData<ITurtleUpgrade>): List<ItemStack> {
-        return listOf(
-            ModRegistry.Items.TURTLE_NORMAL.get().create(-1, null, -1, null, upgrade, 0, null),
-            ModRegistry.Items.TURTLE_ADVANCED.get().create(-1, null, -1, null, upgrade, 0, null),
-        )
-    }
-
-    override fun createPocketsWithUpgrade(upgrade: UpgradeData<IPocketUpgrade>): List<ItemStack> {
-        return listOf(
-            ModRegistry.Items.POCKET_COMPUTER_NORMAL.get().create(-1, null, -1, upgrade),
-            ModRegistry.Items.POCKET_COMPUTER_ADVANCED.get().create(-1, null, -1, upgrade),
-        )
-    }
+    override fun createPocketsWithUpgrade(upgrade: IPocketUpgrade): List<ItemStack> = listOf(
+        dan200.computercraft.shared.Registry.ModItems.POCKET_COMPUTER_NORMAL.create(-1, null, -1, upgrade),
+        dan200.computercraft.shared.Registry.ModItems.POCKET_COMPUTER_ADVANCED.create(-1, null, -1, upgrade),
+    )
 
     override fun triggerRenderUpdate(blockEntity: BlockEntity) {
         val level = blockEntity.level!!
@@ -246,15 +197,10 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
     }
 
     @JvmRecord
-    private data class WrappedMenuProvider(val owner: MenuProvider, val savingFunction: SavingFunction) :
-        ExtendedScreenHandlerFactory {
-        override fun createMenu(id: Int, inventory: Inventory, player: Player): AbstractContainerMenu? {
-            return owner.createMenu(id, inventory, player)
-        }
+    private data class WrappedMenuProvider(val owner: MenuProvider, val savingFunction: SavingFunction) : ExtendedScreenHandlerFactory {
+        override fun createMenu(id: Int, inventory: Inventory, player: Player): AbstractContainerMenu? = owner.createMenu(id, inventory, player)
 
-        override fun getDisplayName(): Component {
-            return owner.displayName
-        }
+        override fun getDisplayName(): Component = owner.displayName
 
         override fun writeScreenOpeningData(player: ServerPlayer, buf: FriendlyByteBuf) {
             savingFunction.toBytes(buf)
@@ -262,11 +208,12 @@ object FabricPeripheraliumPlatform : PeripheraliumPlatform {
     }
 
     override fun registerGenericPeripheralLookup() {
-        PeripheralLookup.get().registerFallback { _, _, _, blockEntity, context ->
+        ComputerCraftAPI.registerPeripheralProvider { level, pos, side ->
+            val blockEntity = level.getBlockEntity(pos)
             if (blockEntity is IPeripheralProvider<*>) {
-                return@registerFallback blockEntity.getPeripheral(context)
+                return@registerPeripheralProvider blockEntity.getPeripheral(side)
             }
-            return@registerFallback null
+            return@registerPeripheralProvider null
         }
     }
 }

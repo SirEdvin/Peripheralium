@@ -15,7 +15,8 @@ abstract class MutableNBTBlockEntity<T : IOwnedPeripheral<*>>(
     blockEntityType: BlockEntityType<*>,
     blockPos: BlockPos,
     blockState: BlockState,
-) : PeripheralBlockEntity<T>(blockEntityType, blockPos, blockState), ISyncingBlockEntity {
+) : PeripheralBlockEntity<T>(blockEntityType, blockPos, blockState),
+    ISyncingBlockEntity {
 
     open val updateFlag: Int
         get() = Block.UPDATE_ALL
@@ -28,9 +29,7 @@ abstract class MutableNBTBlockEntity<T : IOwnedPeripheral<*>>(
         return base
     }
 
-    override fun getUpdatePacket(): ClientboundBlockEntityDataPacket {
-        return ClientboundBlockEntityDataPacket.create(this)
-    }
+    override fun getUpdatePacket(): ClientboundBlockEntityDataPacket = ClientboundBlockEntityDataPacket.create(this)
 
     // Data save logic
 

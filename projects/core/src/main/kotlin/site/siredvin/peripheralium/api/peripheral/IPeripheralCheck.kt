@@ -14,7 +14,5 @@ fun interface IPeripheralCheck<T> {
     }
 
     fun check(context: T): MethodResult?
-    fun checkAlso(check: IPeripheralCheck<T>): IPeripheralCheck<T>? {
-        return ChainedPeripheralCheck(this, check)
-    }
+    fun checkAlso(check: IPeripheralCheck<T>): IPeripheralCheck<T>? = ChainedPeripheralCheck(this, check)
 }

@@ -26,12 +26,14 @@ import java.util.function.BiConsumer
 import java.util.function.Predicate
 import kotlin.math.min
 
-class ScanningAbility<T : IPeripheralOwner>(val owner: T, val maxRadius: Int) : IOwnerAbility, IPeripheralPlugin {
-    abstract class ScanningMethod<T : IPeripheralOwner>(val name: String, val operation: IPeripheralOperation<SphereOperationContext>) {
+class ScanningAbility<T : IPeripheralOwner>(val owner: T, val maxRadius: Int) :
+    IOwnerAbility,
+    IPeripheralPlugin {
+    abstract class ScanningMethod<T : IPeripheralOwner>(val name: String, val operation: IPeripheralOperation<*, SphereOperationContext>) {
         abstract fun scan(ability: ScanningAbility<T>, radius: Int): MethodResult
     }
 
-    class BlockScanningMethod<T : IPeripheralOwner>(operation: IPeripheralOperation<SphereOperationContext>, private val enriches: Array<out BiConsumer<BlockState, MutableMap<String, Any>>>) : ScanningMethod<T>("block", operation) {
+    class BlockScanningMethod<T : IPeripheralOwner>(operation: IPeripheralOperation<*, SphereOperationContext>, private val enriches: Array<out BiConsumer<BlockState, MutableMap<String, Any>>>) : ScanningMethod<T>("block", operation) {
         private fun blockStateConverter(state: BlockState, pos: BlockPos, facing: Direction, center: BlockPos): MutableMap<String, Any> {
             val base = LuaRepresentation.withPos(state, pos, facing, center, LuaRepresentation::forBlockState)
             enriches.forEach { it.accept(state, base) }
@@ -52,7 +54,7 @@ class ScanningAbility<T : IPeripheralOwner>(val owner: T, val maxRadius: Int) : 
 
     abstract class EntityScanningMethod<T : IPeripheralOwner, V : Entity>(
         name: String,
-        operation: IPeripheralOperation<SphereOperationContext>,
+        operation: IPeripheralOperation<*, SphereOperationContext>,
         private val entityClass: Class<V>,
         private val predicate: Predicate<V> = Predicate { true },
     ) : ScanningMethod<T>(name, operation) {
@@ -73,19 +75,17 @@ class ScanningAbility<T : IPeripheralOwner>(val owner: T, val maxRadius: Int) : 
 
         abstract fun convert(entity: V, ability: ScanningAbility<T>): Map<String, Any>
 
-        override fun scan(ability: ScanningAbility<T>, radius: Int): MethodResult {
-            return MethodResult.of(
-                ability.owner.level!!.getEntitiesOfClass(entityClass, getBox(ability, ability.owner.pos, radius)).filter(
-                    predicate::test,
-                ).map {
-                    convert(it, ability)
-                },
-            )
-        }
+        override fun scan(ability: ScanningAbility<T>, radius: Int): MethodResult = MethodResult.of(
+            ability.owner.level!!.getEntitiesOfClass(entityClass, getBox(ability, ability.owner.pos, radius)).filter(
+                predicate::test,
+            ).map {
+                convert(it, ability)
+            },
+        )
     }
 
     class ItemEntityScanningMethod<T : IPeripheralOwner>(
-        operation: IPeripheralOperation<SphereOperationContext>,
+        operation: IPeripheralOperation<*, SphereOperationContext>,
         private val enriches: Array<out BiConsumer<ItemStack, MutableMap<String, Any>>>,
     ) : EntityScanningMethod<T, ItemEntity>("item", operation, ItemEntity::class.java) {
         override fun convert(entity: ItemEntity, ability: ScanningAbility<T>): Map<String, Any> {
@@ -95,7 +95,7 @@ class ScanningAbility<T : IPeripheralOwner>(val owner: T, val maxRadius: Int) : 
         }
     }
     class XpEntityScanningMethod<T : IPeripheralOwner>(
-        operation: IPeripheralOperation<SphereOperationContext>,
+        operation: IPeripheralOperation<*, SphereOperationContext>,
         private val enriches: Array<out BiConsumer<ExperienceOrb, MutableMap<String, Any>>>,
     ) : EntityScanningMethod<T, ExperienceOrb>("xp", operation, ExperienceOrb::class.java) {
         override fun convert(entity: ExperienceOrb, ability: ScanningAbility<T>): Map<String, Any> {
@@ -105,7 +105,7 @@ class ScanningAbility<T : IPeripheralOwner>(val owner: T, val maxRadius: Int) : 
         }
     }
     class LivingEntityScanningMethod<T : IPeripheralOwner>(
-        operation: IPeripheralOperation<SphereOperationContext>,
+        operation: IPeripheralOperation<*, SphereOperationContext>,
         private val enriches: Array<out BiConsumer<LivingEntity, MutableMap<String, Any>>>,
         predicate: Predicate<LivingEntity>,
     ) : EntityScanningMethod<T, LivingEntity>("entity", operation, LivingEntity::class.java, predicate.and { it !is Player }) {
@@ -117,7 +117,7 @@ class ScanningAbility<T : IPeripheralOwner>(val owner: T, val maxRadius: Int) : 
     }
 
     class PlayerScanningMethod<T : IPeripheralOwner>(
-        operation: IPeripheralOperation<SphereOperationContext>,
+        operation: IPeripheralOperation<*, SphereOperationContext>,
         private val enriches: Array<out BiConsumer<Player, MutableMap<String, Any>>>,
     ) : EntityScanningMethod<T, Player>("player", operation, Player::class.java) {
         override fun convert(entity: Player, ability: ScanningAbility<T>): Map<String, Any> {
@@ -129,7 +129,7 @@ class ScanningAbility<T : IPeripheralOwner>(val owner: T, val maxRadius: Int) : 
 
     private val scanningMethods: MutableMap<String, ScanningMethod<T>> = mutableMapOf()
 
-    override val operations: List<IPeripheralOperation<*>>
+    override val operations: List<IPeripheralOperation<*, *>>
         get() = scanningMethods.map { it.value.operation }.toSet().toList()
 
     override fun collectConfiguration(data: MutableMap<String, Any>) {
@@ -137,25 +137,15 @@ class ScanningAbility<T : IPeripheralOwner>(val owner: T, val maxRadius: Int) : 
         data["scanMethods"] = scanningMethods.keys.toList()
     }
 
-    fun attachBlockScan(operation: IPeripheralOperation<SphereOperationContext>, vararg enriches: BiConsumer<BlockState, MutableMap<String, Any>>): ScanningAbility<T> {
-        return attachScanningMethod(BlockScanningMethod(operation, enriches))
-    }
+    fun attachBlockScan(operation: IPeripheralOperation<*, SphereOperationContext>, vararg enriches: BiConsumer<BlockState, MutableMap<String, Any>>): ScanningAbility<T> = attachScanningMethod(BlockScanningMethod(operation, enriches))
 
-    fun attachItemScan(operation: IPeripheralOperation<SphereOperationContext>, vararg enriches: BiConsumer<ItemStack, MutableMap<String, Any>>): ScanningAbility<T> {
-        return attachScanningMethod(ItemEntityScanningMethod(operation, enriches))
-    }
+    fun attachItemScan(operation: IPeripheralOperation<*, SphereOperationContext>, vararg enriches: BiConsumer<ItemStack, MutableMap<String, Any>>): ScanningAbility<T> = attachScanningMethod(ItemEntityScanningMethod(operation, enriches))
 
-    fun attachLivingEntityScan(operation: IPeripheralOperation<SphereOperationContext>, predicate: Predicate<LivingEntity>, vararg enriches: BiConsumer<LivingEntity, MutableMap<String, Any>>): ScanningAbility<T> {
-        return attachScanningMethod(LivingEntityScanningMethod(operation, enriches, predicate))
-    }
+    fun attachLivingEntityScan(operation: IPeripheralOperation<*, SphereOperationContext>, predicate: Predicate<LivingEntity>, vararg enriches: BiConsumer<LivingEntity, MutableMap<String, Any>>): ScanningAbility<T> = attachScanningMethod(LivingEntityScanningMethod(operation, enriches, predicate))
 
-    fun attachXpScan(operation: IPeripheralOperation<SphereOperationContext>, vararg enriches: BiConsumer<ExperienceOrb, MutableMap<String, Any>>): ScanningAbility<T> {
-        return attachScanningMethod(XpEntityScanningMethod(operation, enriches))
-    }
+    fun attachXpScan(operation: IPeripheralOperation<*, SphereOperationContext>, vararg enriches: BiConsumer<ExperienceOrb, MutableMap<String, Any>>): ScanningAbility<T> = attachScanningMethod(XpEntityScanningMethod(operation, enriches))
 
-    fun attachPlayerScan(operation: IPeripheralOperation<SphereOperationContext>, vararg enriches: BiConsumer<Player, MutableMap<String, Any>>): ScanningAbility<T> {
-        return attachScanningMethod(PlayerScanningMethod(operation, enriches))
-    }
+    fun attachPlayerScan(operation: IPeripheralOperation<*, SphereOperationContext>, vararg enriches: BiConsumer<Player, MutableMap<String, Any>>): ScanningAbility<T> = attachScanningMethod(PlayerScanningMethod(operation, enriches))
 
     fun attachScanningMethod(method: ScanningMethod<T>): ScanningAbility<T> {
         this.scanningMethods[method.name] = method

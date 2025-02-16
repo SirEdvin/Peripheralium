@@ -21,10 +21,9 @@ import site.siredvin.peripheralium.util.DataStorageUtil
 import site.siredvin.peripheralium.util.world.FakePlayerProviderEntity
 import site.siredvin.peripheralium.util.world.FakePlayerProxy
 
-open class EntityProxyPeripheralOwner<T>(protected val blockEntity: T, protected val entity: Entity) :
-    BasePeripheralOwner() where T : BlockEntity, T : IPeripheralTileEntity {
+open class EntityProxyPeripheralOwner<T>(protected val blockEntity: T, protected val entity: Entity) : BasePeripheralOwner() where T : BlockEntity, T : IPeripheralTileEntity {
     override val level: Level
-        get() = entity.level()
+        get() = entity.level
     override val pos: BlockPos
         get() = entity.blockPosition()
     override val facing: Direction
@@ -34,7 +33,7 @@ open class EntityProxyPeripheralOwner<T>(protected val blockEntity: T, protected
     override val dataStorage: CompoundTag
         get() = DataStorageUtil.getDataStorage(blockEntity)
     override val storage: SlottedItemStorage? by lazy {
-        ItemStorageExtractor.extractStorage(entity.level(), entity) as? SlottedItemStorage
+        ItemStorageExtractor.extractStorage(entity.level, entity) as? SlottedItemStorage
     }
 
     override fun markDataStorageDirty() {

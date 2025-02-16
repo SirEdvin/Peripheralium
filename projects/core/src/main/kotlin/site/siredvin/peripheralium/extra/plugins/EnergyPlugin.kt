@@ -9,17 +9,11 @@ class EnergyPlugin(private val storage: EnergyStorage) : IPeripheralPlugin {
         get() = PeripheralPluginUtils.Type.ENERGY_STORAGE
 
     @LuaFunction(mainThread = true)
-    fun getEnergy(): Int {
-        return storage.energy.amount.toInt()
-    }
+    fun getEnergy(): Int = storage.energy.amount.toInt()
 
     @LuaFunction(mainThread = true)
-    fun getEnergyCapacity(): Int {
-        return storage.capacity.toInt()
-    }
+    fun getEnergyCapacity(): Int = storage.capacity.toInt()
 
     @LuaFunction(mainThread = true)
-    fun getEnergyUnit(): String {
-        return storage.energy.unit.name
-    }
+    fun getEnergyUnit(): String = storage.energy.unit.name
 }

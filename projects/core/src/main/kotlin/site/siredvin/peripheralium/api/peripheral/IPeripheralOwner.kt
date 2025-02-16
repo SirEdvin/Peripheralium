@@ -42,8 +42,8 @@ interface IPeripheralOwner {
     val abilities: Collection<IOwnerAbility>
 
     @Throws(LuaException::class)
-    fun <T> withOperation(
-        operation: IPeripheralOperation<T>,
+    fun <C, T> withOperation(
+        operation: IPeripheralOperation<C, T>,
         context: T,
         method: IPeripheralFunction<T, MethodResult>,
         check: IPeripheralCheck<T>? = null,

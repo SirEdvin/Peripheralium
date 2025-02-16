@@ -27,11 +27,7 @@ object XPUtil {
         return level.toDouble().pow(2.0) + 6 * level
     }
 
-    fun levelReductionToXp(xp: Double, amount: Int): Double {
-        return xp - levelsToXP(xpToLevels(xp) - amount)
-    }
+    fun levelReductionToXp(xp: Double, amount: Int): Double = xp - levelsToXP(xpToLevels(xp) - amount)
 
-    fun subtractLevels(xp: Double, amount: Int): Double {
-        return levelsToXP(xpToLevels(xp) - amount)
-    }
+    fun subtractLevels(xp: Double, amount: Int): Double = levelsToXP(xpToLevels(xp) - amount)
 }

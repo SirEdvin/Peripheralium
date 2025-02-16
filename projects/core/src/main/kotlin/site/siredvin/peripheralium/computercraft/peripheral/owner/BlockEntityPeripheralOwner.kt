@@ -7,8 +7,7 @@ import site.siredvin.peripheralium.api.peripheral.IPeripheralTileEntity
 import site.siredvin.peripheralium.common.blocks.FacingBlockEntityBlock
 import site.siredvin.peripheralium.util.DataStorageUtil
 
-class BlockEntityPeripheralOwner<T>(blockEntity: T, facingProperty: DirectionProperty = FacingBlockEntityBlock.FACING) :
-    RawBlockEntityPeripheralOwner<T>(blockEntity, facingProperty) where T : BlockEntity, T : IPeripheralTileEntity {
+class BlockEntityPeripheralOwner<T>(blockEntity: T, facingProperty: DirectionProperty = FacingBlockEntityBlock.FACING) : RawBlockEntityPeripheralOwner<T>(blockEntity, facingProperty) where T : BlockEntity, T : IPeripheralTileEntity {
     override val dataStorage: CompoundTag
         get() = DataStorageUtil.getDataStorage(blockEntity)
 

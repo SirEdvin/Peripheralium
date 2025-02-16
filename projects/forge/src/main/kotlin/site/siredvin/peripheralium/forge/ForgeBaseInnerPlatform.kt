@@ -50,9 +50,7 @@ abstract class ForgeBaseInnerPlatform : BaseInnerPlatform {
     open val entityTypesRegistry: DeferredRegister<EntityType<*>>?
         get() = null
 
-    override fun <T : Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T> {
-        return itemsRegistry!!.register(key.path, item)
-    }
+    override fun <T : Item> registerItem(key: ResourceLocation, item: Supplier<T>): Supplier<T> = itemsRegistry!!.register(key.path, item)
 
     override fun <T : Block> registerBlock(
         key: ResourceLocation,
@@ -67,9 +65,7 @@ abstract class ForgeBaseInnerPlatform : BaseInnerPlatform {
     override fun <V : BlockEntity, T : BlockEntityType<V>> registerBlockEntity(
         key: ResourceLocation,
         blockEntityTypeSup: Supplier<T>,
-    ): Supplier<T> {
-        return blockEntityTypesRegistry!!.register(key.path, blockEntityTypeSup)
-    }
+    ): Supplier<T> = blockEntityTypesRegistry!!.register(key.path, blockEntityTypeSup)
 
     override fun <M : AbstractContainerMenu> registerMenu(
         key: ResourceLocation,
@@ -81,23 +77,17 @@ abstract class ForgeBaseInnerPlatform : BaseInnerPlatform {
         return result
     }
 
-    override fun registerCreativeTab(key: ResourceLocation, tab: CreativeModeTab): Supplier<CreativeModeTab> {
-        return creativeTabRegistry!!.register(key.path) { tab }
-    }
+    override fun registerCreativeTab(key: ResourceLocation, tab: CreativeModeTab): Supplier<CreativeModeTab> = creativeTabRegistry!!.register(key.path) { tab }
 
     override fun <V : ITurtleUpgrade> registerTurtleUpgrade(
         key: ResourceLocation,
         serializer: TurtleUpgradeSerialiser<V>,
-    ): Supplier<TurtleUpgradeSerialiser<V>> {
-        return turtleSerializers!!.register(key.path) { serializer }
-    }
+    ): Supplier<TurtleUpgradeSerialiser<V>> = turtleSerializers!!.register(key.path) { serializer }
 
     override fun <V : IPocketUpgrade> registerPocketUpgrade(
         key: ResourceLocation,
         serializer: PocketUpgradeSerialiser<V>,
-    ): Supplier<PocketUpgradeSerialiser<V>> {
-        return pocketSerializers!!.register(key.path) { serializer }
-    }
+    ): Supplier<PocketUpgradeSerialiser<V>> = pocketSerializers!!.register(key.path) { serializer }
 
     override fun registerCustomStat(id: ResourceLocation, formatter: StatFormatter): Supplier<Stat<ResourceLocation>> {
         val registeredStat = customStats!!.register(id.path) { id }
@@ -107,14 +97,10 @@ abstract class ForgeBaseInnerPlatform : BaseInnerPlatform {
     override fun <C : Container, T : Recipe<C>> registerRecipeSerializer(
         key: ResourceLocation,
         serializer: RecipeSerializer<T>,
-    ): Supplier<RecipeSerializer<T>> {
-        return recipeSerializers!!.register(key.path) { serializer }
-    }
+    ): Supplier<RecipeSerializer<T>> = recipeSerializers!!.register(key.path) { serializer }
 
     override fun <V : Entity, T : EntityType<V>> registerEntity(
         key: ResourceLocation,
         entityTypeSup: Supplier<T>,
-    ): Supplier<T> {
-        return entityTypesRegistry!!.register(key.path, entityTypeSup)
-    }
+    ): Supplier<T> = entityTypesRegistry!!.register(key.path, entityTypeSup)
 }

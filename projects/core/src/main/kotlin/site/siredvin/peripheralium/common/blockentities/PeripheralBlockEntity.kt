@@ -18,7 +18,10 @@ abstract class PeripheralBlockEntity<T : IOwnedPeripheral<*>>(
     blockEntityType: BlockEntityType<*>,
     blockPos: BlockPos,
     blockState: BlockState,
-) : BlockEntity(blockEntityType, blockPos, blockState), IPeripheralTileEntity, IPeripheralProvider<T>, IOwnedBlockEntity {
+) : BlockEntity(blockEntityType, blockPos, blockState),
+    IPeripheralTileEntity,
+    IPeripheralProvider<T>,
+    IOwnedBlockEntity {
     // Peripheral logic
     final override var peripheralSettings: CompoundTag
         protected set

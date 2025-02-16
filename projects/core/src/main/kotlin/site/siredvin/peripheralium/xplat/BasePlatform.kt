@@ -1,9 +1,7 @@
 package site.siredvin.peripheralium.xplat
 
 import dan200.computercraft.api.pocket.IPocketUpgrade
-import dan200.computercraft.api.pocket.PocketUpgradeSerialiser
 import dan200.computercraft.api.turtle.ITurtleUpgrade
-import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.stats.Stat
 import net.minecraft.stats.StatFormatter
@@ -36,13 +34,9 @@ interface BasePlatform {
         return registeredItem
     }
 
-    fun <T : Item> registerItem(name: String, item: Supplier<T>): Supplier<T> {
-        return registerItem(ResourceLocation(baseInnerPlatform.modID, name), item)
-    }
+    fun <T : Item> registerItem(name: String, item: Supplier<T>): Supplier<T> = registerItem(ResourceLocation(baseInnerPlatform.modID, name), item)
 
-    fun <T : Block> registerBlock(key: ResourceLocation, block: Supplier<T>, itemFactory: (T) -> (Item)): Supplier<T> {
-        return baseInnerPlatform.registerBlock(key, block, itemFactory)
-    }
+    fun <T : Block> registerBlock(key: ResourceLocation, block: Supplier<T>, itemFactory: (T) -> (Item)): Supplier<T> = baseInnerPlatform.registerBlock(key, block, itemFactory)
 
     fun <T : Block> registerBlock(name: String, block: Supplier<T>, itemFactory: (T) -> (Item) = { DescriptiveBlockItem(it, Item.Properties()) }): Supplier<T> {
         val registeredBlock = baseInnerPlatform
@@ -54,59 +48,47 @@ interface BasePlatform {
     fun <V : BlockEntity, T : BlockEntityType<V>> registerBlockEntity(
         name: String,
         blockEntityTypeSup: Supplier<T>,
-    ): Supplier<T> {
-        return registerBlockEntity(ResourceLocation(baseInnerPlatform.modID, name), blockEntityTypeSup)
-    }
+    ): Supplier<T> = registerBlockEntity(ResourceLocation(baseInnerPlatform.modID, name), blockEntityTypeSup)
 
     fun <V : BlockEntity, T : BlockEntityType<V>> registerBlockEntity(
         key: ResourceLocation,
         blockEntityTypeSup: Supplier<T>,
-    ): Supplier<T> {
-        return baseInnerPlatform.registerBlockEntity(key, blockEntityTypeSup)
-    }
+    ): Supplier<T> = baseInnerPlatform.registerBlockEntity(key, blockEntityTypeSup)
 
     fun <M : AbstractContainerMenu> registerMenu(
         name: String,
         builder: MenuBuilder<M>,
-    ): Supplier<MenuType<M>> {
-        return baseInnerPlatform.registerMenu(ResourceLocation(baseInnerPlatform.modID, name), builder)
-    }
+    ): Supplier<MenuType<M>> = baseInnerPlatform.registerMenu(ResourceLocation(baseInnerPlatform.modID, name), builder)
 
-    fun registerCreativeTab(key: ResourceLocation, tab: CreativeModeTab): Supplier<CreativeModeTab> {
-        return baseInnerPlatform.registerCreativeTab(key, tab)
-    }
+    fun buildCreativeTab(key: ResourceLocation, tabProvider: CreativeTabProvider): Supplier<CreativeModeTab> = baseInnerPlatform.buildCreativeTab(key, tabProvider)
 
     fun <V : ITurtleUpgrade> registerTurtleUpgrade(
         name: String,
-        serializer: TurtleUpgradeSerialiser<V>,
-    ): Supplier<TurtleUpgradeSerialiser<V>> {
-        return registerTurtleUpgrade(ResourceLocation(baseInnerPlatform.modID, name), serializer)
-    }
+        upgrade: V,
+    ): Supplier<V> = registerTurtleUpgrade(ResourceLocation(baseInnerPlatform.modID, name), upgrade)
 
     fun <V : ITurtleUpgrade> registerTurtleUpgrade(
         key: ResourceLocation,
-        serializer: TurtleUpgradeSerialiser<V>,
-    ): Supplier<TurtleUpgradeSerialiser<V>> {
-        val registered = baseInnerPlatform.registerTurtleUpgrade(key, serializer)
+        upgrade: V,
+    ): Supplier<V> {
+        val registered = baseInnerPlatform.registerTurtleUpgrade(key, upgrade)
         @Suppress("UNCHECKED_CAST")
-        modInformationTracker.internalTurtleUpgrades.add(registered as Supplier<TurtleUpgradeSerialiser<out ITurtleUpgrade>>)
+        modInformationTracker.internalTurtleUpgrades.add(registered as Supplier<out ITurtleUpgrade>)
         return registered
     }
 
     fun <V : IPocketUpgrade> registerPocketUpgrade(
         name: String,
-        serializer: PocketUpgradeSerialiser<V>,
-    ): Supplier<PocketUpgradeSerialiser<V>> {
-        return registerPocketUpgrade(ResourceLocation(baseInnerPlatform.modID, name), serializer)
-    }
+        upgrade: V,
+    ): Supplier<V> = registerPocketUpgrade(ResourceLocation(baseInnerPlatform.modID, name), upgrade)
 
     fun <V : IPocketUpgrade> registerPocketUpgrade(
         key: ResourceLocation,
-        serializer: PocketUpgradeSerialiser<V>,
-    ): Supplier<PocketUpgradeSerialiser<V>> {
-        val registered = baseInnerPlatform.registerPocketUpgrade(key, serializer)
+        upgrade: V,
+    ): Supplier<V> {
+        val registered = baseInnerPlatform.registerPocketUpgrade(key, upgrade)
         @Suppress("UNCHECKED_CAST")
-        modInformationTracker.internalPocketUpgrades.add(registered as Supplier<PocketUpgradeSerialiser<out IPocketUpgrade>>)
+        modInformationTracker.internalPocketUpgrades.add(registered as Supplier<out IPocketUpgrade>)
         return registered
     }
 
@@ -116,11 +98,7 @@ interface BasePlatform {
         return registered
     }
 
-    fun <C : Container, T : Recipe<C>> registerRecipeSerializer(key: ResourceLocation, serializer: RecipeSerializer<T>): Supplier<RecipeSerializer<T>> {
-        return baseInnerPlatform.registerRecipeSerializer(key, serializer)
-    }
+    fun <C : Container, T : Recipe<C>> registerRecipeSerializer(key: ResourceLocation, serializer: RecipeSerializer<T>): Supplier<RecipeSerializer<T>> = baseInnerPlatform.registerRecipeSerializer(key, serializer)
 
-    fun <V : Entity, T : EntityType<V>> registerEntity(key: ResourceLocation, entityTypeSup: Supplier<T>): Supplier<T> {
-        return baseInnerPlatform.registerEntity(key, entityTypeSup)
-    }
+    fun <V : Entity, T : EntityType<V>> registerEntity(key: ResourceLocation, entityTypeSup: Supplier<T>): Supplier<T> = baseInnerPlatform.registerEntity(key, entityTypeSup)
 }

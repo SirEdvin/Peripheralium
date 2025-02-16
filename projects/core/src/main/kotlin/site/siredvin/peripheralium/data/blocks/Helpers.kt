@@ -13,6 +13,8 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import site.siredvin.peripheralium.PeripheraliumCore
+import site.siredvin.peripheralium.ext.withPrefix
+import site.siredvin.peripheralium.ext.withSuffix
 import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.util.*
 
@@ -58,19 +60,17 @@ fun createFlatItem(
         .create(model, mapping, generators.output)
 }
 
-fun toYAngle(direction: Direction): VariantProperties.Rotation {
-    return when (direction) {
-        Direction.NORTH -> VariantProperties.Rotation.R0
-        Direction.SOUTH -> VariantProperties.Rotation.R180
-        Direction.EAST -> VariantProperties.Rotation.R90
-        Direction.WEST -> VariantProperties.Rotation.R270
-        else -> {
-            VariantProperties.Rotation.R0
-            VariantProperties.Rotation.R0
-            VariantProperties.Rotation.R180
-            VariantProperties.Rotation.R90
-            VariantProperties.Rotation.R270
-        }
+fun toYAngle(direction: Direction): VariantProperties.Rotation = when (direction) {
+    Direction.NORTH -> VariantProperties.Rotation.R0
+    Direction.SOUTH -> VariantProperties.Rotation.R180
+    Direction.EAST -> VariantProperties.Rotation.R90
+    Direction.WEST -> VariantProperties.Rotation.R270
+    else -> {
+        VariantProperties.Rotation.R0
+        VariantProperties.Rotation.R0
+        VariantProperties.Rotation.R180
+        VariantProperties.Rotation.R90
+        VariantProperties.Rotation.R270
     }
 }
 

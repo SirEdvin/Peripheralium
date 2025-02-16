@@ -12,27 +12,15 @@ import java.util.*
 
 class ForgeFakePlayer(level: ServerLevel, profile: GameProfile) : FakePlayer(level, profile) {
 
-    override fun canHarmPlayer(other: Player): Boolean {
-        return true
-    }
+    override fun canHarmPlayer(other: Player): Boolean = true
 
-    override fun openMenu(menu: MenuProvider?): OptionalInt {
-        return OptionalInt.empty()
-    }
+    override fun openMenu(menu: MenuProvider?): OptionalInt = OptionalInt.empty()
 
-    override fun startRiding(vehicle: Entity, force: Boolean): Boolean {
-        return false
-    }
+    override fun startRiding(vehicle: Entity, force: Boolean): Boolean = false
 
-    override fun getStandingEyeHeight(pose: Pose, dimensions: EntityDimensions): Float {
-        return 0f
-    }
+    override fun getStandingEyeHeight(pose: Pose, dimensions: EntityDimensions): Float = 0f
 
-    override fun getEyeY(): Double {
-        return y + 0.2
-    }
+    override fun getEyeY(): Double = y + 0.2
 
-    override fun getAttackStrengthScale(f: Float): Float {
-        return 1f
-    }
+    override fun getAttackStrengthScale(f: Float): Float = 1f
 }

@@ -9,9 +9,7 @@ enum class TransformInteractionMode {
     ;
 
     companion object {
-        fun luaValueOf(name: String): TransformInteractionMode {
-            return luaValueOf(name, setOf(*values()))
-        }
+        fun luaValueOf(name: String): TransformInteractionMode = luaValueOf(name, setOf(*values()))
         fun luaValueOf(name: String, allowedMods: Set<TransformInteractionMode>): TransformInteractionMode {
             try {
                 return TransformInteractionMode.valueOf(name.uppercase())

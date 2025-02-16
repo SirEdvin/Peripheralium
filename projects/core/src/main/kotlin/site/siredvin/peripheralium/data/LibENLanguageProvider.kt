@@ -1,6 +1,6 @@
 package site.siredvin.peripheralium.data
 
-import net.minecraft.data.PackOutput
+import net.minecraft.data.DataGenerator
 import site.siredvin.peripheralium.PeripheraliumCore
 import site.siredvin.peripheralium.common.setup.Blocks
 import site.siredvin.peripheralium.common.setup.Items
@@ -8,8 +8,8 @@ import site.siredvin.peripheralium.data.language.LanguageProvider
 import site.siredvin.peripheralium.xplat.LibPlatform
 
 class LibENLanguageProvider(
-    output: PackOutput,
-) : LanguageProvider(output, PeripheraliumCore.MOD_ID, "en_us", LibPlatform.holder, *LibText.values()) {
+    dataGenerator: DataGenerator,
+) : LanguageProvider(dataGenerator, PeripheraliumCore.MOD_ID, "en_us", LibPlatform.holder, *LibText.entries.toTypedArray()) {
     override fun addTranslations() {
         add(Items.PERIPHERALIUM_DUST.get(), "Peripheralium dust")
         add(Items.PERIPHERALIUM_BLEND.get(), "Peripheralium blend")

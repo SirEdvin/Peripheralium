@@ -8,9 +8,7 @@ import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 data class FluidStack(val fluid: Fluid, var amount: Long, var tag: CompoundTag? = null) {
     companion object {
         val EMPTY = FluidStack(Fluids.EMPTY, 0)
-        fun isSameFluid(first: FluidStack, second: FluidStack): Boolean {
-            return first.fluid.isSame(second.fluid)
-        }
+        fun isSameFluid(first: FluidStack, second: FluidStack): Boolean = first.fluid.isSame(second.fluid)
 
         fun isSameFluidSameTags(first: FluidStack, second: FluidStack): Boolean {
             if (!isSameFluid(first, second)) {
@@ -25,13 +23,9 @@ data class FluidStack(val fluid: Fluid, var amount: Long, var tag: CompoundTag? 
     val platformAmount: Long
         get() = this.amount * PeripheraliumPlatform.fluidCompactDivider
 
-    fun copy(): FluidStack {
-        return FluidStack(fluid, amount, tag?.copy())
-    }
+    fun copy(): FluidStack = FluidStack(fluid, amount, tag?.copy())
 
-    fun copyWithCount(count: Long): FluidStack {
-        return FluidStack(fluid, count, tag?.copy())
-    }
+    fun copyWithCount(count: Long): FluidStack = FluidStack(fluid, count, tag?.copy())
 
     fun grow(amount: Int) {
         this.amount += amount.toLong()

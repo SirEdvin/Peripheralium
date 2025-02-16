@@ -1,6 +1,5 @@
 package site.siredvin.peripheralium.computercraft.pocket
 
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import site.siredvin.peripheralium.api.peripheral.IOwnedPeripheral
@@ -21,17 +20,6 @@ abstract class StatefulPocketUpgrade<T : IOwnedPeripheral<*>>(
         pocketAdjective(id),
         stack,
     )
-
-    override fun getUpgradeData(stack: ItemStack): CompoundTag {
-        return stack.getTagElement(STORED_DATA_TAG) ?: return CompoundTag()
-    }
-
-    override fun getUpgradeItem(upgradeData: CompoundTag): ItemStack {
-        if (upgradeData.isEmpty) return craftingItem
-        val base = craftingItem.copy()
-        base.addTagElement(STORED_DATA_TAG, upgradeData)
-        return base
-    }
 
     override fun isItemSuitable(stack: ItemStack): Boolean {
         if (stack.getTagElement(STORED_DATA_TAG) == null) return super.isItemSuitable(stack)

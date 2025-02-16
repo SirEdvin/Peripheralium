@@ -42,9 +42,7 @@ open class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide
         turtle.updateUpgradeNBTData(side)
     }
 
-    override fun <T> withPlayer(function: (FakePlayerProxy) -> T, overwrittenDirection: Direction?, skipInventory: Boolean): T {
-        return FakePlayerProviderTurtle.withPlayer(turtle, function, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
-    }
+    override fun <T> withPlayer(function: (FakePlayerProxy) -> T, overwrittenDirection: Direction?, skipInventory: Boolean): T = FakePlayerProviderTurtle.withPlayer(turtle, function, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
 
     override val toolInMainHand: ItemStack
         get() = turtle.inventory.getItem(turtle.selectedSlot)
@@ -58,7 +56,7 @@ open class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide
     }
 
     override fun destroyUpgrade() {
-        turtle.setUpgradeWithData(side, null)
+        turtle.setUpgrade(side, null)
     }
 
     override fun isMovementPossible(level: Level, pos: BlockPos): Boolean {
@@ -76,9 +74,7 @@ open class TurtlePeripheralOwner(val turtle: ITurtleAccess, val side: TurtleSide
         })
     }
 
-    override fun move(level: Level, pos: BlockPos): Boolean {
-        return turtle.teleportTo(level, pos)
-    }
+    override fun move(level: Level, pos: BlockPos): Boolean = turtle.teleportTo(level, pos)
 
     fun attachFuel(maxFuelConsumptionLevel: Int = 1): TurtlePeripheralOwner {
         attachAbility(PeripheralOwnerAbility.FUEL, TurtleFuelAbility(this, maxFuelConsumptionLevel))

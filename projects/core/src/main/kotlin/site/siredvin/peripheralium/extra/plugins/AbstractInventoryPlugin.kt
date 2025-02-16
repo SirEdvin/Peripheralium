@@ -22,9 +22,7 @@ abstract class AbstractInventoryPlugin : IPeripheralPlugin {
     override val additionalType: String
         get() = PeripheralPluginUtils.Type.INVENTORY
 
-    open fun sizeImpl(): Int {
-        return storage.size
-    }
+    open fun sizeImpl(): Int = storage.size
 
     open fun listImpl(): Map<Int, Map<String, *>> {
         val result: MutableMap<Int, Map<String, *>> = hashMapOf()
@@ -41,19 +39,13 @@ abstract class AbstractInventoryPlugin : IPeripheralPlugin {
         return if (stack.isEmpty) null else LuaRepresentation.forItemStack(stack)
     }
 
-    open fun getItemLimitImpl(slot: Int): Int {
-        return storage.getItem(slot).maxStackSize
-    }
+    open fun getItemLimitImpl(slot: Int): Int = storage.getItem(slot).maxStackSize
 
     @LuaFunction(mainThread = true)
-    fun size(): Int {
-        return sizeImpl()
-    }
+    fun size(): Int = sizeImpl()
 
     @LuaFunction(mainThread = true)
-    fun list(): Map<Int, Map<String, *>> {
-        return listImpl()
-    }
+    fun list(): Map<Int, Map<String, *>> = listImpl()
 
     @LuaFunction(mainThread = true)
     fun getItemDetail(slot: Int): Map<String, *>? {

@@ -25,9 +25,7 @@ abstract class PeripheralTurtleUpgrade<T : IOwnedPeripheral<*>> : BaseTurtleUpgr
     )
 
     companion object {
-        fun <T : IOwnedPeripheral<*>> dynamic(item: Item, constructor: TurtleUpgradePeripheralBuilder<T>, idBuilder: TurtleUpgradeIDSupplier): PeripheralTurtleUpgrade<T> {
-            return Dynamic(idBuilder.get(item), item.defaultInstance, constructor)
-        }
+        fun <T : IOwnedPeripheral<*>> dynamic(item: Item, constructor: TurtleUpgradePeripheralBuilder<T>, idBuilder: TurtleUpgradeIDSupplier): PeripheralTurtleUpgrade<T> = Dynamic(idBuilder.get(item), item.defaultInstance, constructor)
     }
 
     private class Dynamic<T : IOwnedPeripheral<*>>(
@@ -35,8 +33,6 @@ abstract class PeripheralTurtleUpgrade<T : IOwnedPeripheral<*>> : BaseTurtleUpgr
         stack: ItemStack,
         private val constructor: TurtleUpgradePeripheralBuilder<T>,
     ) : PeripheralTurtleUpgrade<T>(turtleID, stack) {
-        override fun buildPeripheral(turtle: ITurtleAccess, side: TurtleSide): T {
-            return constructor.build(turtle, side)
-        }
+        override fun buildPeripheral(turtle: ITurtleAccess, side: TurtleSide): T = constructor.build(turtle, side)
     }
 }

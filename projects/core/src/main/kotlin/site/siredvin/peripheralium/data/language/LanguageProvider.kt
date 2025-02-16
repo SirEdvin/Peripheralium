@@ -2,49 +2,47 @@ package site.siredvin.peripheralium.data.language
 
 import com.google.gson.JsonObject
 import net.minecraft.data.CachedOutput
+import net.minecraft.data.DataGenerator
 import net.minecraft.data.DataProvider
-import net.minecraft.data.PackOutput
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
-import site.siredvin.peripheralium.xplat.XplatRegistries
-import java.util.concurrent.CompletableFuture
 import java.util.stream.Stream
 
 abstract class LanguageProvider(
-    private val output: PackOutput,
+    private val dataGenerator: DataGenerator,
     private val modID: String,
     private val locale: String,
     private val informationHolder: ModInformationHolder,
     private vararg val textRecords: TextRecord,
 ) : DataProvider {
     private val translations: MutableMap<String, String> = mutableMapOf()
-    override fun run(cachedOutput: CachedOutput): CompletableFuture<*> {
+    override fun run(cachedOutput: CachedOutput) {
         addTranslations()
         getExpectedKeys().forEach { x -> check(translations.containsKey(x)) { "No translation for $x" } }
 
         val json = JsonObject()
-        for ((key, value) in translations) json.addProperty(
-            key,
-            value,
-        )
+        for ((key, value) in translations) {
+            json.addProperty(
+                key,
+                value,
+            )
+        }
         return DataProvider.saveStable(
             cachedOutput,
             json,
-            output.outputFolder.resolve("assets/$modID/lang/$locale.json"),
+            dataGenerator.outputFolder.resolve("assets/$modID/lang/$locale.json"),
         )
     }
 
-    open fun getExpectedKeys(): Stream<String> {
-        return Stream.of(
-            informationHolder.blocks.stream().map { it.get().descriptionId },
-            informationHolder.items.stream().map { it.get().descriptionId },
-            informationHolder.customStats.stream().map { it.get().value.toStatTranslationKey() },
-            informationHolder.turtleSerializers.stream().map { XplatRegistries.TURTLE_SERIALIZERS.getKey(it.get()).toTurtleTranslationKey() },
-            informationHolder.pocketSerializers.stream().map { XplatRegistries.POCKET_SERIALIZERS.getKey(it.get()).toPocketTranslationKey() },
-            textRecords.map { it.textID }.stream(),
-        ).flatMap { it }
-    }
+    open fun getExpectedKeys(): Stream<String> = Stream.of(
+        informationHolder.blocks.stream().map { it.get().descriptionId },
+        informationHolder.items.stream().map { it.get().descriptionId },
+        informationHolder.customStats.stream().map { it.get().value.toStatTranslationKey() },
+        informationHolder.turtleUpgrades.stream().map { it.get().upgradeID.toTurtleTranslationKey() },
+        informationHolder.pocketUpgrades.stream().map { it.get().upgradeID.toPocketTranslationKey() },
+        textRecords.map { it.textID }.stream(),
+    ).flatMap { it }
 
     abstract fun addTranslations()
     fun add(id: String, text: String) {
@@ -83,7 +81,5 @@ abstract class LanguageProvider(
         addTurtle(id, text)
     }
 
-    override fun getName(): String {
-        return "Language$locale"
-    }
+    override fun getName(): String = "Language$locale"
 }

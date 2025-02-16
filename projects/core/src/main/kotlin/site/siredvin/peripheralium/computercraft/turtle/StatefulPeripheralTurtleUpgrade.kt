@@ -12,9 +12,7 @@ import site.siredvin.peripheralium.api.turtle.TurtleUpgradePeripheralBuilder
 
 abstract class StatefulPeripheralTurtleUpgrade<T : IOwnedPeripheral<*>> : StatefulTurtleUpgrade<T> {
     companion object {
-        fun <T : IOwnedPeripheral<*>> dynamic(item: Item, constructor: TurtleUpgradePeripheralBuilder<T>, idBuilder: TurtleUpgradeIDSupplier): StatefulPeripheralTurtleUpgrade<T> {
-            return Dynamic(idBuilder.get(item), item.defaultInstance, constructor)
-        }
+        fun <T : IOwnedPeripheral<*>> dynamic(item: Item, constructor: TurtleUpgradePeripheralBuilder<T>, idBuilder: TurtleUpgradeIDSupplier): StatefulPeripheralTurtleUpgrade<T> = Dynamic(idBuilder.get(item), item.defaultInstance, constructor)
     }
     constructor(id: ResourceLocation, adjective: String, item: ItemStack) : super(
         id,
@@ -34,8 +32,6 @@ abstract class StatefulPeripheralTurtleUpgrade<T : IOwnedPeripheral<*>> : Statef
         stack: ItemStack,
         private val constructor: TurtleUpgradePeripheralBuilder<T>,
     ) : StatefulPeripheralTurtleUpgrade<T>(turtleID, stack) {
-        override fun buildPeripheral(turtle: ITurtleAccess, side: TurtleSide): T {
-            return constructor.build(turtle, side)
-        }
+        override fun buildPeripheral(turtle: ITurtleAccess, side: TurtleSide): T = constructor.build(turtle, side)
     }
 }

@@ -28,9 +28,7 @@ object EnergyStorageUtils {
         return count
     }
 
-    fun canStack(first: EnergyStack, second: EnergyStack): Boolean {
-        return EnergyStack.isSameEnergy(first, second)
-    }
+    fun canStack(first: EnergyStack, second: EnergyStack): Boolean = EnergyStack.isSameEnergy(first, second)
 
     fun canMerge(first: EnergyStack, second: EnergyStack, stackLimit: Long = -1): Boolean {
         if (!canStack(first, second)) {

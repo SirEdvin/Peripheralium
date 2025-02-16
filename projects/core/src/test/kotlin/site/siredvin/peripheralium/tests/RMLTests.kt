@@ -1,6 +1,6 @@
 package site.siredvin.peripheralium.tests
 
-import com.mojang.math.Axis
+import com.mojang.math.Vector3f
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import site.siredvin.peripheralium.extra.dsl.rml1.*
@@ -17,7 +17,7 @@ class RMLTests {
             parsed,
             listOf(
                 Translate(1f, 2f, 3f),
-                Rotation(Axis.XP, 90f, 0f, 0f, 0f),
+                Rotation(Vector3f.XP, 90f, 0f, 0f, 0f),
             ),
         )
     }

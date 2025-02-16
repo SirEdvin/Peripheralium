@@ -1,16 +1,15 @@
 package site.siredvin.peripheralium.api.config
 
-import net.minecraftforge.common.ForgeConfigSpec
 import java.util.*
 import java.util.stream.Collectors
 
-interface IConfigHandler {
+interface IConfigHandler<T> {
     val name: String
 
     val settingsPostfix: String
         get() = ""
 
-    fun addToConfig(builder: ForgeConfigSpec.Builder)
+    fun addToConfig(builder: T)
 
     fun settingsName(): String {
         val startName = Arrays.stream(name.lowercase(Locale.getDefault()).split("_").toTypedArray())

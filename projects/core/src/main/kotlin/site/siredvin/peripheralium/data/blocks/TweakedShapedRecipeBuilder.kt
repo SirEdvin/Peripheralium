@@ -21,41 +21,29 @@ class TweakedShapedRecipeBuilder(val _result: Item, val count: Int) {
     private var group: String? = null
 
     companion object {
-        fun shaped(itemLike: ItemLike): TweakedShapedRecipeBuilder {
-            return shaped(itemLike, 1)
-        }
+        fun shaped(itemLike: ItemLike): TweakedShapedRecipeBuilder = shaped(itemLike, 1)
 
-        fun shaped(itemLike: ItemLike, i: Int): TweakedShapedRecipeBuilder {
-            return TweakedShapedRecipeBuilder(itemLike.asItem(), i)
-        }
+        fun shaped(itemLike: ItemLike, i: Int): TweakedShapedRecipeBuilder = TweakedShapedRecipeBuilder(itemLike.asItem(), i)
     }
 
-    fun define(character: Char, tagKey: TagKey<Item>): TweakedShapedRecipeBuilder {
-        return this.define(character, Ingredient.of(tagKey))
+    fun define(character: Char, tagKey: TagKey<Item>): TweakedShapedRecipeBuilder = this.define(character, Ingredient.of(tagKey))
+
+    fun define(character: Char, itemLike: ItemLike): TweakedShapedRecipeBuilder = this.define(character, Ingredient.of(itemLike))
+
+    fun define(character: Char, ingredient: Ingredient): TweakedShapedRecipeBuilder = if (key.containsKey(character)) {
+        throw IllegalArgumentException("Symbol '$character' is already defined!")
+    } else if (character == ' ') {
+        throw IllegalArgumentException("Symbol ' ' (whitespace) is reserved and cannot be defined")
+    } else {
+        key[character] = ingredient
+        this
     }
 
-    fun define(character: Char, itemLike: ItemLike): TweakedShapedRecipeBuilder {
-        return this.define(character, Ingredient.of(itemLike))
-    }
-
-    fun define(character: Char, ingredient: Ingredient): TweakedShapedRecipeBuilder {
-        return if (key.containsKey(character)) {
-            throw IllegalArgumentException("Symbol '$character' is already defined!")
-        } else if (character == ' ') {
-            throw IllegalArgumentException("Symbol ' ' (whitespace) is reserved and cannot be defined")
-        } else {
-            key[character] = ingredient
-            this
-        }
-    }
-
-    fun pattern(string: String): TweakedShapedRecipeBuilder {
-        return if (rows.isNotEmpty() && string.length != rows[0].length) {
-            throw IllegalArgumentException("Pattern must be the same width on every line!")
-        } else {
-            rows.add(string)
-            this
-        }
+    fun pattern(string: String): TweakedShapedRecipeBuilder = if (rows.isNotEmpty() && string.length != rows[0].length) {
+        throw IllegalArgumentException("Pattern must be the same width on every line!")
+    } else {
+        rows.add(string)
+        this
     }
 
     fun group(string: String): TweakedShapedRecipeBuilder {
@@ -112,8 +100,7 @@ class TweakedShapedRecipeBuilder(val _result: Item, val count: Int) {
         private val group: String,
         private val pattern: List<String>,
         private val key: Map<Char, Ingredient>,
-    ) :
-        FinishedRecipe {
+    ) : FinishedRecipe {
         override fun serializeRecipeData(jsonObject: JsonObject) {
             if (group.isNotEmpty()) {
                 jsonObject.addProperty("group", group)
@@ -140,20 +127,12 @@ class TweakedShapedRecipeBuilder(val _result: Item, val count: Int) {
             jsonObject.add("result", jsonObject3)
         }
 
-        override fun getType(): RecipeSerializer<*> {
-            return RecipeSerializer.SHAPED_RECIPE
-        }
+        override fun getType(): RecipeSerializer<*> = RecipeSerializer.SHAPED_RECIPE
 
-        override fun getId(): ResourceLocation {
-            return id
-        }
+        override fun getId(): ResourceLocation = id
 
-        override fun serializeAdvancement(): JsonObject? {
-            return null
-        }
+        override fun serializeAdvancement(): JsonObject? = null
 
-        override fun getAdvancementId(): ResourceLocation? {
-            return null
-        }
+        override fun getAdvancementId(): ResourceLocation? = null
     }
 }

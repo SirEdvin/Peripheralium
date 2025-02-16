@@ -1,10 +1,9 @@
 package site.siredvin.peripheralium.data.blocks
 
 import com.google.gson.JsonElement
-import net.minecraft.Util
 import net.minecraft.data.CachedOutput
+import net.minecraft.data.DataGenerator
 import net.minecraft.data.DataProvider
-import net.minecraft.data.PackOutput
 import net.minecraft.data.models.BlockModelGenerators
 import net.minecraft.data.models.ItemModelGenerators
 import net.minecraft.data.models.blockstates.BlockStateGenerator
@@ -15,7 +14,6 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import site.siredvin.peripheralium.xplat.XplatRegistries
 import java.nio.file.Path
-import java.util.concurrent.CompletableFuture
 import java.util.function.BiConsumer
 import java.util.function.Consumer
 import java.util.function.Function
@@ -29,19 +27,16 @@ import java.util.function.Supplier
  * Please don't sue me Mojang. Or at least make these changes to vanilla before doing so!
  */
 class ModelProvider(
-    output: PackOutput,
+    dataGenerator: DataGenerator,
     private val blocks: Consumer<BlockModelGenerators>,
     private val items: Consumer<ItemModelGenerators>,
 ) : DataProvider {
-    private val blockStatePath: PackOutput.PathProvider
-    private val modelPath: PackOutput.PathProvider
+    private val blockStatePath: DataGenerator.PathProvider =
+        dataGenerator.createPathProvider(DataGenerator.Target.RESOURCE_PACK, "blockstates")
+    private val modelPath: DataGenerator.PathProvider =
+        dataGenerator.createPathProvider(DataGenerator.Target.RESOURCE_PACK, "models")
 
-    init {
-        blockStatePath = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "blockstates")
-        modelPath = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "models")
-    }
-
-    override fun run(output: CachedOutput): CompletableFuture<*> {
+    override fun run(output: CachedOutput) {
         val blockStates: MutableMap<Block, BlockStateGenerator> = HashMap()
         val addBlockState = Consumer { generator: BlockStateGenerator ->
             val block = generator.block
@@ -65,29 +60,23 @@ class ModelProvider(
                 models[model] = DelegatedModel(ModelLocationUtils.getModelLocation(block))
             }
         }
-        val futures: MutableList<CompletableFuture<*>> = ArrayList()
         saveCollection(
             output,
-            futures,
             blockStates,
         ) { blockStatePath.json(XplatRegistries.BLOCKS.getKey(it)) }
-        saveCollection(output, futures, models, modelPath::json)
-        return Util.sequenceFailFast(futures)
+        saveCollection(output, models, modelPath::json)
     }
 
     private fun <T> saveCollection(
         output: CachedOutput,
-        futures: MutableList<CompletableFuture<*>>,
         items: Map<T, Supplier<JsonElement>>,
         getLocation: Function<T, Path>,
     ) {
         for ((key, value) in items) {
             val path = getLocation.apply(key)
-            futures.add(DataProvider.saveStable(output, value.get(), path))
+            DataProvider.saveStable(output, value.get(), path)
         }
     }
 
-    override fun getName(): String {
-        return "Block State Definitions"
-    }
+    override fun getName(): String = "Block State Definitions"
 }

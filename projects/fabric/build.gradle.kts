@@ -7,10 +7,6 @@ plugins {
     id("site.siredvin.mod-publishing")
 }
 
-val modVersion: String by extra
-val minecraftVersion: String by extra
-val modBaseName: String by extra
-
 baseShaking {
     projectPart.set("fabric")
     integrationRepositories.set(true)
@@ -22,8 +18,7 @@ fabricShaking {
     accessWidener.set(project(":core").file("src/main/resources/peripheralium.accesswidener"))
     extraVersionMappings.set(
         mapOf(
-            "computercraft" to "cc-tweaked",
-            "forgeconfigapiport" to "forgeconfigapirt",
+            "computercraft" to "cc-restitched",
         ),
     )
     shake()

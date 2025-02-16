@@ -5,11 +5,9 @@ import java.util.function.Predicate
 import net.minecraftforge.fluids.FluidStack as ForgeFluidStack
 
 class ForgeFluidStorage(private val handler: IFluidHandler) : FluidStorage {
-    override fun getFluids(): Iterator<FluidStack> {
-        return (0 until handler.tanks).map {
-            handler.getFluidInTank(it).toVanilla()
-        }.iterator()
-    }
+    override fun getFluids(): Iterator<FluidStack> = (0 until handler.tanks).map {
+        handler.getFluidInTank(it).toVanilla()
+    }.iterator()
 
     override fun takeFluid(predicate: Predicate<FluidStack>, limit: Long): FluidStack {
         var realLimit = limit

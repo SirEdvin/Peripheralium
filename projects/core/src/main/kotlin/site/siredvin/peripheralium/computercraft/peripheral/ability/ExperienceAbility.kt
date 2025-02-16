@@ -15,27 +15,23 @@ import site.siredvin.peripheralium.util.radiusCorrect
 import site.siredvin.peripheralium.util.representation.LuaInterpretation
 import kotlin.math.min
 
-class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadius: Int, private val xpToFuelRate: Int, private val xpTransferOperation: IPeripheralOperation<Any?>) :
+class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadius: Int, private val xpToFuelRate: Int, private val xpTransferOperation: IPeripheralOperation<*, Any?>) :
     IOwnerAbility,
     IPeripheralPlugin {
     companion object {
         private const val COLLECTED_XP_AMOUNT = "CollectedXPAmount"
 
-        fun getStoredXP(dataStorage: CompoundTag): Double {
-            return dataStorage.getDouble(COLLECTED_XP_AMOUNT)
-        }
+        fun getStoredXP(dataStorage: CompoundTag): Double = dataStorage.getDouble(COLLECTED_XP_AMOUNT)
     }
 
-    override val operations: List<IPeripheralOperation<*>>
+    override val operations: List<IPeripheralOperation<*, *>>
         get() = listOf(xpTransferOperation)
 
     override fun collectConfiguration(data: MutableMap<String, Any>) {
         data["xpToFuelRate"] = xpToFuelRate
     }
 
-    fun getStoredXP(): Double {
-        return getStoredXP(owner.dataStorage)
-    }
+    fun getStoredXP(): Double = getStoredXP(owner.dataStorage)
 
     fun adjustStoredXP(amount: Double) {
         owner.dataStorage.putDouble(COLLECTED_XP_AMOUNT, owner.dataStorage.getDouble(COLLECTED_XP_AMOUNT) + amount)
@@ -47,23 +43,21 @@ class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadi
         function: IPeripheralFunction<Any?, MethodResult>,
     ): MethodResult {
         val ability: OperationAbility = owner.getAbility(PeripheralOwnerAbility.OPERATION)!!
-        return ability.performOperation(xpTransferOperation, null, null, function, null, null)
+        return ability.performOperation<Any?>(xpTransferOperation, null, null, function, null, null)
     }
 
     @LuaFunction(mainThread = true)
     @Throws(LuaException::class)
-    fun collectXP(): MethodResult {
-        return withXPTransfer {
-            val level: Level = owner.level!!
-            val pos = owner.pos
-            val searchBox = AABB(pos).inflate(interactionRadius.toDouble())
-            val oldCount = getStoredXP()
-            level.getEntitiesOfClass(ExperienceOrb::class.java, searchBox).forEach { entity ->
-                adjustStoredXP(entity.value.toDouble())
-                entity.remove(Entity.RemovalReason.KILLED)
-            }
-            MethodResult.of(getStoredXP() - oldCount)
+    fun collectXP(): MethodResult = withXPTransfer {
+        val level: Level = owner.level!!
+        val pos = owner.pos
+        val searchBox = AABB(pos).inflate(interactionRadius.toDouble())
+        val oldCount = getStoredXP()
+        level.getEntitiesOfClass(ExperienceOrb::class.java, searchBox).forEach { entity ->
+            adjustStoredXP(entity.value.toDouble())
+            entity.remove(Entity.RemovalReason.KILLED)
         }
+        MethodResult.of(getStoredXP() - oldCount)
     }
 
     @LuaFunction(mainThread = true)
@@ -127,9 +121,7 @@ class ExperienceAbility(val owner: IPeripheralOwner, private val interactionRadi
     }
 
     @LuaFunction(mainThread = true, value = ["getStoredXP"])
-    fun getStoredXPLua(): Double {
-        return getStoredXP()
-    }
+    fun getStoredXPLua(): Double = getStoredXP()
 
     @LuaFunction(mainThread = true)
     fun getOwnerXP(): MethodResult {

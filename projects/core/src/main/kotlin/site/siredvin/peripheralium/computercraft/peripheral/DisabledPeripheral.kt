@@ -6,7 +6,5 @@ object DisabledPeripheral : OwnedPeripheral<DisabledPeripheralOwner>("disabled",
     override val isEnabled: Boolean
         get() = true
 
-    override fun equals(other: Any?): Boolean {
-        return other === this
-    }
+    override fun equals(other: Any?): Boolean = other === this
 }

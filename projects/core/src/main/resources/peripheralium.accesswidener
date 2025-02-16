@@ -1,3 +1,7 @@
 accessWidener v1 named
 
 accessible field net/minecraft/world/entity/animal/horse/AbstractHorse inventory Lnet/minecraft/world/SimpleContainer;
+
+# Data generators
+accessible field net/minecraft/data/recipes/RecipeProvider recipePathProvider Lnet/minecraft/data/DataGenerator$PathProvider;
+accessible field net/minecraft/data/recipes/RecipeProvider advancementPathProvider Lnet/minecraft/data/DataGenerator$PathProvider;

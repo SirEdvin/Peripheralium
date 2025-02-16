@@ -14,18 +14,16 @@ import kotlin.test.assertEquals
 abstract class FluidStorageTests {
     abstract fun createStorage(fluids: List<FluidStack>, secondary: Boolean): FluidStorage
 
-    fun createStorage(sizes: List<Long>, stack: FluidStack, secondary: Boolean): FluidStorage {
-        return createStorage(
-            sizes.map {
-                if (it == 0L) {
-                    FluidStack.EMPTY
-                } else {
-                    stack.copyWithCount(it)
-                }
-            },
-            secondary,
-        )
-    }
+    fun createStorage(sizes: List<Long>, stack: FluidStack, secondary: Boolean): FluidStorage = createStorage(
+        sizes.map {
+            if (it == 0L) {
+                FluidStack.EMPTY
+            } else {
+                stack.copyWithCount(it)
+            }
+        },
+        secondary,
+    )
 
     data class MoveArguments(
         val initialFrom: List<Long>,

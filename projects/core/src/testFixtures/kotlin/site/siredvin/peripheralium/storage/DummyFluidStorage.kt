@@ -27,9 +27,7 @@ class DummyFluidStorage(private val maxSlots: Int, initialItems: List<FluidStack
         fluids.removeIf { it.isEmpty }
     }
 
-    override fun getFluids(): Iterator<FluidStack> {
-        return fluids.iterator()
-    }
+    override fun getFluids(): Iterator<FluidStack> = fluids.iterator()
 
     override fun takeFluid(predicate: Predicate<FluidStack>, limit: Long): FluidStack {
         var slidingStack = FluidStack.EMPTY

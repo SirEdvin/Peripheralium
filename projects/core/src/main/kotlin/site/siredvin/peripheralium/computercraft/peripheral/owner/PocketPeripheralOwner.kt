@@ -45,9 +45,7 @@ open class PocketPeripheralOwner(val pocket: IPocketAccess) : BasePeripheralOwne
         pocket.updateUpgradeNBTData()
     }
 
-    override fun <T> withPlayer(function: (FakePlayerProxy) -> T, overwrittenDirection: Direction?, skipInventory: Boolean): T {
-        return FakePlayerProviderPocket.withPlayer(pocket, function, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
-    }
+    override fun <T> withPlayer(function: (FakePlayerProxy) -> T, overwrittenDirection: Direction?, skipInventory: Boolean): T = FakePlayerProviderPocket.withPlayer(pocket, function, overwrittenDirection = overwrittenDirection, skipInventory = skipInventory)
 
     override val toolInMainHand: ItemStack
         get() = owner?.mainHandItem ?: ItemStack.EMPTY
@@ -57,17 +55,11 @@ open class PocketPeripheralOwner(val pocket: IPocketAccess) : BasePeripheralOwne
         return ContainerUtils.storeItem(player.inventory, stored)
     }
 
-    override fun destroyUpgrade() {
-        throw RuntimeException("Not implemented yet")
-    }
+    override fun destroyUpgrade(): Unit = throw RuntimeException("Not implemented yet")
 
-    override fun isMovementPossible(level: Level, pos: BlockPos): Boolean {
-        return false
-    }
+    override fun isMovementPossible(level: Level, pos: BlockPos): Boolean = false
 
-    override fun move(level: Level, pos: BlockPos): Boolean {
-        return false
-    }
+    override fun move(level: Level, pos: BlockPos): Boolean = false
 
     fun attachFuel(foodFuelPrice: Int = 1000, maxFuelConsumptionLevel: Int = 1): PocketPeripheralOwner {
         attachAbility(PeripheralOwnerAbility.FUEL, PocketFuelAbility(this, foodFuelPrice, maxFuelConsumptionLevel))
@@ -82,9 +74,7 @@ open class PocketPeripheralOwner(val pocket: IPocketAccess) : BasePeripheralOwne
         return pocket == other.pocket
     }
 
-    override fun hashCode(): Int {
-        return pocket.hashCode()
-    }
+    override fun hashCode(): Int = pocket.hashCode()
 
     override val targetRepresentation: Any?
         get() = owner

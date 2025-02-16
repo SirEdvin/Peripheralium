@@ -9,21 +9,13 @@ import net.minecraft.world.level.block.state.BlockState
 import site.siredvin.peripheralium.xplat.XplatTags
 
 object FabricXplatTags : XplatTags {
-    override fun isOre(state: BlockState): Boolean {
-        return state.`is`(ConventionalBlockTags.ORES)
-    }
+    override fun isOre(state: BlockState): Boolean = state.`is`(ConventionalBlockTags.ORES)
 
-    override fun isOre(stack: ItemStack): Boolean {
-        return stack.`is`(ConventionalItemTags.ORES)
-    }
+    override fun isOre(stack: ItemStack): Boolean = stack.`is`(ConventionalItemTags.ORES)
 
-    override fun isBookshelf(state: BlockState): Boolean {
-        return state.`is`(ConventionalBlockTags.BOOKSHELVES)
-    }
+    override fun isBookshelf(state: BlockState): Boolean = state.`is`(ConventionalBlockTags.BOOKSHELVES)
 
-    override fun isBookshelf(stack: ItemStack): Boolean {
-        return stack.`is`(ConventionalItemTags.BOOKSHELVES)
-    }
+    override fun isBookshelf(stack: ItemStack): Boolean = stack.tags.anyMatch { ConventionalBlockTags.BOOKSHELVES.location.equals(it.location()) }
 
     override fun isShearable(entity: Entity, targetItem: ItemStack): Pair<Boolean, Boolean> {
         if (entity !is Shearable) {

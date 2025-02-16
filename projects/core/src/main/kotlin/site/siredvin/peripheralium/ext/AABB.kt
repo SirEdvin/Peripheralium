@@ -1,12 +1,11 @@
 package site.siredvin.peripheralium.ext
 
-import com.mojang.math.Axis
+import com.mojang.math.Vector3f
 import net.minecraft.core.Direction
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
-import org.joml.Vector3f
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -23,13 +22,13 @@ val unitCube: List<List<Vector3f>> = listOf(
     listOf(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(1.0f, 0.0f, 1.0f), Vector3f(1.0f, 0.0f, 0.0f), Vector3f(1.0f, 1.0f, 0.0f)),
 )
 
-fun Vec3.rotate(axis: Axis, angle: Float): Vec3 = when (axis) {
-    Axis.XP -> xRot(angle)
-    Axis.XN -> xRot(-angle)
-    Axis.YP -> yRot(angle)
-    Axis.YN -> yRot(-angle)
-    Axis.ZP -> zRot(angle)
-    Axis.ZN -> zRot(-angle)
+fun Vec3.rotate(axis: Vector3f, angle: Float): Vec3 = when (axis) {
+    Vector3f.XP -> xRot(angle)
+    Vector3f.XN -> xRot(-angle)
+    Vector3f.YP -> yRot(angle)
+    Vector3f.YN -> yRot(-angle)
+    Vector3f.ZP -> zRot(angle)
+    Vector3f.ZN -> zRot(-angle)
     else -> this
 }
 
@@ -48,7 +47,7 @@ fun AABB.rotate(facing: Direction) = when (facing) {
     else -> rotateX(1).rotateTowards(facing)
 }
 
-fun AABB.rotate(axis: Axis, count: Int): AABB {
+fun AABB.rotate(axis: Vector3f, count: Int): AABB {
     val angle = count * Math.PI.toFloat() / 2
     val min = Vec3(minX - 8, minY - 8, minZ - 8).rotate(axis, angle)
     val max = Vec3(maxX - 8, maxY - 8, maxZ - 8).rotate(axis, angle)
@@ -63,26 +62,23 @@ fun AABB.rotate(axis: Axis, count: Int): AABB {
     )
 }
 
-fun AABB.rotateX(count: Int) = rotate(Axis.XP, count)
-fun AABB.rotateY(count: Int) = rotate(Axis.YP, count)
-fun AABB.rotateZ(count: Int) = rotate(Axis.ZP, count)
+fun AABB.rotateX(count: Int) = rotate(Vector3f.XP, count)
+fun AABB.rotateY(count: Int) = rotate(Vector3f.YP, count)
+fun AABB.rotateZ(count: Int) = rotate(Vector3f.ZP, count)
 
-fun AABB.toDiv16(): AABB =
-    AABB(minX / 16.0, minY / 16.0, minZ / 16.0, maxX / 16.0, maxY / 16.0, maxZ / 16.0)
+fun AABB.toDiv16(): AABB = AABB(minX / 16.0, minY / 16.0, minZ / 16.0, maxX / 16.0, maxY / 16.0, maxZ / 16.0)
 
-fun AABB.toMul16(): AABB =
-    AABB(minX * 16.0, minY * 16.0, minZ * 16.0, maxX * 16.0, maxY * 16.0, maxZ * 16.0)
+fun AABB.toMul16(): AABB = AABB(minX * 16.0, minY * 16.0, minZ * 16.0, maxX * 16.0, maxY * 16.0, maxZ * 16.0)
 
-fun AABB.toDiv16VoxelShape(): VoxelShape =
-    Shapes.box(minX / 16.0, minY / 16.0, minZ / 16.0, maxX / 16.0, maxY / 16.0, maxZ / 16.0)
+fun AABB.toDiv16VoxelShape(): VoxelShape = Shapes.box(minX / 16.0, minY / 16.0, minZ / 16.0, maxX / 16.0, maxY / 16.0, maxZ / 16.0)
 
 val AABB.faces: List<List<Vector3f>>
     get() = unitCube.map { face ->
         face.map { vertex ->
             Vector3f(
-                max(minX.toFloat() / 16.0f, min(maxX.toFloat() / 16.0f, vertex.x)),
-                max(minY.toFloat() / 16.0f, min(maxY.toFloat() / 16.0f, vertex.y)),
-                max(minZ.toFloat() / 16.0f, min(maxZ.toFloat() / 16.0f, vertex.z)),
+                max(minX.toFloat() / 16.0f, min(maxX.toFloat() / 16.0f, vertex.x())),
+                max(minY.toFloat() / 16.0f, min(maxY.toFloat() / 16.0f, vertex.y())),
+                max(minZ.toFloat() / 16.0f, min(maxZ.toFloat() / 16.0f, vertex.z())),
             )
         }
     }

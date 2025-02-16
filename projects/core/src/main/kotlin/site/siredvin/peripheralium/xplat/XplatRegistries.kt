@@ -1,15 +1,11 @@
 package site.siredvin.peripheralium.xplat
 
-import dan200.computercraft.api.pocket.PocketUpgradeSerialiser
-import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
-import net.minecraft.core.registries.Registries
+import net.minecraft.core.Registry
 
 object XplatRegistries {
-    val ITEMS by lazy { PeripheraliumPlatform.wrap(Registries.ITEM) }
-    val BLOCKS by lazy { PeripheraliumPlatform.wrap(Registries.BLOCK) }
-    val FLUIDS by lazy { PeripheraliumPlatform.wrap(Registries.FLUID) }
-    val ENTITY_TYPES by lazy { PeripheraliumPlatform.wrap(Registries.ENTITY_TYPE) }
-    val TURTLE_SERIALIZERS by lazy { PeripheraliumPlatform.wrap(TurtleUpgradeSerialiser.registryId()) }
-    val POCKET_SERIALIZERS by lazy { PeripheraliumPlatform.wrap(PocketUpgradeSerialiser.registryId()) }
-    val RECIPE_TYPES by lazy { PeripheraliumPlatform.wrap(Registries.RECIPE_TYPE) }
+    val ITEMS by lazy { PeripheraliumPlatform.wrap(Registry.ITEM_REGISTRY) }
+    val BLOCKS by lazy { PeripheraliumPlatform.wrap(Registry.BLOCK_REGISTRY) }
+    val FLUIDS by lazy { PeripheraliumPlatform.wrap(Registry.FLUID_REGISTRY) }
+    val ENTITY_TYPES by lazy { PeripheraliumPlatform.wrap(Registry.ENTITY_TYPE_REGISTRY) }
+    val RECIPE_TYPES by lazy { PeripheraliumPlatform.wrap(Registry.RECIPE_TYPE_REGISTRY) }
 }

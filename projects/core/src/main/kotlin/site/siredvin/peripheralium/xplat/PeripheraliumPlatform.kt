@@ -5,7 +5,6 @@ import dan200.computercraft.api.peripheral.IPeripheral
 import dan200.computercraft.api.pocket.IPocketUpgrade
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.ITurtleUpgrade
-import dan200.computercraft.api.upgrades.UpgradeData
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.Registry
@@ -22,7 +21,6 @@ import net.minecraft.world.MenuProvider
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.Level
@@ -59,94 +57,52 @@ interface PeripheraliumPlatform {
         val minecraftServer: MinecraftServer?
             get() = get().minecraftServer
 
-        fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T> {
-            return get().wrap(registry)
-        }
+        fun <T> wrap(registry: ResourceKey<Registry<T>>): RegistryWrapper<T> = get().wrap(registry)
 
-        fun createFakePlayer(level: ServerLevel, profile: GameProfile): ServerPlayer {
-            return get().createFakePlayer(level, profile)
-        }
+        fun createFakePlayer(level: ServerLevel, profile: GameProfile): ServerPlayer = get().createFakePlayer(level, profile)
 
-        fun getTurtleAccess(entity: BlockEntity): ITurtleAccess? {
-            return get().getTurtleAccess(entity)
-        }
+        fun getTurtleAccess(entity: BlockEntity): ITurtleAccess? = get().getTurtleAccess(entity)
 
-        fun getPeripheral(level: ServerLevel, pos: BlockPos, side: Direction = Direction.NORTH): IPeripheral? {
-            return get().getPeripheral(level, pos, side)
-        }
+        fun getPeripheral(level: ServerLevel, pos: BlockPos, side: Direction = Direction.NORTH): IPeripheral? = get().getPeripheral(level, pos, side)
 
-        fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean {
-            return get().isBlockProtected(pos, state, player)
-        }
+        fun isBlockProtected(pos: BlockPos, state: BlockState, player: ServerPlayer): Boolean = get().isBlockProtected(pos, state, player)
 
-        fun interactWithEntity(player: ServerPlayer, hand: InteractionHand, entity: Entity, hit: EntityHitResult): InteractionResult {
-            return get().interactWithEntity(player, hand, entity, hit)
-        }
+        fun interactWithEntity(player: ServerPlayer, hand: InteractionHand, entity: Entity, hit: EntityHitResult): InteractionResult = get().interactWithEntity(player, hand, entity, hit)
 
-        fun useOn(player: ServerPlayer, stack: ItemStack, hit: BlockHitResult, canUseBlock: Predicate<BlockState>): InteractionResult {
-            return get().useOn(player, stack, hit, canUseBlock)
-        }
+        fun useOn(player: ServerPlayer, stack: ItemStack, hit: BlockHitResult, canUseBlock: Predicate<BlockState>): InteractionResult = get().useOn(player, stack, hit, canUseBlock)
 
-        fun setChunkForceLoad(level: ServerLevel, modID: String, owner: UUID, chunkPos: ChunkPos, add: Boolean, ticking: Boolean = true): Boolean {
-            return get().setChunkForceLoad(level, modID, owner, chunkPos, add, ticking)
-        }
+        fun setChunkForceLoad(level: ServerLevel, modID: String, owner: UUID, chunkPos: ChunkPos, add: Boolean, ticking: Boolean = true): Boolean = get().setChunkForceLoad(level, modID, owner, chunkPos, add, ticking)
 
-        fun nbtHash(tag: CompoundTag?): String? {
-            return get().nbtHash(tag)
-        }
+        fun nbtHash(tag: CompoundTag?): String? = get().nbtHash(tag)
 
-        fun getTurtleUpgrade(stack: ItemStack): UpgradeData<ITurtleUpgrade>? {
-            return get().getTurtleUpgrade(stack)
-        }
+        fun getTurtleUpgrade(stack: ItemStack): ITurtleUpgrade? = get().getTurtleUpgrade(stack)
 
-        fun getPocketUpgrade(stack: ItemStack): UpgradeData<IPocketUpgrade>? {
-            return get().getPocketUpgrade(stack)
-        }
+        fun getPocketUpgrade(stack: ItemStack): IPocketUpgrade? = get().getPocketUpgrade(stack)
 
-        fun getTurtleUpgrade(key: String): ITurtleUpgrade? {
-            return get().getTurtleUpgrade(key)
-        }
+        fun getTurtleUpgrade(key: String): ITurtleUpgrade? = get().getTurtleUpgrade(key)
 
-        fun getPocketUpgrade(key: String): IPocketUpgrade? {
-            return get().getPocketUpgrade(key)
-        }
+        fun getPocketUpgrade(key: String): IPocketUpgrade? = get().getPocketUpgrade(key)
 
-        fun nbtToLua(tag: Tag): Any? {
-            return get().nbtToLua(tag)
-        }
+        fun nbtToLua(tag: Tag): Any? = get().nbtToLua(tag)
 
         fun <T : BlockEntity> createBlockEntityType(
             factory: BiFunction<BlockPos, BlockState, T>,
             block: Block,
-        ): BlockEntityType<T> {
-            return get().createBlockEntityType(factory, block)
-        }
+        ): BlockEntityType<T> = get().createBlockEntityType(factory, block)
 
         fun <T : Entity> createEntityType(
             name: ResourceLocation,
             factory: Function<Level, T>,
-        ): EntityType<T> {
-            return get().createEntityType(name, factory)
-        }
+        ): EntityType<T> = get().createEntityType(name, factory)
 
-        fun createTabBuilder(): CreativeModeTab.Builder {
-            return get().createTabBuilder()
-        }
-
-        fun createTurtlesWithUpgrade(upgrade: UpgradeData<ITurtleUpgrade>): List<ItemStack> {
-            return get().createTurtlesWithUpgrade(upgrade)
-        }
-        fun createPocketsWithUpgrade(upgrade: UpgradeData<IPocketUpgrade>): List<ItemStack> {
-            return get().createPocketsWithUpgrade(upgrade)
-        }
+        fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack> = get().createTurtlesWithUpgrade(upgrade)
+        fun createPocketsWithUpgrade(upgrade: IPocketUpgrade): List<ItemStack> = get().createPocketsWithUpgrade(upgrade)
 
         fun triggerRenderUpdate(blockEntity: BlockEntity) {
             get().triggerRenderUpdate(blockEntity)
         }
 
-        fun openMenu(player: Player, owner: MenuProvider, savingFunction: SavingFunction) {
-            return get().openMenu(player, owner, savingFunction)
-        }
+        fun openMenu(player: Player, owner: MenuProvider, savingFunction: SavingFunction) = get().openMenu(player, owner, savingFunction)
 
         fun registerGenericPeripheralLookup() {
             if (!genericLookupRegistered) {
@@ -177,9 +133,9 @@ interface PeripheraliumPlatform {
 
     fun nbtHash(tag: CompoundTag?): String?
 
-    fun getTurtleUpgrade(stack: ItemStack): UpgradeData<ITurtleUpgrade>?
+    fun getTurtleUpgrade(stack: ItemStack): ITurtleUpgrade?
 
-    fun getPocketUpgrade(stack: ItemStack): UpgradeData<IPocketUpgrade>?
+    fun getPocketUpgrade(stack: ItemStack): IPocketUpgrade?
 
     fun getTurtleUpgrade(key: String): ITurtleUpgrade?
 
@@ -197,10 +153,8 @@ interface PeripheraliumPlatform {
         factory: Function<Level, T>,
     ): EntityType<T>
 
-    fun createTabBuilder(): CreativeModeTab.Builder
-
-    fun createTurtlesWithUpgrade(upgrade: UpgradeData<ITurtleUpgrade>): List<ItemStack>
-    fun createPocketsWithUpgrade(upgrade: UpgradeData<IPocketUpgrade>): List<ItemStack>
+    fun createTurtlesWithUpgrade(upgrade: ITurtleUpgrade): List<ItemStack>
+    fun createPocketsWithUpgrade(upgrade: IPocketUpgrade): List<ItemStack>
 
     fun triggerRenderUpdate(blockEntity: BlockEntity)
 

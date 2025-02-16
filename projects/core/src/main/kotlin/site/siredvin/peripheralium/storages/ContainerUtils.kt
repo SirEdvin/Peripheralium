@@ -9,9 +9,7 @@ import site.siredvin.peripheralium.storages.item.ItemStorageUtils
 import java.util.function.Predicate
 
 object ContainerUtils {
-    fun extract(container: Container, slot: Int, limit: Int, previousStack: ItemStack): ItemStack {
-        return extract(container, slot, limit) { previousStack.isEmpty || ItemStorageUtils.canStack(previousStack, it) }
-    }
+    fun extract(container: Container, slot: Int, limit: Int, previousStack: ItemStack): ItemStack = extract(container, slot, limit) { previousStack.isEmpty || ItemStorageUtils.canStack(previousStack, it) }
 
     fun extract(container: Container, slot: Int, limit: Int, predicate: Predicate<ItemStack>): ItemStack {
         val existingStack = container.getItem(slot)

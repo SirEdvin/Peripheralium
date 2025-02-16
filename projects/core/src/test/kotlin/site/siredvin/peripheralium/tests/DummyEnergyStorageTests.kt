@@ -6,7 +6,5 @@ import site.siredvin.peripheralium.storages.energy.EnergyStorage
 
 @WithMinecraft
 class DummyEnergyStorageTests : EnergyStorageTests() {
-    override fun createStorage(energy: EnergyStack, capacity: Long, secondary: Boolean): EnergyStorage {
-        return DummyEnergyStorage(capacity, energy)
-    }
+    override fun createStorage(energy: EnergyStack, capacity: Long, secondary: Boolean): EnergyStorage = DummyEnergyStorage(capacity, energy)
 }

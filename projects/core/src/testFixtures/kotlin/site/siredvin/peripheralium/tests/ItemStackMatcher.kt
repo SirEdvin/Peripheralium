@@ -13,19 +13,13 @@ import org.hamcrest.TypeSafeMatcher
 
 class ItemStackMatcher(private val stack: ItemStack) : TypeSafeMatcher<ItemStack>() {
     companion object {
-        fun isStack(stack: ItemStack): Matcher<ItemStack> {
-            return ItemStackMatcher(stack)
-        }
+        fun isStack(stack: ItemStack): Matcher<ItemStack> = ItemStackMatcher(stack)
 
-        fun isStack(item: Item, size: Int): Matcher<ItemStack> {
-            return ItemStackMatcher(ItemStack(item, size))
-        }
+        fun isStack(item: Item, size: Int): Matcher<ItemStack> = ItemStackMatcher(ItemStack(item, size))
     }
     override fun describeTo(description: Description) {
         description.appendValue(stack).appendValue(stack.tag)
     }
 
-    override fun matchesSafely(item: ItemStack): Boolean {
-        return ItemStack.isSameItemSameTags(item, stack) && item.count == stack.count
-    }
+    override fun matchesSafely(item: ItemStack): Boolean = ItemStack.isSameItemSameTags(item, stack) && item.count == stack.count
 }

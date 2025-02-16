@@ -23,22 +23,14 @@ class TweakedShapelessRecipeBuilder(itemLike: ItemLike, private val count: Int) 
     }
 
     companion object {
-        fun shapeless(itemLike: ItemLike): TweakedShapelessRecipeBuilder {
-            return TweakedShapelessRecipeBuilder(itemLike, 1)
-        }
+        fun shapeless(itemLike: ItemLike): TweakedShapelessRecipeBuilder = TweakedShapelessRecipeBuilder(itemLike, 1)
 
-        fun shapeless(itemLike: ItemLike, i: Int): TweakedShapelessRecipeBuilder {
-            return TweakedShapelessRecipeBuilder(itemLike, i)
-        }
+        fun shapeless(itemLike: ItemLike, i: Int): TweakedShapelessRecipeBuilder = TweakedShapelessRecipeBuilder(itemLike, i)
     }
 
-    fun requires(tagKey: TagKey<Item>): TweakedShapelessRecipeBuilder {
-        return this.requires(Ingredient.of(tagKey))
-    }
+    fun requires(tagKey: TagKey<Item>): TweakedShapelessRecipeBuilder = this.requires(Ingredient.of(tagKey))
 
-    fun requires(itemLike: ItemLike): TweakedShapelessRecipeBuilder {
-        return this.requires(itemLike, 1)
-    }
+    fun requires(itemLike: ItemLike): TweakedShapelessRecipeBuilder = this.requires(itemLike, 1)
 
     fun requires(itemLike: ItemLike?, i: Int): TweakedShapelessRecipeBuilder {
         for (j in 0 until i) {
@@ -47,9 +39,7 @@ class TweakedShapelessRecipeBuilder(itemLike: ItemLike, private val count: Int) 
         return this
     }
 
-    fun requires(ingredient: Ingredient): TweakedShapelessRecipeBuilder {
-        return this.requires(ingredient, 1)
-    }
+    fun requires(ingredient: Ingredient): TweakedShapelessRecipeBuilder = this.requires(ingredient, 1)
 
     fun requires(ingredient: Ingredient, i: Int): TweakedShapelessRecipeBuilder {
         for (j in 0 until i) {
@@ -63,9 +53,7 @@ class TweakedShapelessRecipeBuilder(itemLike: ItemLike, private val count: Int) 
         return this
     }
 
-    fun getResult(): Item {
-        return result
-    }
+    fun getResult(): Item = result
 
     fun save(consumer: Consumer<FinishedRecipe>) {
         this.save(consumer, XplatRegistries.ITEMS.getKey(result))
@@ -92,8 +80,7 @@ class TweakedShapelessRecipeBuilder(itemLike: ItemLike, private val count: Int) 
         private val count: Int,
         private val group: String,
         private val ingredients: List<Ingredient>,
-    ) :
-        FinishedRecipe {
+    ) : FinishedRecipe {
         override fun serializeRecipeData(jsonObject: JsonObject) {
             if (group.isNotEmpty()) {
                 jsonObject.addProperty("group", group)
@@ -113,20 +100,12 @@ class TweakedShapelessRecipeBuilder(itemLike: ItemLike, private val count: Int) 
             jsonObject.add("result", jsonObject2)
         }
 
-        override fun getType(): RecipeSerializer<*> {
-            return RecipeSerializer.SHAPELESS_RECIPE
-        }
+        override fun getType(): RecipeSerializer<*> = RecipeSerializer.SHAPELESS_RECIPE
 
-        override fun getId(): ResourceLocation {
-            return id
-        }
+        override fun getId(): ResourceLocation = id
 
-        override fun serializeAdvancement(): JsonObject? {
-            return null
-        }
+        override fun serializeAdvancement(): JsonObject? = null
 
-        override fun getAdvancementId(): ResourceLocation? {
-            return null
-        }
+        override fun getAdvancementId(): ResourceLocation? = null
     }
 }

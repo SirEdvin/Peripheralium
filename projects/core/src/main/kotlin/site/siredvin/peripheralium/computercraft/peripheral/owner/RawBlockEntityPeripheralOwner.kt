@@ -16,8 +16,7 @@ import site.siredvin.peripheralium.util.world.FakePlayerProviderBlockEntity
 import site.siredvin.peripheralium.util.world.FakePlayerProxy
 import java.util.*
 
-open class RawBlockEntityPeripheralOwner<T>(val blockEntity: T, val facingProperty: DirectionProperty = FacingBlockEntityBlock.FACING) :
-    BasePeripheralOwner() where T : BlockEntity {
+open class RawBlockEntityPeripheralOwner<T>(val blockEntity: T, val facingProperty: DirectionProperty = FacingBlockEntityBlock.FACING) : BasePeripheralOwner() where T : BlockEntity {
 
     override val level: Level?
         get() = Objects.requireNonNull(blockEntity.level)
@@ -70,13 +69,9 @@ open class RawBlockEntityPeripheralOwner<T>(val blockEntity: T, val facingProper
         level!!.removeBlock(blockEntity.blockPos, false)
     }
 
-    override fun isMovementPossible(level: Level, pos: BlockPos): Boolean {
-        return false
-    }
+    override fun isMovementPossible(level: Level, pos: BlockPos): Boolean = false
 
-    override fun move(level: Level, pos: BlockPos): Boolean {
-        return false
-    }
+    override fun move(level: Level, pos: BlockPos): Boolean = false
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

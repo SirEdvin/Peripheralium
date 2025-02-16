@@ -7,21 +7,13 @@ import site.siredvin.peripheralium.storage.DummyFluidStorage
 import site.siredvin.peripheralium.storages.fluid.*
 
 internal class CombinedTanks(private val tanks: List<IFluidTank>) : IFluidHandler {
-    override fun getTanks(): Int {
-        return tanks.size
-    }
+    override fun getTanks(): Int = tanks.size
 
-    override fun getFluidInTank(tank: Int): net.minecraftforge.fluids.FluidStack {
-        return tanks[tank].fluid
-    }
+    override fun getFluidInTank(tank: Int): net.minecraftforge.fluids.FluidStack = tanks[tank].fluid
 
-    override fun getTankCapacity(tank: Int): Int {
-        return tanks[tank].capacity
-    }
+    override fun getTankCapacity(tank: Int): Int = tanks[tank].capacity
 
-    override fun isFluidValid(tank: Int, stack: net.minecraftforge.fluids.FluidStack): Boolean {
-        return tanks[tank].isFluidValid(stack)
-    }
+    override fun isFluidValid(tank: Int, stack: net.minecraftforge.fluids.FluidStack): Boolean = tanks[tank].isFluidValid(stack)
 
     override fun fill(resource: net.minecraftforge.fluids.FluidStack, action: IFluidHandler.FluidAction): Int {
         val slidingStack = resource.copy()

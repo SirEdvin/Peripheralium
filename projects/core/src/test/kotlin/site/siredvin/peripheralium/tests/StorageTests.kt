@@ -9,9 +9,7 @@ import site.siredvin.peripheralium.storages.item.SlottedItemStorage
 
 @WithMinecraft
 internal class BaseStorageTests : StorageTests() {
-    override fun createStorage(items: List<ItemStack>, secondary: Boolean): AccessibleItemStorage {
-        return DummyStorage(items.size, items)
-    }
+    override fun createStorage(items: List<ItemStack>, secondary: Boolean): AccessibleItemStorage = DummyStorage(items.size, items)
 }
 
 @WithMinecraft

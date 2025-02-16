@@ -32,7 +32,7 @@ object FakePlayerProviderTurtle {
 
     private fun load(player: ServerPlayer, turtle: ITurtleAccess, overwrittenDirection: Direction? = null, skipInventory: Boolean = false) {
         val direction = overwrittenDirection ?: turtle.direction
-        player.setServerLevel(turtle.level as ServerLevel)
+        player.level = turtle.level as ServerLevel
         val position = turtle.position
         // Player position
         val pitch: Float = if (direction == Direction.UP) {

@@ -20,9 +20,7 @@ abstract class AbstractFluidStoragePlugin(protected val level: Level, protected 
     override val additionalType: String
         get() = PeripheralPluginUtils.Type.FLUID_STORAGE
 
-    protected open fun fluidInformation(fluid: FluidStack): MutableMap<String, Any?> {
-        return LuaRepresentation.forFluidStack(fluid)
-    }
+    protected open fun fluidInformation(fluid: FluidStack): MutableMap<String, Any?> = LuaRepresentation.forFluidStack(fluid)
 
     protected abstract val storage: FluidStorage
 

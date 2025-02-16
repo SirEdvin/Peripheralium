@@ -13,10 +13,12 @@ import java.util.function.BiConsumer
 import java.util.function.Consumer
 import kotlin.math.max
 
-class OperationAbility(private val owner: IPeripheralOwner, private val reduceRate: Double = 1.0, private val config: IOperationAbilityConfig) : IOwnerAbility, IPeripheralPlugin {
-    private val allowedOperations: MutableMap<String, IPeripheralOperation<*>> = HashMap()
+class OperationAbility(private val owner: IPeripheralOwner, private val reduceRate: Double = 1.0, private val config: IOperationAbilityConfig) :
+    IOwnerAbility,
+    IPeripheralPlugin {
+    private val allowedOperations: MutableMap<String, IPeripheralOperation<*, *>> = HashMap()
 
-    protected fun setCooldown(operation: IPeripheralOperation<*>, cooldown: Int) {
+    protected fun setCooldown(operation: IPeripheralOperation<*, *>, cooldown: Int) {
         if (cooldown > 0) {
             val dataStorage = owner.dataStorage
             if (!dataStorage.contains(COOLDOWNS_TAG)) dataStorage.put(COOLDOWNS_TAG, CompoundTag())
@@ -27,7 +29,7 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
         }
     }
 
-    protected fun getCooldown(operation: IPeripheralOperation<*>): Int {
+    protected fun getCooldown(operation: IPeripheralOperation<*, *>): Int {
         val dataStorage = owner.dataStorage
         if (!dataStorage.contains(COOLDOWNS_TAG)) return 0
         val cooldowns = dataStorage.getCompound(COOLDOWNS_TAG)
@@ -37,13 +39,13 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
         return max(0, cooldowns.getLong(operationName) - currentTime).toInt()
     }
 
-    fun registerOperation(operation: IPeripheralOperation<*>) {
+    fun registerOperation(operation: IPeripheralOperation<*, *>) {
         allowedOperations[operation.settingsName()] = operation
     }
 
     @Throws(LuaException::class)
     fun <T> performOperation(
-        operation: IPeripheralOperation<T>,
+        operation: IPeripheralOperation<*, T>,
         context: T,
         check: IPeripheralCheck<T>?,
         method: IPeripheralFunction<T, MethodResult>,
@@ -87,13 +89,9 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
         return result
     }
 
-    fun getCurrentCooldown(operation: IPeripheralOperation<*>): Int {
-        return getCooldown(operation)
-    }
+    fun getCurrentCooldown(operation: IPeripheralOperation<*, *>): Int = getCooldown(operation)
 
-    fun isOnCooldown(operation: IPeripheralOperation<*>): Boolean {
-        return getCurrentCooldown(operation) > 0
-    }
+    fun isOnCooldown(operation: IPeripheralOperation<*, *>): Boolean = getCurrentCooldown(operation) > 0
 
     override fun collectConfiguration(data: MutableMap<String, Any>) {
         for (operation in allowedOperations.values) {
@@ -108,9 +106,7 @@ class OperationAbility(private val owner: IPeripheralOwner, private val reduceRa
     }
 
     @LuaFunction(value = ["getOperations"])
-    fun getOperationsLua(): List<String> {
-        return allowedOperations.keys.toList()
-    }
+    fun getOperationsLua(): List<String> = allowedOperations.keys.toList()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

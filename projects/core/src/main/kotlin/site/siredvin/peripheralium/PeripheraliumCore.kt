@@ -1,10 +1,9 @@
 package site.siredvin.peripheralium
 
-import net.minecraft.world.item.CreativeModeTab
+import net.minecraft.world.item.ItemStack
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import site.siredvin.peripheralium.common.setup.Items
-import site.siredvin.peripheralium.data.LibText
 import site.siredvin.peripheralium.xplat.*
 
 object PeripheraliumCore {
@@ -12,17 +11,15 @@ object PeripheraliumCore {
 
     val LOGGER: Logger = LogManager.getLogger(MOD_ID)
 
-    fun configureCreativeTab(builder: CreativeModeTab.Builder): CreativeModeTab.Builder {
-        return builder.icon { Items.PERIPHERALIUM_DUST.get().defaultInstance }
-            .title(LibText.CREATIVE_TAB.text)
-            .displayItems { _, output ->
-                LibPlatform.holder.items.forEach {
-                    output.accept(it.get())
-                }
-                LibPlatform.holder.blocks.forEach {
-                    output.accept(it.get())
-                }
-            }
+    fun configureCreativeTab(): CreativeTabProvider = object : CreativeTabProvider {
+
+        override fun appendItems(items: MutableList<ItemStack>): List<ItemStack> {
+            LibPlatform.holder.items.forEach { items.add(it.get().defaultInstance) }
+            LibPlatform.holder.blocks.forEach { items.add(it.get().asItem().defaultInstance) }
+            return items
+        }
+
+        override fun makeIcon(): ItemStack = Items.PERIPHERALIUM_DUST.get().defaultInstance
     }
 
     fun configure(libPlatform: BaseInnerPlatform, platform: PeripheraliumPlatform, ingredients: RecipeIngredients, tags: XplatTags) {

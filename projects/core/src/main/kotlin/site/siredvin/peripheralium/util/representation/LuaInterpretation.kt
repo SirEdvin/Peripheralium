@@ -50,12 +50,10 @@ object LuaInterpretation {
     }
 
     @Throws(LuaException::class)
-    fun asID(id: String): ResourceLocation {
-        return try {
-            ResourceLocation(id)
-        } catch (e: ResourceLocationException) {
-            throw LuaException(e.message)
-        }
+    fun asID(id: String): ResourceLocation = try {
+        ResourceLocation(id)
+    } catch (e: ResourceLocationException) {
+        throw LuaException(e.message)
     }
 
     @Throws(LuaException::class)
@@ -70,7 +68,9 @@ object LuaInterpretation {
             val count = obj.getOrDefault("count", 1) as? Number ?: throw LuaException("Count field should be a number")
             val candidate = XplatRegistries.ITEMS.get(asID(id)).defaultInstance
             if (candidate.isEmpty) throw LuaException("Cannot find item with id $obj")
-            return candidate.copyWithCount(count.toInt())
+            val copy = candidate.copy()
+            copy.count = count.toInt()
+            return copy
         }
         throw LuaException("Item stack should be item id or table with item id and count")
     }

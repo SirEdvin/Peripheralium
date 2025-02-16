@@ -3,24 +3,16 @@ package site.siredvin.peripheralium.storages.energy
 data class EnergyStack(val unit: EnergyUnit, var amount: Long) {
     companion object {
         val EMPTY = EnergyStack(Energies.EMPTY, 0)
-        fun isSameEnergy(first: EnergyStack, second: EnergyStack): Boolean {
-            return first.unit == second.unit
-        }
+        fun isSameEnergy(first: EnergyStack, second: EnergyStack): Boolean = first.unit == second.unit
     }
     val isEmpty: Boolean
         get() = unit == Energies.EMPTY
 
-    fun copy(): EnergyStack {
-        return EnergyStack(unit, amount)
-    }
+    fun copy(): EnergyStack = EnergyStack(unit, amount)
 
-    fun `is`(unit: EnergyUnit): Boolean {
-        return unit == this.unit
-    }
+    fun `is`(unit: EnergyUnit): Boolean = unit == this.unit
 
-    fun copyWithCount(count: Long): EnergyStack {
-        return EnergyStack(unit, count)
-    }
+    fun copyWithCount(count: Long): EnergyStack = EnergyStack(unit, count)
 
     fun grow(amount: Int) {
         this.amount += amount.toLong()

@@ -6,7 +6,5 @@ import site.siredvin.peripheralium.storages.fluid.FluidStorage
 
 @WithMinecraft
 internal class DummyFluidStorageTests : FluidStorageTests() {
-    override fun createStorage(fluids: List<FluidStack>, secondary: Boolean): FluidStorage {
-        return DummyFluidStorage(fluids.size, fluids)
-    }
+    override fun createStorage(fluids: List<FluidStack>, secondary: Boolean): FluidStorage = DummyFluidStorage(fluids.size, fluids)
 }

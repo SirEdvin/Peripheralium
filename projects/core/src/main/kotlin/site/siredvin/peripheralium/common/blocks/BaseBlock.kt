@@ -8,7 +8,6 @@ import site.siredvin.peripheralium.util.BlockUtil
 class BaseBlock @JvmOverloads constructor(
     properties: Properties = BlockUtil.defaultProperties(),
 ) : Block(properties) {
-    override fun getRenderShape(state: BlockState): RenderShape {
-        return RenderShape.MODEL
-    }
+    @Deprecated("Deprecated in Java")
+    override fun getRenderShape(state: BlockState): RenderShape = RenderShape.MODEL
 }

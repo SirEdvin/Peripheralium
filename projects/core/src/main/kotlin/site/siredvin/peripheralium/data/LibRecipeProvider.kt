@@ -1,19 +1,19 @@
 package site.siredvin.peripheralium.data
 
-import net.minecraft.data.PackOutput
+import net.minecraft.data.DataGenerator
 import net.minecraft.data.recipes.FinishedRecipe
-import net.minecraft.data.recipes.RecipeProvider
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.crafting.Ingredient
 import site.siredvin.peripheralium.common.setup.Blocks
 import site.siredvin.peripheralium.common.setup.Items
+import site.siredvin.peripheralium.data.blocks.ModRecipeProvider
 import site.siredvin.peripheralium.data.blocks.TweakedShapedRecipeBuilder
 import site.siredvin.peripheralium.data.blocks.TweakedShapelessRecipeBuilder
 import site.siredvin.peripheralium.data.blocks.TweakedSmeltingRecipeBuilder
 import site.siredvin.peripheralium.xplat.RecipeIngredients
 import java.util.function.Consumer
 
-class LibRecipeProvider(output: PackOutput) : RecipeProvider(output) {
+class LibRecipeProvider(dataGenerator: DataGenerator) : ModRecipeProvider(dataGenerator) {
     override fun buildRecipes(consumer: Consumer<FinishedRecipe>) {
         val ingredients = RecipeIngredients.get()
 

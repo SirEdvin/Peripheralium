@@ -24,7 +24,7 @@ object FakePlayerProviderEntity {
     private fun getPlayer(entity: Entity, profile: GameProfile): FakePlayerProxy {
         var fake: FakePlayerProxy? = registeredPlayers[entity]
         if (fake == null) {
-            fake = FakePlayerProxy(PeripheraliumPlatform.createFakePlayer(entity.level() as ServerLevel, profile))
+            fake = FakePlayerProxy(PeripheraliumPlatform.createFakePlayer(entity.level as ServerLevel, profile))
             registeredPlayers[entity] = fake
         }
         return fake
@@ -32,7 +32,7 @@ object FakePlayerProviderEntity {
 
     private fun load(player: ServerPlayer, realPlayer: Player, storage: SlottedItemStorage?, overwrittenDirection: Direction? = null, skipInventory: Boolean = false) {
         val direction = overwrittenDirection ?: realPlayer.direction
-        player.setServerLevel(realPlayer.level() as ServerLevel)
+        player.level = realPlayer.level as ServerLevel
         val position = realPlayer.blockPosition()
         // Player position
         val pitch: Float = if (direction == Direction.UP) {
@@ -113,7 +113,7 @@ object FakePlayerProviderEntity {
                             storage,
                             0,
                             realPlayer.blockPosition(),
-                            realPlayer.level(),
+                            realPlayer.level,
                         )
                     }
                     playerInventory.setItem(i, ItemStack.EMPTY)
@@ -125,7 +125,7 @@ object FakePlayerProviderEntity {
     fun <T> withPlayer(entity: Entity, realPlayer: ServerPlayer, function: Function<FakePlayerProxy, T>, overwrittenDirection: Direction? = null, skipInventory: Boolean = false): T {
         val player: FakePlayerProxy =
             getPlayer(entity, realPlayer.gameProfile)
-        val storage = ItemStorageExtractor.extractStorage(entity.level(), entity) as? SlottedItemStorage
+        val storage = ItemStorageExtractor.extractStorage(entity.level, entity) as? SlottedItemStorage
         if (!skipInventory && storage == null) {
             throw IllegalArgumentException("Cannot init fake player with storage and with block entity without storage")
         }

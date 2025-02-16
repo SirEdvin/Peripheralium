@@ -1,21 +1,26 @@
 package site.siredvin.peripheralium.data.blocks
 
+import net.minecraft.data.DataGenerator
 import net.minecraft.data.DataProvider
 import net.minecraft.data.loot.LootTableProvider
 import net.minecraft.data.models.BlockModelGenerators
 import net.minecraft.data.models.ItemModelGenerators
 import net.minecraft.data.tags.TagsProvider
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagBuilder
 import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.storage.loot.LootTable
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet
 import site.siredvin.peripheralium.xplat.RegistryWrapper
+import java.util.function.BiConsumer
 import java.util.function.Consumer
 
 interface GeneratorSink {
-    fun <T : DataProvider> add(factory: DataProvider.Factory<T>): T
-    fun lootTable(tables: List<LootTableProvider.SubProviderEntry>)
+    fun <T : DataProvider> add(factory: (DataGenerator) -> T): T
+    fun lootTable(tables: List<Pair<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>, LootContextParamSet>>)
     fun blockTags(modID: String, tags: Consumer<TagConsumer<Block>>): TagsProvider<Block>
 
     fun entityTags(modID: String, tags: Consumer<TagConsumer<EntityType<*>>>): TagsProvider<EntityType<*>>

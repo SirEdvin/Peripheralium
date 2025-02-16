@@ -1,39 +1,39 @@
 [versions]
 # Base libraries
-kotlin = "2.0.0"
-kotlin-coroutines = "1.6.4"
-kotlin-atomicfu = "0.20.2"
+kotlin = "2.0.21"
+kotlin-coroutines = "1.10.1"
+kotlin-atomicfu = "0.27.0"
 
 # Gradle plugins
 sponge = "0.2.1-SNAPSHOT"
-loom = "1.5.+"
+loom = "1.9.+"
 forgegradle = "6.+"
-spotless = "6.19.0"
+spotless = "7.0.2"
 
 # Core mod dependencies
-cc-tweaked = "1.112.0"
+cc-tweaked = "1.101.3"
+cc-restitched = "1.101.2"
 mixin = "0.8.5"
 
 # Only core mod dependenceis
 asm = "9.3"
 
 # Fabric dependencies
-fabric-api = "0.92.0+1.20.1"
-fabric-loader = "0.15.11"
-fabric-kotlin = "1.11.0+kotlin.2.0.0"
-forgeconfigapirt = "8.0.0"
-modmenu = "7.2.1"
+fabric-api = "0.77.0+1.19.2"
+fabric-loader = "0.16.10"
+fabric-kotlin = "1.12.3+kotlin.2.0.21"
+modmenu = "4.2.0-beta.2"
 
 # Forge dependencies
-forge = "47.1.0"
-forge-kotlin = "4.4.0"
-parchment = "2023.07.16"
-parchmentMc = "1.20.1"
+forge = "43.4.16"
+forge-kotlin = "3.12.0"
+parchment = "2022.08.10"
+parchmentMc = "1.19.2"
 # Extra mod dependencies
 
 # Dev mod dependenceis
-jei = "15.1.0.19"
-rei = "12.0.625"
+jei = "11.8.1.1034"
+rei = "9.2.784"
 
 # Testing
 autoService = "1.0.1"
@@ -49,35 +49,26 @@ kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", 
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlin-atomicfu = {module = "org.jetbrains.kotlinx:atomicfu-jvm", version.ref = "kotlin-atomicfu"}
 
-# Plugins
-kotlin-plugin = {module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-spotless-plugin = {module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref="spotless"}
-
 # Core mod dependencies
-cc-tweaked-common = {module = "cc.tweaked:cc-tweaked-1.20.1-common", version.ref = "cc-tweaked"}
-cc-tweaked-common-api = {module = "cc.tweaked:cc-tweaked-1.20.1-common-api", version.ref = "cc-tweaked"}
-cc-tweaked-core = {module = "cc.tweaked:cc-tweaked-1.20.1-core", version.ref = "cc-tweaked"}
-common-config = {module = "fuzs.forgeconfigapiport:forgeconfigapiport-common", version.ref = "forgeconfigapirt"}
+cc-raw = {module = "dan200.computercraft:cc-raw", version.ref = "cc-restitched"}
 mixin = { module = "org.spongepowered:mixin", version.ref = "mixin" }
 
 # Only core dependencies
 asm = { module = "org.ow2.asm:asm", version.ref = "asm" }
 
 # Fabric mod dependencies
+cc-restitched = {module = "dan200.computercraft:cc-restitched", version.ref = "cc-restitched"}
 fabric-loader = {module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader"}
 fabric-api = {module = "net.fabricmc.fabric-api:fabric-api", version.ref="fabric-api"}
 fabric-kotlin = {module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric-kotlin"}
-fabric-config = {module = "fuzs.forgeconfigapiport:forgeconfigapiport-fabric", version.ref = "forgeconfigapirt"}
-cc-tweaked-fabric-api = {module = "cc.tweaked:cc-tweaked-1.20.1-fabric-api", version.ref = "cc-tweaked"}
-cc-tweaked-fabric = {module = "cc.tweaked:cc-tweaked-1.20.1-fabric", version.ref = "cc-tweaked"}
 modmenu = {module = "com.terraformersmc:modmenu", version.ref="modmenu"}
 
 # Forge mod dependencies
-cc-tweaked-forge =  {module = "cc.tweaked:cc-tweaked-1.20.1-forge", version.ref="cc-tweaked"}
+cc-tweaked =  {module = "org.squiddev:cc-tweaked-1.19.2", version.ref="cc-tweaked"}
 forge-kotlin = {module = "thedarkcolour:kotlinforforge", version.ref = "forge-kotlin"}
 
 # Dev mod dependencies
-jei-forge = { module = "mezz.jei:jei-1.20.1-forge", version.ref = "jei" }
+jei-forge = { module = "mezz.jei:jei-1.19.2-forge", version.ref = "jei" }
 rei-fabric = {module = "me.shedaniel:RoughlyEnoughItems-fabric", version.ref = "rei"}
 
 # Testing
@@ -98,23 +89,26 @@ spotless = {id = "com.diffplug.spotless", version.ref="spotless"}
 
 [bundles]
 kotlin = ["kotlin-stdlib", "kotlin-coroutines", "kotlin-atomicfu"]
-cccommon = ["cc-tweaked-common", "cc-tweaked-core", "cc-tweaked-common-api"]
+cccommon = ["cc-raw"]
 onlycore = ["asm"]
-apicommon = ["common-config"]
-ccfabric-api = ["cc-tweaked-fabric-api", "cc-tweaked-core"]
-ccfabric = ["cc-tweaked-fabric", "cc-tweaked-core"]
+apicommon = []
+ccfabric = ["cc-restitched"]
 fabric-core = ["fabric-loader"]
-fabric = ["fabric-api", "fabric-kotlin", "fabric-config"]
+fabric = ["fabric-api", "fabric-kotlin"]
 forge-raw = ["forge-kotlin"]
-forge-base = ["cc-tweaked-forge"]
+forge-base = ["cc-tweaked"]
 
 # Minecraft
 #externalMods-common = ["jei-api", "nightConfig-core", "nightConfig-toml"]
 #externalMods-forge-compile = ["oculus", "jei-api"]
-externalMods-forge-runtime = ["jei-forge"]
+externalMods-forge-runtime = [
+    "jei-forge"
+]
 #externalMods-fabric = ["nightConfig-core", "nightConfig-toml"]
 #externalMods-fabric-compile = ["iris", "jei-api", "rei-api", "rei-builtin"]
-externalMods-fabric-runtime = ["rei-fabric", "modmenu"]
+externalMods-fabric-runtime = [
+#    "rei-fabric", "modmenu"
+]
 #
 ## Testing
 test = ["junit-jupiter-api", "junit-jupiter-params", "hamcrest", "jqwik-api"]

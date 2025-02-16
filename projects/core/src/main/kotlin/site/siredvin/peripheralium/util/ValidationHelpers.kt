@@ -2,6 +2,7 @@ package site.siredvin.peripheralium.util
 
 import dan200.computercraft.api.lua.LuaException
 import net.minecraft.core.BlockPos
+import net.minecraft.world.item.CreativeModeTab
 import kotlin.math.abs
 
 fun assertBetween(arg: Int, min: Int, max: Int, name: String) {
