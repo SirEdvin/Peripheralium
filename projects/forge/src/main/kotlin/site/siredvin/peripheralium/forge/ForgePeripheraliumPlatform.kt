@@ -6,12 +6,6 @@ import dan200.computercraft.api.peripheral.IPeripheral
 import dan200.computercraft.api.pocket.IPocketUpgrade
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.ITurtleUpgrade
-import dan200.computercraft.api.upgrades.UpgradeData
-import dan200.computercraft.impl.Peripherals
-import dan200.computercraft.impl.PocketUpgrades
-import dan200.computercraft.impl.TurtleUpgrades
-import dan200.computercraft.shared.ModRegistry
-import dan200.computercraft.shared.turtle.blocks.TurtleBlockEntity
 import dan200.computercraft.shared.util.NBTUtil
 import net.minecraft.client.Minecraft
 import net.minecraft.core.*

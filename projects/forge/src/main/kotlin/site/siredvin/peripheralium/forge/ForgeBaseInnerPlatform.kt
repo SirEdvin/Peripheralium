@@ -1,5 +1,6 @@
 package site.siredvin.peripheralium.forge
 
+import dan200.computercraft.api.ComputerCraftAPI
 import dan200.computercraft.api.pocket.IPocketUpgrade
 import dan200.computercraft.api.pocket.PocketUpgradeSerialiser
 import dan200.computercraft.api.turtle.ITurtleUpgrade
@@ -23,6 +24,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraftforge.common.extensions.IForgeMenuType
 import net.minecraftforge.registries.DeferredRegister
 import site.siredvin.peripheralium.xplat.BaseInnerPlatform
+import site.siredvin.peripheralium.xplat.CreativeTabProvider
 import site.siredvin.peripheralium.xplat.MenuBuilder
 import java.util.function.Supplier
 
@@ -77,17 +79,19 @@ abstract class ForgeBaseInnerPlatform : BaseInnerPlatform {
         return result
     }
 
-    override fun registerCreativeTab(key: ResourceLocation, tab: CreativeModeTab): Supplier<CreativeModeTab> = creativeTabRegistry!!.register(key.path) { tab }
+    override fun <V : ITurtleUpgrade> registerTurtleUpgrade(key: ResourceLocation, upgrade: V): Supplier<V> {
+        turtleSerializers!!.register(key.path) { TurtleUpgradeSerialiser.simple<V> { upgrade } }
+        return Supplier { upgrade }
+    }
 
-    override fun <V : ITurtleUpgrade> registerTurtleUpgrade(
-        key: ResourceLocation,
-        serializer: TurtleUpgradeSerialiser<V>,
-    ): Supplier<TurtleUpgradeSerialiser<V>> = turtleSerializers!!.register(key.path) { serializer }
+    override fun <V : IPocketUpgrade> registerPocketUpgrade(key: ResourceLocation, upgrade: V): Supplier<V> {
+        pocketSerializers!!.register(key.path) { PocketUpgradeSerialiser.simple<V> { upgrade } }
+        return Supplier { upgrade }
+    }
 
-    override fun <V : IPocketUpgrade> registerPocketUpgrade(
-        key: ResourceLocation,
-        serializer: PocketUpgradeSerialiser<V>,
-    ): Supplier<PocketUpgradeSerialiser<V>> = pocketSerializers!!.register(key.path) { serializer }
+    override fun buildCreativeTab(key: ResourceLocation, tabProvider: CreativeTabProvider): Supplier<CreativeModeTab> {
+        TODO("Not yet implemented")
+    }
 
     override fun registerCustomStat(id: ResourceLocation, formatter: StatFormatter): Supplier<Stat<ResourceLocation>> {
         val registeredStat = customStats!!.register(id.path) { id }

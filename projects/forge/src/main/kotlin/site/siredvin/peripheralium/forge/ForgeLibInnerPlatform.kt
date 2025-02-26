@@ -1,6 +1,5 @@
 package site.siredvin.peripheralium.forge
 
-import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import net.minecraftforge.registries.DeferredRegister
@@ -16,7 +15,4 @@ object ForgeLibInnerPlatform : ForgeBaseInnerPlatform() {
 
     override val itemsRegistry: DeferredRegister<Item>
         get() = ForgePeripheralium.itemsRegistry
-
-    override val creativeTabRegistry: DeferredRegister<CreativeModeTab>
-        get() = ForgePeripheralium.creativeTabRegistry
 }
